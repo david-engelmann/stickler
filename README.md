@@ -100,9 +100,11 @@ Contested flags, 2
 
 ## Usage
 
-The ten commands each read one file and print one rendering. The examples below run over the files under examples, and every output block is captured from the command it follows.
+The eleven commands each read one file and print one rendering. The examples below run over the files under examples, and every output block is captured from the command it follows.
 
-The check command reads a unified diff and builds a review with the built in checker. The checker holds a fixed set of rules over the shapes of code a diff can carry, and each objection it raises names the rule the code breaks and the change that would clear the objection.
+The input formats are specified in CONTRACT.md, in the section The formats, version 1, which states each form completely with its literal keys, the review form of CK-1 that render reads, the unified diff as text under CK-3 and CK-5 that check reads, the change set form of CK-6 and CK-8 that review reads, the collection form of CK-12 that the collection commands read, the pair form of CK-14 that rejudged reads, and the split form of CK-15 that split reads.
+
+The check command reads a unified diff and builds a review with the built in checker. The checker holds a fixed set of rules over the shapes of code a diff can carry, and each objection it raises names the rule the code breaks and the change that would clear the objection. The six rules read Python shaped code, a bare except clause, a def line default, a print call and their kin, and a diff of another language's code raises nothing and reads as an empty accepted review, so the silence a stranger meets is a scope fact and not a judgement of their code.
 
 ```sh
 stickler check examples/smelly.diff
@@ -146,7 +148,7 @@ Standard, A handler names the failures it expects so the failures nobody expecte
 Rewrite,     except Exception:
 ```
 
-The review command reads a change set. A change set lists flags, and each flag names a file, a line, and a pattern. The change set also carries the verdicts on its flags, recorded by decision model routes through the verdict seat. The set review prints the judgement of each flag, the lines where the routes that judged one flag disagree as the contested lines, and a summary tally of the verdicts.
+The review command reads a change set. A change set is a list of files, each entry naming a file and holding its diff, and the checker computes the judgements and the borderline flags from the diffs. A set may carry verdicts recorded on its flags by decision model routes through the verdict seat. The set review prints the judgement of each flag, the lines where the routes that judged one flag disagree as the contested lines, and a summary tally of the verdicts.
 
 ```sh
 stickler review examples/change_set.json
@@ -583,6 +585,49 @@ Borderline flags, 18
 Sets read, 3
 ```
 
+The outcomes command reads a collection in the census form and prints the outcomes reading. The reading states one section per judgement, in the order the contract states them, naming each flag of the collection standing under that judgement with its file, line, pattern, and the set it stands in, and it closes with counts over the whole collection.
+
+```sh
+stickler outcomes examples/outcomes.json
+```
+
+```text
+Outcomes
+
+Judged stickler
+harvest.py, line 7, near placeholder name, set, pilot set
+harvest.py, line 12, broad handler, set, pilot set
+harvest.py, line 18, broad handler, set, pilot set
+windows.py, line 6, shared member default, set, pilot set
+windows.py, line 10, shared member default, set, pilot set
+windows.py, line 14, shared member default, set, pilot set
+windows.py, line 18, shared member default, set, pilot set
+sorting.py, line 6, near placeholder name, set, pilot set
+sorting.py, line 11, near placeholder name, set, pilot set
+sorting.py, line 12, near placeholder name, set, pilot set
+sorting.py, line 15, broad handler, set, pilot set
+ledger.py, line 6, near placeholder name, set, constructed round 4 example
+cache.py, line 7, shared member default, set, constructed round 4 example
+cache.py, line 15, near placeholder name, set, constructed round 4 example
+Flags read, 14
+
+Judged clean
+ledger.py, line 7, near placeholder name, set, constructed round 4 example
+cache.py, line 10, broad handler, set, constructed round 4 example
+Flags read, 2
+
+Unjudged
+harvest.py, line 6, near placeholder name, set, pilot set
+cache.py, line 19, near placeholder name, set, constructed round 4 example
+Flags read, 2
+
+Sets read, 3
+Flags read, 18
+Judged stickler, 14
+Judged clean, 2
+Unjudged, 2
+```
+
 ## Status
 
 Seeded in October 2026. Setup has landed, and Rounds 1 to 11 have closed, with all slices merged on main. Part of the Spectacle line in the 39 repo storefront perfection programme.
@@ -612,6 +657,8 @@ Seeded in October 2026. Setup has landed, and Rounds 1 to 11 have closed, with a
 - Slice 11 has landed. It carries the file reading over a recorded collection of change sets, one section per file in first appearance order across the collection, naming each flag standing on that file with line, pattern, and the set it stands in, with per file flags read and contested counts and closing counts over the whole collection, with the constructed files example under examples standing over two constructed sets sharing one file, and the files command beside check, render, review, census, rejudged, split, contested, and pattern, and the review rendering fencing closure over the single review rendering, and the README brought to the fleet README standard, with the suite running offline on the recorded verdicts.
 - Contract, CK-23 and CK-24 met. They stand in full form in CONTRACT.md with the FIX-CK-23 fencing closure, and Round 11 closed on the merged slice 12 after three reviews approving, with no repair pass.
 - Slice 12 has landed. It carries the borderline reading over a recorded collection of change sets, one section per set holding at least one borderline flag in collection order, naming each borderline flag of the set with file, line, pattern, the flagged line as written, and the shape reading the checker computed for it, with per section borderline counts and closing counts over the whole collection, with the borderline example under examples standing over the same collection as the census example, and the borderline command beside check, render, review, census, rejudged, split, contested, pattern, and files, and the set review rendering fencing closure over the judgement, flag, and verdict fields of the set review rendering, with the suite running offline on the recorded verdicts.
+- Contract, FIX-CK-24, FIX-CK-25, CK-25, and CK-26 stated. They stand in full form in CONTRACT.md, and Round 12 stands open on slice 13 in review.
+- Slice 13 is built and in review. It carries the formats of the repo stated at version 1 in the contract with the consolidated formats section, the static outcome word fencing in the split and rejudged renderings, the outcomes reading over a recorded collection of change sets, one section per judgement in the order the contract states them, naming each flag of the collection standing under that judgement with file, line, pattern, and the set it stands in, with per section flags read counts and closing counts over the whole collection, with the outcomes example under examples standing over the same collection as the census example, and the outcomes command beside check, render, review, census, rejudged, split, contested, pattern, files, and borderline, and the constructed large change set and large diff under examples, with the suite running offline on the recorded verdicts.
 - The Rust port has landed. It carries the behavior the Python package carried, checked against the same goldens, and the Python tree stands removed under PORT-9.
 - Local gate, cargo test, cargo fmt --check, and cargo clippy --all-targets -- -D warnings. CI runs the same commands.
 

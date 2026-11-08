@@ -616,7 +616,8 @@ const USAGE_BYTES: &[u8] = b"Usage, stickler check DIFF_FILE\n\
     Usage, stickler contested CONTESTED_JSON\n\
     Usage, stickler pattern PATTERN_JSON\n\
     Usage, stickler files FILES_JSON\n\
-    Usage, stickler borderline BORDERLINE_JSON\n";
+    Usage, stickler borderline BORDERLINE_JSON\n\
+    Usage, stickler outcomes OUTCOMES_JSON\n";
 
 #[test]
 fn check_names_a_readable_raw_byte_diff_by_its_surrogate_defect() {

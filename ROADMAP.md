@@ -67,3 +67,10 @@ ruling of the same day, and a live round runs against it without
 a further approval step. Raising the cap means amending this
 section with the reason recorded, in the open, and the spend
 ledger still closes every round.
+
+Maintainer note. Two credentials stand live for the decision
+model routes, a Typesafe Jev credential and an OpenAI compatible
+route credential, and each is held outside this repo by the
+maintainer. Installing, testing, and using the repo needs no
+credential, and a round spends only when it records fresh
+verdicts under the cap above.

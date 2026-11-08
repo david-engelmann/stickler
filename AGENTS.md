@@ -54,6 +54,6 @@ Verify claims from the thing itself. A result is read from the file on disk, the
 
 ## Repo annex
 
-Stickler judges the code. Bluepencil, owned by the Retrospective Line chat, judges the instructions. Stickler never edits a rules file and bluepencil never reviews a diff.
+Stickler judges the code it is handed and prints its reviews as text. It never writes to the files it judges, and it reads no rules file, because its rules are the six built in shapes.
 
 The local gate is cargo test with cargo fmt --check and cargo clippy --all-targets -- -D warnings, and the suite runs offline against recorded model output or the operator's existing session tooling, with no new paid keys. Every fixture is synthetic and written for this repo.
