@@ -115,8 +115,13 @@ fn readme_reports_the_round_4_standing() {
     // consequence of slice 11 standing in review, so the
     // count stood at one while Round 10 was built, until
     // the Round 10 closure landed slice 11 and the count
-    // returned to zero.
-    assert_eq!(text.matches("built and in review").count(), 0);
+    // returned to zero. Adjusted again with the Round 11
+    // slice, as the named mechanical consequence of
+    // slice 12 standing in review, so the count stands
+    // at one while Round 11 is built, until the Round 11
+    // closure lands slice 12 and the count returns to
+    // zero.
+    assert_eq!(text.matches("built and in review").count(), 1);
 }
 
 #[test]
@@ -244,6 +249,30 @@ fn readme_reports_the_round_10_standing() {
         fencing closure over the single review rendering, and the \
         README brought to the fleet README standard, with the suite \
         running offline on the recorded verdicts.";
+    assert!(text.lines().any(|line| line == slice_line));
+    assert!(text.contains("Closed perfection rounds, 10 of 100"));
+}
+
+#[test]
+fn readme_reports_the_round_11_standing() {
+    let text = read("README.md");
+    let standing = "- Contract, CK-23 and CK-24 stated. They stand in full form in \
+        CONTRACT.md, and Round 11 stands open on slice 12 in review.";
+    assert!(text.lines().any(|line| line == standing));
+    let slice_line = "- Slice 12 is built and in review. It carries the \
+        borderline reading over a recorded collection of change sets, one \
+        section per set holding at least one borderline flag in \
+        collection order, naming each borderline flag of the set with \
+        file, line, pattern, the flagged line as written, and the shape \
+        reading the checker computed for it, with per section borderline \
+        counts and closing counts over the whole collection, with the \
+        borderline example under examples standing over the same \
+        collection as the census example, and the borderline command \
+        beside check, render, review, census, rejudged, split, \
+        contested, pattern, and files, and the set review rendering \
+        fencing closure over the judgement, flag, and verdict fields of \
+        the set review rendering, with the suite running offline on the \
+        recorded verdicts.";
     assert!(text.lines().any(|line| line == slice_line));
     assert!(text.contains("Closed perfection rounds, 10 of 100"));
 }

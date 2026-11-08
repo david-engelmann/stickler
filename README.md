@@ -100,7 +100,7 @@ Contested flags, 2
 
 ## Usage
 
-The nine commands each read one file and print one rendering. The examples below run over the files under examples, and every output block is captured from the command it follows.
+The ten commands each read one file and print one rendering. The examples below run over the files under examples, and every output block is captured from the command it follows.
 
 The check command reads a unified diff and builds a review with the built in checker. The checker holds a fixed set of rules over the shapes of code a diff can carry, and each objection it raises names the rule the code breaks and the change that would clear the objection.
 
@@ -545,6 +545,44 @@ Flags read, 9
 Contested flags, 3
 ```
 
+The borderline command reads a collection in the census form and prints the borderline reading. The reading states one section per set holding at least one borderline flag, naming each borderline flag of the set with its file, line, pattern, the flagged line as written, and the shape reading the checker computed for it, and it closes with counts over the whole collection.
+
+```sh
+stickler borderline examples/borderline.json
+```
+
+```text
+Borderline
+
+Set, pilot set
+Borderline, 12
+harvest.py, line 6, near placeholder name, data = load_entries(), drawn name entries
+harvest.py, line 7, near placeholder name, temp = [], drawn name items
+harvest.py, line 12, broad handler,     except BaseException:, handler names BaseException
+harvest.py, line 18, broad handler,     except BaseException:, handler names BaseException
+windows.py, line 6, shared member default, def plan(start, cache=([],)):, default holds a list literal
+windows.py, line 10, shared member default, def grid(rows, defaults=({"unit": "m"}, 2)):, default holds a dict literal
+windows.py, line 14, shared member default, def pack(items, pair=([], {})):, default holds a list literal
+windows.py, line 18, shared member default, def pick(mode, seen=({1, 2},)):, default holds a set literal
+sorting.py, line 6, near placeholder name, def temp(rows):, no drawn name
+sorting.py, line 11, near placeholder name,     data, extra = left, right, no drawn name
+sorting.py, line 12, near placeholder name,     tmp: list = [], drawn name items
+sorting.py, line 15, broad handler,     except BaseException as err:, handler names BaseException
+
+Set, constructed round 4 example
+Borderline, 6
+ledger.py, line 6, near placeholder name, data = load_entries(), drawn name entries
+ledger.py, line 7, near placeholder name, temp = {}, drawn name mapping
+cache.py, line 7, shared member default, def fetch(key, memo=([],)):, default holds a list literal
+cache.py, line 10, broad handler,     except BaseException:, handler names BaseException
+cache.py, line 15, near placeholder name,     tmp = [], drawn name items
+cache.py, line 19, near placeholder name, def data(rows):, no drawn name
+
+Sets standing, 2
+Borderline flags, 18
+Sets read, 3
+```
+
 ## Status
 
 Seeded in October 2026. Setup has landed, and Rounds 1 to 10 have closed, with all slices merged on main. Part of the Spectacle line in the 39 repo storefront perfection programme.
@@ -572,6 +610,8 @@ Seeded in October 2026. Setup has landed, and Rounds 1 to 10 have closed, with a
 - Slice 10 has landed. It carries the pattern reading over a recorded collection of change sets, one section per borderline pattern in the order the contract states them, naming each flag of the collection standing under that pattern with file, line, and the set it stands in, with per section flags read and contested counts and closing counts over the whole collection, with the pattern example under examples standing over the same collection as the census example, and the pattern command beside check, render, review, census, rejudged, split, and contested, and the library fencing closure over the census, rejudged, split, and set review renderings, with the suite running offline on the recorded verdicts.
 - Contract, CK-21 and CK-22 met. They stand in full form in CONTRACT.md with the FIX-CK-22 fencing closure, and Round 10 closed on the merged slice 11 after three reviews, with the red team's one observation on the set review rendering carried to a later round as a fencing candidate.
 - Slice 11 has landed. It carries the file reading over a recorded collection of change sets, one section per file in first appearance order across the collection, naming each flag standing on that file with line, pattern, and the set it stands in, with per file flags read and contested counts and closing counts over the whole collection, with the constructed files example under examples standing over two constructed sets sharing one file, and the files command beside check, render, review, census, rejudged, split, contested, and pattern, and the review rendering fencing closure over the single review rendering, and the README brought to the fleet README standard, with the suite running offline on the recorded verdicts.
+- Contract, CK-23 and CK-24 stated. They stand in full form in CONTRACT.md, and Round 11 stands open on slice 12 in review.
+- Slice 12 is built and in review. It carries the borderline reading over a recorded collection of change sets, one section per set holding at least one borderline flag in collection order, naming each borderline flag of the set with file, line, pattern, the flagged line as written, and the shape reading the checker computed for it, with per section borderline counts and closing counts over the whole collection, with the borderline example under examples standing over the same collection as the census example, and the borderline command beside check, render, review, census, rejudged, split, contested, pattern, and files, and the set review rendering fencing closure over the judgement, flag, and verdict fields of the set review rendering, with the suite running offline on the recorded verdicts.
 - The Rust port has landed. It carries the behavior the Python package carried, checked against the same goldens, and the Python tree stands removed under PORT-9.
 - Local gate, cargo test, cargo fmt --check, and cargo clippy --all-targets -- -D warnings. CI runs the same commands.
 

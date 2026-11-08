@@ -1,0 +1,29 @@
+Borderline
+
+Set, pilot set
+Borderline, 12
+harvest.py, line 6, near placeholder name, data = load_entries(), drawn name entries
+harvest.py, line 7, near placeholder name, temp = [], drawn name items
+harvest.py, line 12, broad handler,     except BaseException:, handler names BaseException
+harvest.py, line 18, broad handler,     except BaseException:, handler names BaseException
+windows.py, line 6, shared member default, def plan(start, cache=([],)):, default holds a list literal
+windows.py, line 10, shared member default, def grid(rows, defaults=({"unit": "m"}, 2)):, default holds a dict literal
+windows.py, line 14, shared member default, def pack(items, pair=([], {})):, default holds a list literal
+windows.py, line 18, shared member default, def pick(mode, seen=({1, 2},)):, default holds a set literal
+sorting.py, line 6, near placeholder name, def temp(rows):, no drawn name
+sorting.py, line 11, near placeholder name,     data, extra = left, right, no drawn name
+sorting.py, line 12, near placeholder name,     tmp: list = [], drawn name items
+sorting.py, line 15, broad handler,     except BaseException as err:, handler names BaseException
+
+Set, constructed round 4 example
+Borderline, 6
+ledger.py, line 6, near placeholder name, data = load_entries(), drawn name entries
+ledger.py, line 7, near placeholder name, temp = {}, drawn name mapping
+cache.py, line 7, shared member default, def fetch(key, memo=([],)):, default holds a list literal
+cache.py, line 10, broad handler,     except BaseException:, handler names BaseException
+cache.py, line 15, near placeholder name,     tmp = [], drawn name items
+cache.py, line 19, near placeholder name, def data(rows):, no drawn name
+
+Sets standing, 2
+Borderline flags, 18
+Sets read, 3

@@ -1,6 +1,7 @@
 //! The one deterministic rendering of a review, shared by every
 //! command.
 
+use crate::borderline::BorderlineReading;
 use crate::census::{Census, CensusSet, Tally};
 use crate::changeset::{FileResult, Judgements};
 use crate::checker::{BORDERLINE_PATTERNS, SHAPES};
@@ -266,9 +267,11 @@ pub fn render_contested_defects(defects: &[String]) -> String {
 /// rule of CK-18, as FIX-CK-20 closes that rule at the
 /// library surface for the contested reading, FIX-CK-21
 /// closes it for the census, rejudged, split, pattern,
-/// and set review renderings, and FIX-CK-22 closes it
-/// for the single review rendering and the file reading.
-/// A field holding a
+/// and set review renderings, FIX-CK-22 closes it
+/// for the single review rendering and the file reading,
+/// and FIX-CK-23 closes it for the judgement, flag, and
+/// verdict fields of the set review rendering and for
+/// the borderline reading. A field holding a
 /// line break, the break standing as the newline or the
 /// carriage return the loaders name, prints as the empty
 /// field, the rendering the contested reading already
@@ -467,6 +470,56 @@ pub fn render_files(reading: &FilesReading) -> String {
     lines.join("\n") + "\n"
 }
 
+/// Render a malformed borderline file with its defects named.
+pub fn render_borderline_defects(defects: &[String]) -> String {
+    render_defects_headed("Borderline", defects)
+}
+
+/// Render a borderline reading under CK-24.
+///
+/// The reading states one section per set of the
+/// collection holding at least one borderline flag, in
+/// the order the sets stand in the collection, naming
+/// every borderline flag of the set in the order the
+/// set review raised it, and closes with the counts of
+/// the reading. The section counts print as the counts
+/// of the flags stated, and the closing counts print as
+/// the sums over the sections stated, in the relations
+/// CK-24 states for them, and every field prints under
+/// the one line rule, so the rendering holds the rule
+/// for any reading it is handed, under FIX-CK-23. The
+/// same collection always renders byte identical.
+pub fn render_borderline(reading: &BorderlineReading) -> String {
+    let mut lines = vec!["Borderline".to_string()];
+    for section in &reading.sections {
+        lines.push(String::new());
+        lines.push(format!("Set, {}", one_line_field(&section.label)));
+        lines.push(format!("Borderline, {}", section.flags.len()));
+        for flag in &section.flags {
+            lines.push(format!(
+                "{}, line {}, {}, {}, {}",
+                one_line_field(&flag.file),
+                flag.line,
+                one_line_field(&flag.pattern),
+                one_line_field(&flag.content),
+                one_line_field(&flag.reading)
+            ));
+        }
+    }
+    lines.push(String::new());
+    lines.push(format!("Sets standing, {}", reading.sections.len()));
+    lines.push(format!(
+        "Borderline flags, {}",
+        reading
+            .sections
+            .iter()
+            .map(|section| section.flags.len())
+            .sum::<usize>()
+    ));
+    lines.push(format!("Sets read, {}", reading.sets_read));
+    lines.join("\n") + "\n"
+}
+
 /// Push the three judged lines onto a rendering.
 ///
 /// The forms are stated once here and shared by the set
@@ -576,10 +629,12 @@ pub fn render_census(census: &Census) -> String {
 /// flagged line is contested under CK-9 a contested section
 /// stands before the summary and the summary counts the
 /// contested lines. Every count of the rendering is computed
-/// over the results it is handed, and the file names and flag
-/// patterns print under the one line rule, so the rendering
-/// holds the rule for any results it is handed, under
-/// FIX-CK-21. The same results always render byte
+/// over the results it is handed, and every field of it
+/// prints under the one line rule, the file names and flag
+/// patterns under FIX-CK-21 and the fields of each judgement,
+/// of each flag, and of each recorded verdict under
+/// FIX-CK-23, so the rendering holds the rule for any
+/// results it is handed. The same results always render byte
 /// identical, and results holding no flags render exactly as
 /// judgement only results render.
 pub fn render_set_review(results: &[FileResult]) -> String {
@@ -622,10 +677,14 @@ pub fn render_set_review(results: &[FileResult]) -> String {
             }
             for (index, (_shape, objection)) in judgements.iter().enumerate() {
                 lines.push(String::new());
-                lines.push(format!("Judgement {}, {}", index + 1, objection.category));
-                lines.push(format!("Flaw, {}", objection.flaw));
-                lines.push(format!("Standard, {}", objection.standard));
-                lines.push(format!("Rewrite, {}", objection.rewrite));
+                lines.push(format!(
+                    "Judgement {}, {}",
+                    index + 1,
+                    one_line_field(&objection.category)
+                ));
+                lines.push(format!("Flaw, {}", one_line_field(&objection.flaw)));
+                lines.push(format!("Standard, {}", one_line_field(&objection.standard)));
+                lines.push(format!("Rewrite, {}", one_line_field(&objection.rewrite)));
             }
         }
         for (index, block) in blocks.iter().enumerate() {
@@ -647,15 +706,22 @@ pub fn render_set_review(results: &[FileResult]) -> String {
                 index + 1,
                 one_line_field(&flag.pattern)
             ));
-            lines.push(format!("Line, {}", flag.content));
-            lines.push(format!("Shape reading, {}", flag.reading));
+            lines.push(format!("Line, {}", one_line_field(&flag.content)));
+            lines.push(format!("Shape reading, {}", one_line_field(&flag.reading)));
             for entry in entries {
                 if verdict_outcome(entry) == "abstained" {
-                    lines.push(format!("Verdict, {}, abstained", entry.model));
+                    lines.push(format!(
+                        "Verdict, {}, abstained",
+                        one_line_field(&entry.model)
+                    ));
                 } else {
-                    lines.push(format!("Verdict, {}, {}", entry.model, entry.choice));
+                    lines.push(format!(
+                        "Verdict, {}, {}",
+                        one_line_field(&entry.model),
+                        one_line_field(&entry.choice)
+                    ));
                 }
-                lines.push(format!("Reason, {}", reason_for(entry)));
+                lines.push(format!("Reason, {}", one_line_field(&reason_for(entry))));
             }
             if outcome == "unjudged" {
                 lines.push("Unjudged".to_string());
@@ -672,12 +738,12 @@ pub fn render_set_review(results: &[FileResult]) -> String {
                 "Borderline {index}, {}",
                 one_line_field(&flag.pattern)
             ));
-            lines.push(format!("Line, {}", flag.content));
+            lines.push(format!("Line, {}", one_line_field(&flag.content)));
             for entry in *entries {
                 lines.push(format!(
                     "Verdict, {}, {}",
-                    entry.model,
-                    verdict_outcome(entry)
+                    one_line_field(&entry.model),
+                    one_line_field(verdict_outcome(entry))
                 ));
             }
         }
