@@ -594,12 +594,13 @@ fn run_units(args: &[&[u8]]) -> ByteOutcome {
     cli_main_units(&owned)
 }
 
-// Adjusted with the Round 10 slice, as the named mechanical
-// consequence of CK-22 adding the files command to the
-// command line. The usage text gains the files line, so
-// the pinned bytes gain it too, and the three assertions
+// Adjusted with the Round 11 slice, as the named mechanical
+// consequence of CK-24 adding the borderline command to the
+// command line. The usage text gains the borderline line,
+// so the pinned bytes gain it too, and the three assertions
 // standing on this constant hold the new text. The constant
-// was adjusted before with the Round 9 slice, when CK-20
+// was adjusted before with the Round 10 slice, when CK-22
+// added the files command, with the Round 9 slice, when CK-20
 // added the pattern command, with the Round 8 slice, when
 // CK-18 added the contested command, with the Round 7
 // slice, when CK-16 added the split command, with the
@@ -614,7 +615,8 @@ const USAGE_BYTES: &[u8] = b"Usage, stickler check DIFF_FILE\n\
     Usage, stickler split SPLIT_JSON\n\
     Usage, stickler contested CONTESTED_JSON\n\
     Usage, stickler pattern PATTERN_JSON\n\
-    Usage, stickler files FILES_JSON\n";
+    Usage, stickler files FILES_JSON\n\
+    Usage, stickler borderline BORDERLINE_JSON\n";
 
 #[test]
 fn check_names_a_readable_raw_byte_diff_by_its_surrogate_defect() {

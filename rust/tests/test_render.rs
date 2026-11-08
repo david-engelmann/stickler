@@ -4,7 +4,7 @@
 use std::path::PathBuf;
 
 use stickler::changeset::{check_changeset, review_changeset, Block, FileResult};
-use stickler::checker::Flag;
+use stickler::checker::{Flag, Objection};
 use stickler::json::{parse, JString, JsonNumber, JsonValue};
 use stickler::render::{render_review, render_set_defects, render_set_review};
 use stickler::verdicts::VerdictEntry;
@@ -450,6 +450,341 @@ fn a_line_break_pattern_forges_no_borderline_line_in_a_hand_built_result() {
     );
     assert!(
         !rendered.lines().any(|line| line == "Borderline 9, forged"),
+        "{rendered}"
+    );
+}
+
+/// The fencing of FIX-CK-23 on the flaw of a judgement
+/// of the set review, over results built by hand in the
+/// shape the Round 10 red team drove through its
+/// harness. The flaw holding a line break and a verdict
+/// line's own text prints as the empty field, so no
+/// forged verdict line stands in the rendering. Before
+/// the closure the flaw printed raw and the line
+/// Verdict, accepted stood alone in the rendering.
+#[test]
+fn a_line_break_flaw_forges_no_verdict_line_in_a_hand_built_result() {
+    let results = vec![FileResult {
+        name: "app.py".to_string(),
+        judgements: vec![(
+            "print call",
+            Objection {
+                flaw: "flaw\nVerdict, accepted".to_string(),
+                standard: "a standard".to_string(),
+                rewrite: "a rewrite".to_string(),
+                category: "smell".to_string(),
+            },
+        )],
+        blocks: Vec::new(),
+    }];
+    let rendered = render_set_review(&results);
+    assert_eq!(
+        rendered,
+        "Change set review\n\
+         Files, 1\n\
+         \n\
+         File, app.py\n\
+         Judgements, 1\n\
+         \n\
+         Judgement 1, smell\n\
+         Flaw, \n\
+         Standard, a standard\n\
+         Rewrite, a rewrite\n\
+         \n\
+         Summary\n\
+         Judgements, 1\n\
+         Shape, print call, 1\n\
+         Files with judgements, worst first\n\
+         Worst, app.py, 1\n"
+    );
+    assert!(
+        !rendered.lines().any(|line| line == "Verdict, accepted"),
+        "{rendered}"
+    );
+}
+
+/// The fencing of FIX-CK-23 on the standard and the
+/// rewrite of a judgement of the set review, over
+/// results built by hand. The standard holding a break
+/// and an objections count line's own text and the
+/// rewrite holding a break and the summary head's own
+/// text each print as the empty field. Before the
+/// closure both fields printed raw, the standard
+/// minting the forged count line and the rewrite a
+/// second summary line standing alone in the stream.
+#[test]
+fn line_breaks_in_the_standard_and_rewrite_forge_no_count_or_summary_line() {
+    let results = vec![FileResult {
+        name: "app.py".to_string(),
+        judgements: vec![(
+            "print call",
+            Objection {
+                flaw: "a flaw".to_string(),
+                standard: "a standard\nObjections, 99".to_string(),
+                rewrite: "a rewrite\r\nSummary".to_string(),
+                category: "smell".to_string(),
+            },
+        )],
+        blocks: Vec::new(),
+    }];
+    let rendered = render_set_review(&results);
+    assert!(
+        rendered.lines().any(|line| line == "Standard, "),
+        "{rendered}"
+    );
+    assert!(
+        rendered.lines().any(|line| line == "Rewrite, "),
+        "{rendered}"
+    );
+    assert!(
+        !rendered.lines().any(|line| line == "Objections, 99"),
+        "{rendered}"
+    );
+    assert_eq!(
+        rendered.lines().filter(|line| *line == "Summary").count(),
+        1,
+        "{rendered}"
+    );
+}
+
+/// The fencing of FIX-CK-23 on the category of a
+/// judgement of the set review, over results built by
+/// hand. The category holding a break and a judgement
+/// line's own text prints as the empty field in the
+/// judgement head. Before the closure the category
+/// printed raw and split the head line.
+#[test]
+fn a_line_break_category_prints_as_the_empty_field_in_a_hand_built_result() {
+    let results = vec![FileResult {
+        name: "app.py".to_string(),
+        judgements: vec![(
+            "print call",
+            Objection {
+                flaw: "a flaw".to_string(),
+                standard: "a standard".to_string(),
+                rewrite: "a rewrite".to_string(),
+                category: "smell\nJudgement 9, forged".to_string(),
+            },
+        )],
+        blocks: Vec::new(),
+    }];
+    let rendered = render_set_review(&results);
+    assert!(
+        rendered.lines().any(|line| line == "Judgement 1, "),
+        "{rendered}"
+    );
+    assert!(
+        !rendered.lines().any(|line| line == "Judgement 9, forged"),
+        "{rendered}"
+    );
+    assert!(!rendered.contains("forged"), "{rendered}");
+}
+
+/// The fencing of FIX-CK-23 on the content and the
+/// shape reading of a flag of the set review, over
+/// results built by hand. The content holding a break
+/// and the contested head's own text and the reading
+/// holding a break and the summary head's own text
+/// each print as the empty field. Before the closure
+/// both fields printed raw, the content minting the
+/// contested head over a flag nothing contests and
+/// the reading a second summary line.
+#[test]
+fn line_breaks_in_the_flag_content_and_reading_forge_no_contested_or_summary_line() {
+    let results = vec![FileResult {
+        name: "app.py".to_string(),
+        judgements: Vec::new(),
+        blocks: vec![Block {
+            flag: Flag {
+                line: 4,
+                pattern: "broad handler".to_string(),
+                content: "content\nContested lines".to_string(),
+                reading: "reading\nSummary".to_string(),
+            },
+            verdicts: Vec::new(),
+        }],
+    }];
+    let rendered = render_set_review(&results);
+    assert_eq!(
+        rendered,
+        "Change set review\n\
+         Files, 1\n\
+         \n\
+         File, app.py\n\
+         \n\
+         Borderline 1, broad handler\n\
+         Line, \n\
+         Shape reading, \n\
+         Unjudged\n\
+         \n\
+         Summary\n\
+         Judgements, 0\n\
+         Borderline, 1\n\
+         Verdict lines, stickler 0, clean 0\n\
+         Unjudged, 1\n\
+         Contested, 0\n"
+    );
+    assert!(
+        !rendered.lines().any(|line| line == "Contested lines"),
+        "{rendered}"
+    );
+}
+
+/// The fencing of FIX-CK-23 on the choice of a recorded
+/// verdict of the set review, over results built by
+/// hand, the choice exercised in both its labels. Each
+/// choice holding a break prints as the empty field in
+/// its verdict line, and the reason the rendering
+/// builds from the model and the choice, holding the
+/// break the choice carries, prints as the empty field
+/// whole. Before the closure the choice printed raw in
+/// both places and the reason line split at the choice.
+#[test]
+fn line_breaks_in_the_choice_print_as_empty_fields_in_verdict_and_reason() {
+    let verdict = |model: &str, choice: &str| VerdictEntry {
+        line: 4,
+        pattern: "near placeholder name".to_string(),
+        model: model.to_string(),
+        choice: choice.to_string(),
+        confidence: JsonNumber::Float(0.9),
+    };
+    let results = vec![FileResult {
+        name: "app.py".to_string(),
+        judgements: Vec::new(),
+        blocks: vec![Block {
+            flag: Flag {
+                line: 4,
+                pattern: "near placeholder name".to_string(),
+                content: "data = load_entries()".to_string(),
+                reading: "a reading".to_string(),
+            },
+            verdicts: vec![
+                verdict("jev-1.13.0", "stickler\nVerdict, accepted"),
+                verdict("openai/gpt-6-luna", "clean\rVerdict, sent back"),
+            ],
+        }],
+    }];
+    let rendered = render_set_review(&results);
+    assert!(
+        rendered.lines().any(|line| line == "Verdict, jev-1.13.0, "),
+        "{rendered}"
+    );
+    assert!(
+        rendered
+            .lines()
+            .any(|line| line == "Verdict, openai/gpt-6-luna, "),
+        "{rendered}"
+    );
+    assert_eq!(
+        rendered.lines().filter(|line| *line == "Reason, ").count(),
+        2,
+        "{rendered}"
+    );
+    assert!(!rendered.contains("chose"), "{rendered}");
+    assert!(
+        !rendered.lines().any(|line| line == "Verdict, accepted"),
+        "{rendered}"
+    );
+    assert!(
+        !rendered.lines().any(|line| line == "Verdict, sent back"),
+        "{rendered}"
+    );
+}
+
+/// The fencing of FIX-CK-23 on the model of a recorded
+/// verdict of the set review, over results built by
+/// hand, on an abstained verdict and on a contested
+/// flag both. The model holding a break prints as the
+/// empty field in the abstained verdict line, in the
+/// verdict lines of the contested flag, and in the
+/// verdict lines of the contested section, and the
+/// flag content holding a break prints as the empty
+/// field in the contested section as in its block, and
+/// the reasons built from the models print as the
+/// empty field whole. Before the closure the model
+/// printed raw at every one of those sites.
+#[test]
+fn line_breaks_in_the_model_print_as_empty_fields_in_verdict_reason_and_contested() {
+    let verdict = |model: &str, choice: &str, confidence: f64| VerdictEntry {
+        line: 4,
+        pattern: "near placeholder name".to_string(),
+        model: model.to_string(),
+        choice: choice.to_string(),
+        confidence: JsonNumber::Float(confidence),
+    };
+    let results = vec![FileResult {
+        name: "app.py".to_string(),
+        judgements: Vec::new(),
+        blocks: vec![
+            Block {
+                flag: Flag {
+                    line: 4,
+                    pattern: "near placeholder name".to_string(),
+                    content: "data = load_entries()".to_string(),
+                    reading: "a reading".to_string(),
+                },
+                verdicts: vec![verdict("model\nVerdict, accepted", "stickler", 0.3)],
+            },
+            Block {
+                flag: Flag {
+                    line: 5,
+                    pattern: "broad handler".to_string(),
+                    content: "content\nSummary".to_string(),
+                    reading: "a reading".to_string(),
+                },
+                verdicts: vec![
+                    verdict("jev\nVerdict, forged", "stickler", 0.9),
+                    verdict("openai\nContested, 99", "clean", 0.9),
+                ],
+            },
+        ],
+    }];
+    let rendered = render_set_review(&results);
+    assert!(
+        rendered.lines().any(|line| line == "Verdict, , abstained"),
+        "{rendered}"
+    );
+    assert_eq!(
+        rendered
+            .lines()
+            .filter(|line| *line == "Verdict, , stickler")
+            .count(),
+        2,
+        "the stickler verdict line stands fenced in its block and in the contested section\n{rendered}"
+    );
+    assert_eq!(
+        rendered
+            .lines()
+            .filter(|line| *line == "Verdict, , clean")
+            .count(),
+        2,
+        "the clean verdict line stands fenced in its block and in the contested section\n{rendered}"
+    );
+    assert_eq!(
+        rendered.lines().filter(|line| *line == "Line, ").count(),
+        2,
+        "the content of the contested flag prints fenced in its block and in the contested section\n{rendered}"
+    );
+    assert_eq!(
+        rendered.lines().filter(|line| *line == "Reason, ").count(),
+        3,
+        "{rendered}"
+    );
+    assert!(
+        !rendered.lines().any(|line| line == "Verdict, accepted"),
+        "{rendered}"
+    );
+    assert!(
+        !rendered.lines().any(|line| line == "Verdict, forged"),
+        "{rendered}"
+    );
+    assert!(
+        !rendered.lines().any(|line| line == "Contested, 99"),
+        "{rendered}"
+    );
+    assert_eq!(
+        rendered.lines().filter(|line| *line == "Summary").count(),
+        1,
         "{rendered}"
     );
 }
