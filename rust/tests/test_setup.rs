@@ -24,7 +24,7 @@ fn agents_carries_the_canonical_marker() {
 #[test]
 fn readme_states_the_closed_round_count() {
     let text = read("README.md");
-    assert!(text.contains("Closed perfection rounds, 10 of 100"));
+    assert!(text.contains("Closed perfection rounds, 11 of 100"));
 }
 
 #[test]
@@ -117,11 +117,11 @@ fn readme_reports_the_round_4_standing() {
     // the Round 10 closure landed slice 11 and the count
     // returned to zero. Adjusted again with the Round 11
     // slice, as the named mechanical consequence of
-    // slice 12 standing in review, so the count stands
-    // at one while Round 11 is built, until the Round 11
-    // closure lands slice 12 and the count returns to
+    // slice 12 standing in review, so the count stood
+    // at one while Round 11 was built, until the Round 11
+    // closure landed slice 12 and the count returned to
     // zero.
-    assert_eq!(text.matches("built and in review").count(), 1);
+    assert_eq!(text.matches("built and in review").count(), 0);
 }
 
 #[test]
@@ -139,7 +139,7 @@ fn readme_reports_the_round_5_standing() {
         example named as constructed, with the suite running offline \
         on the recorded and constructed sets.";
     assert!(text.lines().any(|line| line == slice_line));
-    assert!(text.contains("Closed perfection rounds, 10 of 100"));
+    assert!(text.contains("Closed perfection rounds, 11 of 100"));
 }
 
 #[test]
@@ -158,7 +158,7 @@ fn readme_reports_the_round_6_standing() {
         and census, with the suite running offline on the recorded \
         envelopes and sets.";
     assert!(text.lines().any(|line| line == slice_line));
-    assert!(text.contains("Closed perfection rounds, 10 of 100"));
+    assert!(text.contains("Closed perfection rounds, 11 of 100"));
 }
 
 #[test]
@@ -176,7 +176,7 @@ fn readme_reports_the_round_7_standing() {
         beside check, render, review, census, and rejudged, with the \
         suite running offline on the recorded verdicts.";
     assert!(text.lines().any(|line| line == slice_line));
-    assert!(text.contains("Closed perfection rounds, 10 of 100"));
+    assert!(text.contains("Closed perfection rounds, 11 of 100"));
 }
 
 #[test]
@@ -198,7 +198,7 @@ fn readme_reports_the_round_8_standing() {
         review, census, rejudged, and split, with the suite running \
         offline on the recorded verdicts.";
     assert!(text.lines().any(|line| line == slice_line));
-    assert!(text.contains("Closed perfection rounds, 10 of 100"));
+    assert!(text.contains("Closed perfection rounds, 11 of 100"));
 }
 
 #[test]
@@ -224,7 +224,7 @@ fn readme_reports_the_round_9_standing() {
         rejudged, split, and set review renderings, with the suite \
         running offline on the recorded verdicts.";
     assert!(text.lines().any(|line| line == slice_line));
-    assert!(text.contains("Closed perfection rounds, 10 of 100"));
+    assert!(text.contains("Closed perfection rounds, 11 of 100"));
 }
 
 #[test]
@@ -250,16 +250,18 @@ fn readme_reports_the_round_10_standing() {
         README brought to the fleet README standard, with the suite \
         running offline on the recorded verdicts.";
     assert!(text.lines().any(|line| line == slice_line));
-    assert!(text.contains("Closed perfection rounds, 10 of 100"));
+    assert!(text.contains("Closed perfection rounds, 11 of 100"));
 }
 
 #[test]
 fn readme_reports_the_round_11_standing() {
     let text = read("README.md");
-    let standing = "- Contract, CK-23 and CK-24 stated. They stand in full form in \
-        CONTRACT.md, and Round 11 stands open on slice 12 in review.";
+    let standing = "- Contract, CK-23 and CK-24 met. They stand in full form in \
+        CONTRACT.md with the FIX-CK-23 fencing closure, and Round 11 \
+        closed on the merged slice 12 after three reviews approving, \
+        with no repair pass.";
     assert!(text.lines().any(|line| line == standing));
-    let slice_line = "- Slice 12 is built and in review. It carries the \
+    let slice_line = "- Slice 12 has landed. It carries the \
         borderline reading over a recorded collection of change sets, one \
         section per set holding at least one borderline flag in \
         collection order, naming each borderline flag of the set with \
@@ -274,7 +276,7 @@ fn readme_reports_the_round_11_standing() {
         the set review rendering, with the suite running offline on the \
         recorded verdicts.";
     assert!(text.lines().any(|line| line == slice_line));
-    assert!(text.contains("Closed perfection rounds, 10 of 100"));
+    assert!(text.contains("Closed perfection rounds, 11 of 100"));
 }
 
 #[test]
