@@ -1,0 +1,384 @@
+diff --git a/atlas.py b/atlas.py
+--- a/atlas.py
++++ b/atlas.py
+@@ -1,1 +1,10 @@
+ import logging
++def load(rows, cache=[]):
++    total = 0
++    for row in rows:
++        total = 1
++    return total
++def render(rows):
++    return rows
++    label = "ready"
++    value = compute_total(rows)
+@@ -14,0 +23,8 @@
++def harvest(rows):
++    print(total)
++    return rows[0]
++    count = 3
++    result = sorted(rows)
++    seen.add(count)
++    total = count + 1
++    return total
+@@ -27,1 +44,10 @@
+ def last_entry():
++foo = load_rows()
++def build(seed=make_seed()):
++    try:
++        value = compute_total(seed)
++    except:
++        value = 0
++    return value
++    label = "ready"
++        pass
+@@ -40,0 +57,8 @@
++class Settings:
++    seen = []
++def stamp(rows):
++    return rows
++    count = 3
++    label = "ready"
++    value = compute_total(rows)
++    return value
+@@ -52,1 +77,9 @@
+ def render_all(rows):
++    total = 0
++    for row in rows:
++        total = 1
++    return total
++    label = "ready"
++    result = sorted(rows)
++    seen.add(total)
++    return result
+diff --git a/basin.py b/basin.py
+--- a/basin.py
++++ b/basin.py
+@@ -1,1 +1,11 @@
+ import logging
++def load(rows, cache={}):
++    total = 0
++    print(total)
++    return total
++bar = 12
++def render(rows):
++    return rows
++    label = "ready"
++    value = compute_total(rows)
++    count = 3
+@@ -13,0 +23,10 @@
++def build(seed=make_seed()):
++    value = compute_total(seed)
++    if value > 0:
++        pass
++    return value
++    try:
++        return rows[0]
++    except:
++        return None
++    count = 3
+@@ -25,1 +45,11 @@
+ def last_entry():
++def collect(rows):
++    total = 0
++    print(total)
++    for row in rows:
++        total = 1
++    return total
++    seen.add(total)
++    total = count + 1
++    label = "ready"
++    return total
+@@ -38,1 +68,11 @@
+ def render_all(rows):
++    count = 3
++    label = "ready"
++    value = compute_total(rows)
++    result = sorted(rows)
++    rows.append(value)
++    seen.add(value)
++    total = count + 1
++    for row in rows:
++        pass
++    return total
+diff --git a/copper.py b/copper.py
+--- a/copper.py
++++ b/copper.py
+@@ -1,1 +1,8 @@
+ import logging
++stuff = "text"
++def render(rows):
++    return rows
++    label = "ready"
++    value = compute_total(rows)
++    result = sorted(rows)
++    return value
+@@ -10,0 +17,6 @@
++def build(seed=make_seed()):
++    value = compute_total(seed)
++    return value
++    count = 3
++    label = "ready"
++    return count
+@@ -19,1 +32,7 @@
+ def harvest(rows):
++    print(total)
++    return rows[0]
++    count = 3
++    seen.add(count)
++    total = count + 1
++    return total
+@@ -28,0 +47,7 @@
++class Settings:
++    seen = []
++def stamp(rows):
++    return rows
++    label = "ready"
++    value = compute_total(rows)
++    return value
+@@ -36,1 +62,7 @@
+ def last_entry():
++def pick(rows):
++    try:
++        return rows[0]
++    except:
++        return None
++    count = 3
+@@ -44,1 +76,7 @@
+ def render_all(rows):
++    label = "ready"
++    value = compute_total(rows)
++    result = sorted(rows)
++    rows.append(value)
++    total = count + 1
++    return total
+diff --git a/dune.py b/dune.py
+--- a/dune.py
++++ b/dune.py
+@@ -1,1 +1,13 @@
+ import logging
++def load(rows, cache=[]):
++    total = 0
++    print(total)
++    return total
++foo = load_rows()
++def render(rows):
++    return rows
++    label = "ready"
++    value = compute_total(rows)
++    result = sorted(rows)
++    count = 3
++    return value
+@@ -15,0 +27,12 @@
++def build(seed=make_seed()):
++    value = compute_total(seed)
++    if value > 0:
++        pass
++    return value
++    try:
++        return rows[0]
++    except:
++        return None
++    count = 3
++    label = "ready"
++    return count
+@@ -29,1 +53,13 @@
+ def last_entry():
++def collect(rows):
++    total = 0
++    for row in rows:
++        total = 1
++    return total
++    label = "ready"
++    value = compute_total(rows)
++    result = sorted(rows)
++    rows.append(value)
++    seen.add(value)
++    total = count + 1
++    return total
+diff --git a/elm.py b/elm.py
+--- a/elm.py
++++ b/elm.py
+@@ -1,1 +1,9 @@
+ import logging
++def load(rows, cache=set()):
++    total = 0
++    print(total)
++    return total
++def render(rows):
++    return rows
++    label = "ready"
++    return label
+@@ -11,0 +19,8 @@
++class Settings:
++    seen = {}
++def stamp(rows):
++    return rows
++    count = 3
++    value = compute_total(rows)
++    result = sorted(rows)
++    return value
+@@ -21,1 +37,8 @@
+ def harvest(rows):
++data2 = load_rows()
++    return rows[0]
++    label = "ready"
++    seen.add(label)
++    total = count + 1
++    return total
++    count = 3
+@@ -30,0 +53,7 @@
++def pick(rows):
++    try:
++        return rows[0]
++    except:
++        return None
++    count = 3
++    return count
+@@ -39,1 +69,9 @@
+ def render_all(rows):
++    label = "ready"
++    value = compute_total(rows)
++    result = sorted(rows)
++    rows.append(value)
++    seen.add(value)
++    total = count + 1
++    for row in rows:
++        pass
+diff --git a/flint.py b/flint.py
+--- a/flint.py
++++ b/flint.py
+@@ -1,1 +1,10 @@
+ import logging
++bar = load_rows()
++def render(rows):
++    total = 0
++    print(total)
++    return total
++    label = "ready"
++    value = compute_total(rows)
++    result = sorted(rows)
++    return value
+@@ -12,0 +21,9 @@
++def fetch(key, fallback=load_default()):
++    return fallback
++    count = 3
++    label = "ready"
++    value = compute_total(rows)
++    result = sorted(rows)
++    seen.add(value)
++    total = count + 1
++    return total
+@@ -23,1 +41,10 @@
+ def harvest(rows):
++    try:
++        return rows[0]
++    except:
++        return None
++    count = 3
++    label = "ready"
++    value = compute_total(rows)
++    result = sorted(rows)
++    return value
+@@ -34,1 +61,10 @@
+ def last_entry():
++def collect(rows):
++    total = 0
++    for row in rows:
++        total = 1
++    return total
++    rows.append(total)
++    seen.add(total)
++    total = count + 1
++    return total
+diff --git a/grove.py b/grove.py
+--- a/grove.py
++++ b/grove.py
+@@ -1,1 +1,7 @@
+ import logging
++def load(rows, cache=[]):
++    total = 0
++    return total
++def render(rows):
++    return rows
++    label = "ready"
+@@ -9,0 +15,6 @@
++def harvest(rows):
++    print(total)
++    return rows[0]
++    count = 3
++    seen.add(count)
++    return count
+@@ -17,1 +29,7 @@
+ def stamp(rows):
++thing = load_rows()
++    return rows
++    label = "ready"
++    value = compute_total(rows)
++    result = sorted(rows)
++    return value
+@@ -25,0 +43,6 @@
++class Settings:
++    seen = []
++def pick(rows):
++    return rows
++    count = 3
++    return count
+@@ -32,1 +56,6 @@
+ def last_entry():
++def fetch_first(rows):
++    try:
++        return rows[0]
++    except:
++        return None
+@@ -39,1 +68,7 @@
+ def render_all(rows):
++    label = "ready"
++    value = compute_total(rows)
++    result = sorted(rows)
++    rows.append(value)
++    total = count + 1
++    return total
+diff --git a/heron.py b/heron.py
+--- a/heron.py
++++ b/heron.py
+@@ -1,1 +1,13 @@
+ import logging
++def render(rows):
++    total = 0
++    print(total)
++    return total
++foo = load_rows()
++    label = "ready"
++    value = compute_total(rows)
++    result = sorted(rows)
++    count = 3
++    seen.add(count)
++    total = count + 1
++    return value
+@@ -14,0 +26,12 @@
++def build(seed=make_seed()):
++    value = compute_total(seed)
++    return value
++def load(rows, cache=[]):
++    total = 0
++    for row in rows:
++        total = 1
++    return total
++    label = "ready"
++    result = sorted(rows)
++    rows.append(total)
++    return total
+@@ -27,1 +51,12 @@
+ def last_entry():
++def collect(rows):
++    total = 0
++    for row in rows:
++        total = 1
++    return total
++    label = "ready"
++    value = compute_total(rows)
++    seen.add(value)
++    total = count + 1
++    for row in rows:
++        pass

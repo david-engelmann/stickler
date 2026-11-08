@@ -1,13 +1,13 @@
-//! The set entry validation shared by the two collection
-//! loaders. A census file under CK-12 and a rejudged file
-//! under CK-14 both hold a sets list of entries in one
-//! form, each entry an object holding a label and a change
-//! set embedded whole, and the validation of one entry
-//! stands here once, called by both loaders, so the two
-//! surfaces can never drift apart on the defects they name
-//! for an entry or for a member of an entry. The
-//! obligations this module carries are CK-12 and CK-14 in
-//! CONTRACT.md, in the Round 5 and Round 6 sections.
+//! The set entry validation shared by the collection
+//! loaders. A collection file holds a sets list of
+//! entries in one form, each entry an object holding a
+//! label and a change set embedded whole, and the
+//! validation of one entry stands here once, called by
+//! every collection loader, so the surfaces can never
+//! drift apart on the defects they name for an entry or
+//! for a member of an entry. The obligations this module
+//! carries are CK-12, CK-14, CK-17, CK-19, CK-21, CK-23,
+//! and CK-25 in CONTRACT.md.
 
 use crate::changeset::load_changeset;
 use crate::json::JsonValue;

@@ -1,0 +1,34 @@
+Outcomes
+
+Judged stickler
+harvest.py, line 7, near placeholder name, set, pilot set
+harvest.py, line 12, broad handler, set, pilot set
+harvest.py, line 18, broad handler, set, pilot set
+windows.py, line 6, shared member default, set, pilot set
+windows.py, line 10, shared member default, set, pilot set
+windows.py, line 14, shared member default, set, pilot set
+windows.py, line 18, shared member default, set, pilot set
+sorting.py, line 6, near placeholder name, set, pilot set
+sorting.py, line 11, near placeholder name, set, pilot set
+sorting.py, line 12, near placeholder name, set, pilot set
+sorting.py, line 15, broad handler, set, pilot set
+ledger.py, line 6, near placeholder name, set, constructed round 4 example
+cache.py, line 7, shared member default, set, constructed round 4 example
+cache.py, line 15, near placeholder name, set, constructed round 4 example
+Flags read, 14
+
+Judged clean
+ledger.py, line 7, near placeholder name, set, constructed round 4 example
+cache.py, line 10, broad handler, set, constructed round 4 example
+Flags read, 2
+
+Unjudged
+harvest.py, line 6, near placeholder name, set, pilot set
+cache.py, line 19, near placeholder name, set, constructed round 4 example
+Flags read, 2
+
+Sets read, 3
+Flags read, 18
+Judged stickler, 14
+Judged clean, 2
+Unjudged, 2

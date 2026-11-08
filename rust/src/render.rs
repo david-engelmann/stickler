@@ -8,6 +8,7 @@ use crate::checker::{BORDERLINE_PATTERNS, SHAPES};
 use crate::contested::Contested;
 use crate::files::FilesReading;
 use crate::json::{JString, JsonValue};
+use crate::outcomes::OutcomesReading;
 use crate::pattern::PatternReading;
 use crate::rejudged::Rejudged;
 use crate::review::{validate_review, verdict_for};
@@ -159,10 +160,11 @@ pub fn render_rejudged_defects(defects: &[String]) -> String {
 /// relations CK-14 states for them, and every field
 /// prints under the one line rule, so the rendering holds
 /// both rules for any reading it is handed, under
-/// FIX-CK-21. The inputs read count counts the inputs of
-/// the two sets and not the pairs stated, so it stands as
-/// the reading states it. The same pair always renders
-/// byte identical.
+/// FIX-CK-21 and, for the judgement words, FIX-CK-25. The
+/// inputs read count counts the inputs of the two sets
+/// and not the pairs stated, so it stands as the reading
+/// states it. The same pair always renders byte
+/// identical.
 pub fn render_rejudged(reading: &Rejudged) -> String {
     let mut lines = vec![
         "Rejudged".to_string(),
@@ -177,8 +179,8 @@ pub fn render_rejudged(reading: &Rejudged) -> String {
             pair.line,
             one_line_field(&pair.pattern)
         ));
-        lines.push(format!("First, {}", pair.first));
-        lines.push(format!("Second, {}", pair.second));
+        lines.push(format!("First, {}", one_line_field(pair.first)));
+        lines.push(format!("Second, {}", one_line_field(pair.second)));
         lines.push(if pair.held { "Held" } else { "Changed" }.to_string());
     }
     lines.push(String::new());
@@ -209,7 +211,8 @@ pub fn render_split_defects(defects: &[String]) -> String {
 /// as the counts over the flags stated, in the relations
 /// CK-16 states for them, and every field prints under
 /// the one line rule, so the rendering holds both rules
-/// for any reading it is handed, under FIX-CK-21. The
+/// for any reading it is handed, under FIX-CK-21 and,
+/// for the judgement words, FIX-CK-25. The
 /// same file always renders byte identical.
 pub fn render_split(reading: &Split) -> String {
     let mut lines = vec![
@@ -225,9 +228,9 @@ pub fn render_split(reading: &Split) -> String {
             flag.line,
             one_line_field(&flag.pattern)
         ));
-        lines.push(format!("First route, {}", flag.first));
-        lines.push(format!("Second route, {}", flag.second));
-        lines.push(format!("Joint, {}", flag.joint));
+        lines.push(format!("First route, {}", one_line_field(flag.first)));
+        lines.push(format!("Second route, {}", one_line_field(flag.second)));
+        lines.push(format!("Joint, {}", one_line_field(flag.joint)));
     }
     lines.push(String::new());
     lines.push(format!("Flags read, {}", reading.flags.len()));
@@ -271,7 +274,9 @@ pub fn render_contested_defects(defects: &[String]) -> String {
 /// for the single review rendering and the file reading,
 /// and FIX-CK-23 closes it for the judgement, flag, and
 /// verdict fields of the set review rendering and for
-/// the borderline reading. A field holding a
+/// the borderline reading, and FIX-CK-25 closes it for
+/// the judgement words of the rejudged and split
+/// renderings. A field holding a
 /// line break, the break standing as the newline or the
 /// carriage return the loaders name, prints as the empty
 /// field, the rendering the contested reading already
@@ -517,6 +522,77 @@ pub fn render_borderline(reading: &BorderlineReading) -> String {
             .sum::<usize>()
     ));
     lines.push(format!("Sets read, {}", reading.sets_read));
+    lines.join("\n") + "\n"
+}
+
+/// Render a malformed outcomes file with its defects named.
+pub fn render_outcomes_defects(defects: &[String]) -> String {
+    render_defects_headed("Outcomes", defects)
+}
+
+/// The section head word a judgement stands under in an
+/// outcomes rendering, a fixed literal of the rendering
+/// and not a handed field.
+fn judgement_head(judgement: &str) -> &'static str {
+    match judgement {
+        "stickler" => "Judged stickler",
+        "clean" => "Judged clean",
+        _ => "Unjudged",
+    }
+}
+
+/// Render an outcomes reading under CK-26.
+///
+/// The reading states one section per judgement of CK-8
+/// in the order CK-8 states them, naming every flag of
+/// the collection standing under that judgement in
+/// collection order, or the no flagged lines line where
+/// none stands, and closes with the counts of the
+/// collection. The section counts print as the counts of
+/// the flags stated, and the closing counts print as the
+/// sums over the sections stated, in the relations CK-26
+/// states for them, and every field prints under the one
+/// line rule, so the rendering holds the rule for any
+/// reading it is handed, as the collection readings
+/// before it stand closed from their first writing. The
+/// same collection always renders byte identical.
+pub fn render_outcomes(reading: &OutcomesReading) -> String {
+    let mut lines = vec!["Outcomes".to_string()];
+    for section in &reading.sections {
+        lines.push(String::new());
+        lines.push(judgement_head(section.judgement).to_string());
+        if section.flags.is_empty() {
+            lines.push("No flagged lines".to_string());
+        } else {
+            for flag in &section.flags {
+                lines.push(format!(
+                    "{}, line {}, {}, set, {}",
+                    one_line_field(&flag.file),
+                    flag.line,
+                    one_line_field(&flag.pattern),
+                    one_line_field(&flag.set_label)
+                ));
+            }
+        }
+        lines.push(format!("Flags read, {}", section.flags.len()));
+    }
+    lines.push(String::new());
+    lines.push(format!("Sets read, {}", reading.sets_read));
+    lines.push(format!(
+        "Flags read, {}",
+        reading
+            .sections
+            .iter()
+            .map(|section| section.flags.len())
+            .sum::<usize>()
+    ));
+    for section in &reading.sections {
+        lines.push(format!(
+            "{}, {}",
+            judgement_head(section.judgement),
+            section.flags.len()
+        ));
+    }
     lines.join("\n") + "\n"
 }
 

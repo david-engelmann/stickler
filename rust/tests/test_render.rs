@@ -6,7 +6,11 @@ use std::path::PathBuf;
 use stickler::changeset::{check_changeset, review_changeset, Block, FileResult};
 use stickler::checker::{Flag, Objection};
 use stickler::json::{parse, JString, JsonNumber, JsonValue};
-use stickler::render::{render_review, render_set_defects, render_set_review};
+use stickler::rejudged::{ComparedInput, Rejudged};
+use stickler::render::{
+    render_rejudged, render_review, render_set_defects, render_set_review, render_split,
+};
+use stickler::split::{Split, SplitFlag};
 use stickler::verdicts::VerdictEntry;
 
 fn root() -> PathBuf {
@@ -785,6 +789,197 @@ fn line_breaks_in_the_model_print_as_empty_fields_in_verdict_reason_and_conteste
     assert_eq!(
         rendered.lines().filter(|line| *line == "Summary").count(),
         1,
+        "{rendered}"
+    );
+}
+
+/// The fencing of FIX-CK-25 on the first judgement word
+/// of a compared input of the rejudged reading, over a
+/// reading built by hand. The word holding a line break
+/// and a held count line's own text prints as the empty
+/// field. Before the closure the word printed raw and
+/// the forged count line stood in the rendering.
+#[test]
+fn a_line_break_in_the_first_word_of_a_rejudged_pair_forges_no_count_line() {
+    let reading = Rejudged {
+        first_label: "first set".to_string(),
+        second_label: "second set".to_string(),
+        pairs: vec![ComparedInput {
+            file: "app.py".to_string(),
+            line: 4,
+            pattern: "near placeholder name".to_string(),
+            first: "stickler\nHeld, 99",
+            second: "stickler",
+            held: true,
+        }],
+        inputs_read: 1,
+        held: 1,
+        changed: 0,
+    };
+    let rendered = render_rejudged(&reading);
+    assert!(rendered.lines().any(|line| line == "First, "), "{rendered}");
+    assert!(
+        rendered.lines().any(|line| line == "Second, stickler"),
+        "{rendered}"
+    );
+    assert!(rendered.lines().any(|line| line == "Held, 1"), "{rendered}");
+    assert!(
+        !rendered.lines().any(|line| line == "Held, 99"),
+        "{rendered}"
+    );
+}
+
+/// The fencing of FIX-CK-25 on the second judgement word
+/// of a compared input of the rejudged reading, over a
+/// reading built by hand. The word holding a carriage
+/// return, a line break, and a changed count line's own
+/// text prints as the empty field. Before the closure
+/// the word printed raw and split its line.
+#[test]
+fn a_line_break_in_the_second_word_of_a_rejudged_pair_forges_no_count_line() {
+    let reading = Rejudged {
+        first_label: "first set".to_string(),
+        second_label: "second set".to_string(),
+        pairs: vec![ComparedInput {
+            file: "app.py".to_string(),
+            line: 4,
+            pattern: "near placeholder name".to_string(),
+            first: "stickler",
+            second: "clean\r\nChanged, 99",
+            held: false,
+        }],
+        inputs_read: 1,
+        held: 0,
+        changed: 1,
+    };
+    let rendered = render_rejudged(&reading);
+    assert!(
+        rendered.lines().any(|line| line == "Second, "),
+        "{rendered}"
+    );
+    assert!(
+        rendered.lines().any(|line| line == "Changed, 1"),
+        "{rendered}"
+    );
+    assert!(
+        !rendered.lines().any(|line| line == "Changed, 99"),
+        "{rendered}"
+    );
+}
+
+/// The fencing of FIX-CK-25 on the first route word of a
+/// flag of the split reading, over a reading built by
+/// hand. The word holding a line break and an agree
+/// count line's own text prints as the empty field.
+/// Before the closure the word printed raw and the
+/// forged count line stood in the rendering.
+#[test]
+fn a_line_break_in_the_first_word_of_a_split_flag_forges_no_count_line() {
+    let reading = Split {
+        first_route: "route one".to_string(),
+        second_route: "route two".to_string(),
+        flags: vec![SplitFlag {
+            file: "app.py".to_string(),
+            line: 4,
+            pattern: "near placeholder name".to_string(),
+            first: "stickler\nRoutes agree, 99",
+            second: "stickler",
+            joint: "stickler",
+        }],
+        routes_agree: 0,
+        routes_differ: 1,
+        joint_differs: 1,
+    };
+    let rendered = render_split(&reading);
+    assert!(
+        rendered.lines().any(|line| line == "First route, "),
+        "{rendered}"
+    );
+    assert!(
+        rendered
+            .lines()
+            .any(|line| line == "Second route, stickler"),
+        "{rendered}"
+    );
+    assert!(
+        !rendered.lines().any(|line| line == "Routes agree, 99"),
+        "{rendered}"
+    );
+}
+
+/// The fencing of FIX-CK-25 on the second route word of
+/// a flag of the split reading, over a reading built by
+/// hand. The word holding a line break and a differ
+/// count line's own text prints as the empty field.
+/// Before the closure the word printed raw and the
+/// forged count line stood in the rendering.
+#[test]
+fn a_line_break_in_the_second_word_of_a_split_flag_forges_no_count_line() {
+    let reading = Split {
+        first_route: "route one".to_string(),
+        second_route: "route two".to_string(),
+        flags: vec![SplitFlag {
+            file: "app.py".to_string(),
+            line: 4,
+            pattern: "near placeholder name".to_string(),
+            first: "clean",
+            second: "stickler\nRoutes differ, 99",
+            joint: "clean",
+        }],
+        routes_agree: 0,
+        routes_differ: 1,
+        joint_differs: 1,
+    };
+    let rendered = render_split(&reading);
+    assert!(
+        rendered.lines().any(|line| line == "Second route, "),
+        "{rendered}"
+    );
+    assert!(
+        rendered.lines().any(|line| line == "Routes differ, 1"),
+        "{rendered}"
+    );
+    assert!(
+        !rendered.lines().any(|line| line == "Routes differ, 99"),
+        "{rendered}"
+    );
+}
+
+/// The fencing of FIX-CK-25 on the joint word of a flag
+/// of the split reading, over a reading built by hand.
+/// The word holding a line break and a joint count
+/// line's own text prints as the empty field. Before
+/// the closure the word printed raw and the forged
+/// count line stood in the rendering.
+#[test]
+fn a_line_break_in_the_joint_word_of_a_split_flag_forges_no_count_line() {
+    let reading = Split {
+        first_route: "route one".to_string(),
+        second_route: "route two".to_string(),
+        flags: vec![SplitFlag {
+            file: "app.py".to_string(),
+            line: 4,
+            pattern: "near placeholder name".to_string(),
+            first: "stickler",
+            second: "stickler",
+            joint: "unjudged\nJoint differs from a route, 99",
+        }],
+        routes_agree: 1,
+        routes_differ: 0,
+        joint_differs: 1,
+    };
+    let rendered = render_split(&reading);
+    assert!(rendered.lines().any(|line| line == "Joint, "), "{rendered}");
+    assert!(
+        rendered
+            .lines()
+            .any(|line| line == "Joint differs from a route, 1"),
+        "{rendered}"
+    );
+    assert!(
+        !rendered
+            .lines()
+            .any(|line| line == "Joint differs from a route, 99"),
         "{rendered}"
     );
 }

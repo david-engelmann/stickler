@@ -53,8 +53,16 @@ name = "test_files_reading"
 path = "rust/tests/test_files_reading.rs"
 
 [[test]]
+name = "test_fixtures"
+path = "rust/tests/test_fixtures.rs"
+
+[[test]]
 name = "test_json"
 path = "rust/tests/test_json.rs"
+
+[[test]]
+name = "test_outcomes_reading"
+path = "rust/tests/test_outcomes_reading.rs"
 
 [[test]]
 name = "test_pattern_reading"

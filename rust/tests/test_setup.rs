@@ -42,6 +42,27 @@ fn contract_carries_the_setup_obligations() {
 }
 
 #[test]
+fn contract_carries_the_formats_section() {
+    let text = read("CONTRACT.md");
+    assert!(text.contains("## The formats, version 1"));
+    assert!(text.contains("FIX-CK-24"));
+    for form in [
+        "The review form stands at version 1",
+        "The change set form stands at version 1",
+        "The collection form stands at version 1",
+        "The verdict envelope forms stand at version 1",
+        "The run record form stands at version 1",
+    ] {
+        assert!(text.contains(form), "form {form}");
+    }
+    assert!(text.contains("answers.decision"));
+    assert!(text.contains("message.content"));
+    assert!(text.contains(
+        "The borderline lines of a change set and the judgement standing on each are computed under CK-7 and CK-8"
+    ));
+}
+
+#[test]
 fn readme_reports_the_contract_status() {
     let text = read("README.md");
     let expected = "- Contract, SETUP-1 to SETUP-4 and CK-1 to CK-6 met. \
@@ -120,8 +141,13 @@ fn readme_reports_the_round_4_standing() {
     // slice 12 standing in review, so the count stood
     // at one while Round 11 was built, until the Round 11
     // closure landed slice 12 and the count returned to
+    // zero. Adjusted again with the Round 12 slice, as
+    // the named mechanical consequence of slice 13
+    // standing in review, so the count stands at one
+    // while Round 12 is built, until the Round 12
+    // closure lands slice 13 and the count returns to
     // zero.
-    assert_eq!(text.matches("built and in review").count(), 0);
+    assert_eq!(text.matches("built and in review").count(), 1);
 }
 
 #[test]
@@ -275,6 +301,32 @@ fn readme_reports_the_round_11_standing() {
         fencing closure over the judgement, flag, and verdict fields of \
         the set review rendering, with the suite running offline on the \
         recorded verdicts.";
+    assert!(text.lines().any(|line| line == slice_line));
+    assert!(text.contains("Closed perfection rounds, 11 of 100"));
+}
+
+#[test]
+fn readme_reports_the_round_12_slice() {
+    let text = read("README.md");
+    let standing = "- Contract, FIX-CK-24, FIX-CK-25, CK-25, and CK-26 stated. \
+        They stand in full form in CONTRACT.md, and Round 12 stands \
+        open on slice 13 in review.";
+    assert!(text.lines().any(|line| line == standing));
+    let slice_line = "- Slice 13 is built and in review. It carries the \
+        formats of the repo stated at version 1 in the contract with the \
+        consolidated formats section, the static outcome word fencing \
+        in the split and rejudged renderings, the outcomes reading over \
+        a recorded collection of change sets, one section per judgement \
+        in the order the contract states them, naming each flag of the \
+        collection standing under that judgement with file, line, \
+        pattern, and the set it stands in, with per section flags read \
+        counts and closing counts over the whole collection, with the \
+        outcomes example under examples standing over the same \
+        collection as the census example, and the outcomes command \
+        beside check, render, review, census, rejudged, split, \
+        contested, pattern, files, and borderline, and the constructed \
+        large change set and large diff under examples, with the suite \
+        running offline on the recorded verdicts.";
     assert!(text.lines().any(|line| line == slice_line));
     assert!(text.contains("Closed perfection rounds, 11 of 100"));
 }
