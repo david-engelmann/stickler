@@ -24,7 +24,7 @@ fn agents_carries_the_canonical_marker() {
 #[test]
 fn readme_states_the_closed_round_count() {
     let text = read("README.md");
-    assert!(text.contains("Closed perfection rounds, 11 of 100"));
+    assert!(text.contains("Closed perfection rounds, 12 of 100"));
 }
 
 #[test]
@@ -143,11 +143,11 @@ fn readme_reports_the_round_4_standing() {
     // closure landed slice 12 and the count returned to
     // zero. Adjusted again with the Round 12 slice, as
     // the named mechanical consequence of slice 13
-    // standing in review, so the count stands at one
-    // while Round 12 is built, until the Round 12
-    // closure lands slice 13 and the count returns to
+    // standing in review, so the count stood at one
+    // while Round 12 was built, until the Round 12
+    // closure landed slice 13 and the count returned to
     // zero.
-    assert_eq!(text.matches("built and in review").count(), 1);
+    assert_eq!(text.matches("built and in review").count(), 0);
 }
 
 #[test]
@@ -165,7 +165,7 @@ fn readme_reports_the_round_5_standing() {
         example named as constructed, with the suite running offline \
         on the recorded and constructed sets.";
     assert!(text.lines().any(|line| line == slice_line));
-    assert!(text.contains("Closed perfection rounds, 11 of 100"));
+    assert!(text.contains("Closed perfection rounds, 12 of 100"));
 }
 
 #[test]
@@ -184,7 +184,7 @@ fn readme_reports_the_round_6_standing() {
         and census, with the suite running offline on the recorded \
         envelopes and sets.";
     assert!(text.lines().any(|line| line == slice_line));
-    assert!(text.contains("Closed perfection rounds, 11 of 100"));
+    assert!(text.contains("Closed perfection rounds, 12 of 100"));
 }
 
 #[test]
@@ -202,7 +202,7 @@ fn readme_reports_the_round_7_standing() {
         beside check, render, review, census, and rejudged, with the \
         suite running offline on the recorded verdicts.";
     assert!(text.lines().any(|line| line == slice_line));
-    assert!(text.contains("Closed perfection rounds, 11 of 100"));
+    assert!(text.contains("Closed perfection rounds, 12 of 100"));
 }
 
 #[test]
@@ -224,7 +224,7 @@ fn readme_reports_the_round_8_standing() {
         review, census, rejudged, and split, with the suite running \
         offline on the recorded verdicts.";
     assert!(text.lines().any(|line| line == slice_line));
-    assert!(text.contains("Closed perfection rounds, 11 of 100"));
+    assert!(text.contains("Closed perfection rounds, 12 of 100"));
 }
 
 #[test]
@@ -250,7 +250,7 @@ fn readme_reports_the_round_9_standing() {
         rejudged, split, and set review renderings, with the suite \
         running offline on the recorded verdicts.";
     assert!(text.lines().any(|line| line == slice_line));
-    assert!(text.contains("Closed perfection rounds, 11 of 100"));
+    assert!(text.contains("Closed perfection rounds, 12 of 100"));
 }
 
 #[test]
@@ -276,7 +276,7 @@ fn readme_reports_the_round_10_standing() {
         README brought to the fleet README standard, with the suite \
         running offline on the recorded verdicts.";
     assert!(text.lines().any(|line| line == slice_line));
-    assert!(text.contains("Closed perfection rounds, 11 of 100"));
+    assert!(text.contains("Closed perfection rounds, 12 of 100"));
 }
 
 #[test]
@@ -302,17 +302,19 @@ fn readme_reports_the_round_11_standing() {
         the set review rendering, with the suite running offline on the \
         recorded verdicts.";
     assert!(text.lines().any(|line| line == slice_line));
-    assert!(text.contains("Closed perfection rounds, 11 of 100"));
+    assert!(text.contains("Closed perfection rounds, 12 of 100"));
 }
 
 #[test]
-fn readme_reports_the_round_12_slice() {
+fn readme_reports_the_round_12_status() {
     let text = read("README.md");
-    let standing = "- Contract, FIX-CK-24, FIX-CK-25, CK-25, and CK-26 stated. \
-        They stand in full form in CONTRACT.md, and Round 12 stands \
-        open on slice 13 in review.";
+    let standing = "- Contract, FIX-CK-24, FIX-CK-25, CK-25, and CK-26 met. \
+        They stand in full form in CONTRACT.md with the FIX-CK-24, \
+        FIX-CK-25, and FIX-CK-26 repair amendments, and Round 12 \
+        closed on the merged slice 13 after three reviews, one \
+        standards Minor and one red team Minor repaired.";
     assert!(text.lines().any(|line| line == standing));
-    let slice_line = "- Slice 13 is built and in review. It carries the \
+    let slice_line = "- Slice 13 has landed. It carries the \
         formats of the repo stated at version 1 in the contract with the \
         consolidated formats section, the static outcome word fencing \
         in the split and rejudged renderings, the outcomes reading over \
@@ -328,7 +330,7 @@ fn readme_reports_the_round_12_slice() {
         large change set and large diff under examples, with the suite \
         running offline on the recorded verdicts.";
     assert!(text.lines().any(|line| line == slice_line));
-    assert!(text.contains("Closed perfection rounds, 11 of 100"));
+    assert!(text.contains("Closed perfection rounds, 12 of 100"));
 }
 
 #[test]
