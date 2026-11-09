@@ -81,8 +81,7 @@ fn contested_of(results: &[FileResult]) -> (Vec<ContestedFlag>, usize) {
 /// Never fails, whatever it is handed.
 ///
 /// Each entry is validated through the shared set entry
-/// validation, the one home the census and rejudged
-/// loaders both call.
+/// validation, the one home every collection loader calls.
 pub fn load_contested(value: &JsonValue) -> Vec<String> {
     let mut defects = Vec::new();
     if !value.is_object() {

@@ -7,7 +7,7 @@
 //! drift apart on the defects they name for an entry or
 //! for a member of an entry. The obligations this module
 //! carries are CK-12, CK-14, CK-17, CK-19, CK-21, CK-23,
-//! CK-25, and CK-27 in CONTRACT.md.
+//! CK-25, CK-27, and CK-29 in CONTRACT.md.
 
 use crate::changeset::load_changeset;
 use crate::json::JsonValue;

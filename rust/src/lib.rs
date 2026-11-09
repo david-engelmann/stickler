@@ -21,6 +21,7 @@ pub mod render;
 pub mod review;
 pub mod scan;
 pub mod sets;
+pub mod shapes;
 pub mod split;
 pub mod verdicts;
 pub mod verdicts_reading;
