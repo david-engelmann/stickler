@@ -146,8 +146,13 @@ fn readme_reports_the_round_4_standing() {
     // standing in review, so the count stood at one
     // while Round 12 was built, until the Round 12
     // closure landed slice 13 and the count returned to
+    // zero. Adjusted again with the Round 13 slice, as
+    // the named mechanical consequence of slice 14
+    // standing in review, so the count stands at one
+    // while Round 13 is built, until the Round 13
+    // closure lands slice 14 and the count returns to
     // zero.
-    assert_eq!(text.matches("built and in review").count(), 0);
+    assert_eq!(text.matches("built and in review").count(), 1);
 }
 
 #[test]
@@ -329,6 +334,48 @@ fn readme_reports_the_round_12_status() {
         contested, pattern, files, and borderline, and the constructed \
         large change set and large diff under examples, with the suite \
         running offline on the recorded verdicts.";
+    assert!(text.lines().any(|line| line == slice_line));
+    assert!(text.contains("Closed perfection rounds, 12 of 100"));
+}
+
+/// The Round 13 pins. The obligations pin fails against
+/// the tree Round 12 closed on by the absence of every
+/// text it reads, and the status pin fails on that
+/// tree's README by the absence of the two lines it
+/// holds, each line read whole as the standing pins
+/// read theirs.
+#[test]
+fn contract_carries_the_round_13_obligations() {
+    let text = read("CONTRACT.md");
+    assert!(text.contains("- CK-27."));
+    assert!(text.contains("- CK-28."));
+    assert!(text.contains("the label FIX-CK-27 is not consumed"));
+    let sets = read("rust/src/sets.rs");
+    assert!(sets.contains("CK-25, and CK-27 in CONTRACT.md"));
+    let readme = read("README.md");
+    assert!(readme.contains("the collection form under CK-27 that verdicts reads"));
+}
+
+#[test]
+fn readme_reports_the_round_13_status() {
+    let text = read("README.md");
+    let standing = "- Contract, CK-27 and CK-28 stated. They stand in full form in \
+        CONTRACT.md, and Round 13 stands open on slice 14 in review.";
+    assert!(text.lines().any(|line| line == standing));
+    let slice_line = "- Slice 14 is built and in review. It carries the \
+        verdicts reading over a recorded collection of change sets, one \
+        section per set in collection order, naming each flag of the \
+        set carrying at least one recorded verdict with file, line, \
+        pattern, and the set it stands in, the verdict pairs of the \
+        flag in the standing set review form, and a closing count of \
+        the pairs stated per section, with closing counts over the \
+        whole collection, with the verdicts example under examples \
+        standing over the same collection as the census example, and \
+        the verdicts command beside check, render, review, census, \
+        rejudged, split, contested, pattern, files, borderline, and \
+        outcomes, and the constructed large verdicts collection under \
+        examples, with the suite running offline on the recorded \
+        verdicts.";
     assert!(text.lines().any(|line| line == slice_line));
     assert!(text.contains("Closed perfection rounds, 12 of 100"));
 }

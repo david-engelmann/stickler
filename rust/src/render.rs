@@ -13,7 +13,8 @@ use crate::pattern::PatternReading;
 use crate::rejudged::Rejudged;
 use crate::review::{validate_review, verdict_for};
 use crate::split::Split;
-use crate::verdicts::{is_contested, line_outcome, reason_for, verdict_outcome};
+use crate::verdicts::{is_abstention, is_contested, line_outcome, reason_for, verdict_outcome};
+use crate::verdicts_reading::VerdictsReading;
 
 /// Read a text field of a valid review or entry as the string
 /// it stands for.
@@ -528,6 +529,100 @@ pub fn render_borderline(reading: &BorderlineReading) -> String {
 /// Render a malformed outcomes file with its defects named.
 pub fn render_outcomes_defects(defects: &[String]) -> String {
     render_defects_headed("Outcomes", defects)
+}
+
+/// Render a malformed verdicts file with its defects named.
+pub fn render_verdicts_defects(defects: &[String]) -> String {
+    render_defects_headed("Verdicts", defects)
+}
+
+/// Render a verdicts reading under CK-28.
+///
+/// The reading states one section per set of the
+/// collection in collection order, naming each flag of
+/// the set carrying at least one recorded verdict with
+/// its file, line, and pattern and the label of its
+/// set, the verdict pairs of the flag under it in the
+/// standing set review form, or the none recorded line
+/// where no flag of the set carries one, and closes
+/// with the counts of the collection. The section
+/// counts print as the counts of the pairs stated, and
+/// the closing counts print as the sums over the
+/// sections stated, in the relations CK-28 states for
+/// them, the three outcome counts counted over the
+/// verdicts under the one outcome helper of the seat,
+/// the abstained count taken where the abstention
+/// predicate of CK-7 holds, the test the helper itself
+/// applies and never the choice word, so a handed
+/// choice outside the two labels counts in the
+/// verdicts read count and in none of the three, and
+/// the word abstained standing as a choice is no
+/// exception, under FIX-CK-28.
+/// Every field prints under the one line rule, so the
+/// rendering holds the rule for any reading it is
+/// handed, as the collection readings before it stand
+/// closed from their first writing. The same
+/// collection always renders byte identical.
+pub fn render_verdicts(reading: &VerdictsReading) -> String {
+    let mut lines = vec!["Verdicts".to_string()];
+    let mut flags_with_verdicts = 0usize;
+    let mut verdicts_read = 0usize;
+    let mut chose_stickler = 0usize;
+    let mut chose_clean = 0usize;
+    let mut abstained = 0usize;
+    for section in &reading.sections {
+        lines.push(String::new());
+        lines.push(format!("Set, {}", one_line_field(&section.label)));
+        if section.groups.is_empty() {
+            lines.push("Verdicts, none recorded".to_string());
+        }
+        let mut section_verdicts = 0usize;
+        for group in &section.groups {
+            lines.push(format!(
+                "{}, line {}, {}, set, {}",
+                one_line_field(&group.file),
+                group.line,
+                one_line_field(&group.pattern),
+                one_line_field(&section.label)
+            ));
+            if !group.verdicts.is_empty() {
+                flags_with_verdicts += 1;
+            }
+            for entry in &group.verdicts {
+                section_verdicts += 1;
+                if is_abstention(entry) {
+                    abstained += 1;
+                    lines.push(format!(
+                        "Verdict, {}, abstained",
+                        one_line_field(&entry.model)
+                    ));
+                } else {
+                    match verdict_outcome(entry) {
+                        "stickler" => chose_stickler += 1,
+                        "clean" => chose_clean += 1,
+                        _ => {}
+                    }
+                    lines.push(format!(
+                        "Verdict, {}, {}",
+                        one_line_field(&entry.model),
+                        one_line_field(&entry.choice)
+                    ));
+                }
+                lines.push(format!("Reason, {}", one_line_field(&reason_for(entry))));
+            }
+        }
+        verdicts_read += section_verdicts;
+        lines.push(format!("Verdicts read, {section_verdicts}"));
+    }
+    lines.push(String::new());
+    lines.push(format!("Sets read, {}", reading.sections.len()));
+    lines.push(format!("Flags read, {}", reading.flags_read));
+    lines.push(format!("Flags with verdicts, {flags_with_verdicts}"));
+    lines.push(format!("Verdicts read, {verdicts_read}"));
+    lines.push(format!("Chose stickler, {chose_stickler}"));
+    lines.push(format!("Chose clean, {chose_clean}"));
+    lines.push(format!("Abstained, {abstained}"));
+    lines.join("\n") + "\n"
 }
 
 /// The section head word a judgement stands under in an

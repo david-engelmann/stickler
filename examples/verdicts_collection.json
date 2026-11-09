@@ -1,0 +1,1434 @@
+{
+  "sets": [
+    {
+      "label": "constructed verdicts set 1",
+      "change_set": {
+        "files": [
+          {
+            "file": "anchor.py",
+            "diff": "--- a/anchor.py\n+++ b/anchor.py\n@@ -0,0 +1,3 @@\n+    logger.debug(total)\n+data = load_entries()\n+    return total\n"
+          },
+          {
+            "file": "harbor.py",
+            "diff": "--- a/harbor.py\n+++ b/harbor.py\n@@ -0,0 +1,9 @@\n+    total = compute_total(rows)\n+    rows.append(item)\n+def pack(items, pair=([], {})):\n+    rows.append(item)\n+tmp = []\n+    limit = default_limit()\n+    value = next_value()\n+    except BaseException:\n+    total = compute_total(rows)\n"
+          },
+          {
+            "file": "onyx.py",
+            "diff": "--- a/onyx.py\n+++ b/onyx.py\n@@ -0,0 +1,6 @@\n+    limit = default_limit()\n+temp = fetch_rows()\n+    value = next_value()\n+    logger.debug(total)\n+    except BaseException:\n+    rows.append(item)\n"
+          },
+          {
+            "file": "velvet.py",
+            "diff": "--- a/velvet.py\n+++ b/velvet.py\n@@ -0,0 +1,4 @@\n+    logger.debug(total)\n+    return total\n+data = {}\n+    limit = default_limit()\n"
+          },
+          {
+            "file": "octant.py",
+            "diff": "--- a/octant.py\n+++ b/octant.py\n@@ -0,0 +1,8 @@\n+    total = compute_total(rows)\n+def render(items, cache=({},)):\n+    rows.append(item)\n+    limit = default_limit()\n+tmp = read_items()\n+    limit = default_limit()\n+    except BaseException:\n+    value = next_value()\n"
+          },
+          {
+            "file": "fable.py",
+            "diff": "--- a/fable.py\n+++ b/fable.py\n@@ -0,0 +1,6 @@\n+    limit = default_limit()\n+    value = next_value()\n+temp = load_entries()\n+    value = next_value()\n+    except BaseException:\n+    logger.debug(total)\n"
+          }
+        ]
+      }
+    },
+    {
+      "label": "constructed verdicts set 2",
+      "change_set": {
+        "files": [
+          {
+            "file": "pumice.py",
+            "diff": "--- a/pumice.py\n+++ b/pumice.py\n@@ -0,0 +1,6 @@\n+    logger.debug(total)\n+data = fetch_rows()\n+    return total\n+    total = compute_total(rows)\n+    except BaseException:\n+    return total\n",
+            "verdicts": [
+              {
+                "line": 5,
+                "pattern": "near placeholder name",
+                "model": "jev-1.13.0",
+                "choice": "stickler",
+                "confidence": 0.88
+              },
+              {
+                "line": 5,
+                "pattern": "near placeholder name",
+                "model": "openai/gpt-6-luna",
+                "choice": "clean",
+                "confidence": 0.81
+              }
+            ]
+          },
+          {
+            "file": "walnut.py",
+            "diff": "--- a/walnut.py\n+++ b/walnut.py\n@@ -0,0 +1,4 @@\n+    total = compute_total(rows)\n+    rows.append(item)\n+tmp = {}\n+    total = compute_total(rows)\n",
+            "verdicts": [
+              {
+                "line": 6,
+                "pattern": "near placeholder name",
+                "model": "jev-1.13.0",
+                "choice": "stickler",
+                "confidence": 0.87
+              }
+            ]
+          },
+          {
+            "file": "pollen.py",
+            "diff": "--- a/pollen.py\n+++ b/pollen.py\n@@ -0,0 +1,8 @@\n+    limit = default_limit()\n+def render(items, cache=({},)):\n+    value = next_value()\n+    logger.debug(total)\n+temp = read_items()\n+    logger.debug(total)\n+    except BaseException:\n+    rows.append(item)\n",
+            "verdicts": [
+              {
+                "line": 5,
+                "pattern": "shared member default",
+                "model": "openai/gpt-6-luna",
+                "choice": "stickler",
+                "confidence": 0.92
+              },
+              {
+                "line": 8,
+                "pattern": "near placeholder name",
+                "model": "jev-1.13.0",
+                "choice": "clean",
+                "confidence": 0.74
+              },
+              {
+                "line": 10,
+                "pattern": "broad handler",
+                "model": "openai/gpt-6-luna",
+                "choice": "stickler",
+                "confidence": 0.78
+              },
+              {
+                "line": 10,
+                "pattern": "broad handler",
+                "model": "jev-1.13.0",
+                "choice": "stickler",
+                "confidence": 0.95
+              }
+            ]
+          },
+          {
+            "file": "garnet.py",
+            "diff": "--- a/garnet.py\n+++ b/garnet.py\n@@ -0,0 +1,6 @@\n+    logger.debug(total)\n+    return total\n+data = load_entries()\n+    return total\n+    except BaseException:\n+    limit = default_limit()\n",
+            "verdicts": [
+              {
+                "line": 8,
+                "pattern": "broad handler",
+                "model": "openai/gpt-6-luna",
+                "choice": "stickler",
+                "confidence": 0.83
+              }
+            ]
+          },
+          {
+            "file": "needle.py",
+            "diff": "--- a/needle.py\n+++ b/needle.py\n@@ -0,0 +1,3 @@\n+    total = compute_total(rows)\n+tmp = []\n+    value = next_value()\n",
+            "verdicts": [
+              {
+                "line": 5,
+                "pattern": "near placeholder name",
+                "model": "jev-1.13.0",
+                "choice": "clean",
+                "confidence": 0.86
+              }
+            ]
+          },
+          {
+            "file": "umbra.py",
+            "diff": "--- a/umbra.py\n+++ b/umbra.py\n@@ -0,0 +1,9 @@\n+    limit = default_limit()\n+    value = next_value()\n+def pack(items, pair=([], {})):\n+    value = next_value()\n+temp = fetch_rows()\n+    logger.debug(total)\n+    return total\n+    except BaseException:\n+    logger.debug(total)\n",
+            "verdicts": [
+              {
+                "line": 8,
+                "pattern": "near placeholder name",
+                "model": "jev-1.13.0",
+                "choice": "stickler",
+                "confidence": 0.9
+              },
+              {
+                "line": 8,
+                "pattern": "near placeholder name",
+                "model": "openai/gpt-6-luna",
+                "choice": "stickler",
+                "confidence": 0.3
+              }
+            ]
+          },
+          {
+            "file": "nectar.py",
+            "diff": "--- a/nectar.py\n+++ b/nectar.py\n@@ -0,0 +1,6 @@\n+    logger.debug(total)\n+data = {}\n+    return total\n+    total = compute_total(rows)\n+    except BaseException:\n+    return total\n",
+            "verdicts": [
+              {
+                "line": 5,
+                "pattern": "near placeholder name",
+                "model": "jev-1.13.0",
+                "choice": "clean",
+                "confidence": 0.69
+              },
+              {
+                "line": 8,
+                "pattern": "broad handler",
+                "model": "openai/gpt-6-luna",
+                "choice": "stickler",
+                "confidence": 0.87
+              }
+            ]
+          },
+          {
+            "file": "ember.py",
+            "diff": "--- a/ember.py\n+++ b/ember.py\n@@ -0,0 +1,4 @@\n+    total = compute_total(rows)\n+    rows.append(item)\n+tmp = read_items()\n+    total = compute_total(rows)\n",
+            "verdicts": [
+              {
+                "line": 6,
+                "pattern": "near placeholder name",
+                "model": "jev-1.13.0",
+                "choice": "stickler",
+                "confidence": 0.92
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "label": "constructed verdicts set 3",
+      "change_set": {
+        "files": [
+          {
+            "file": "onyx.py",
+            "diff": "--- a/onyx.py\n+++ b/onyx.py\n@@ -0,0 +1,3 @@\n+    limit = default_limit()\n+def pack(items, pair=([], {})):\n+    rows.append(item)\n",
+            "verdicts": [
+              {
+                "line": 5,
+                "pattern": "shared member default",
+                "model": "openai/gpt-6-luna",
+                "choice": "stickler",
+                "confidence": 0.78
+              },
+              {
+                "line": 5,
+                "pattern": "shared member default",
+                "model": "jev-1.13.0",
+                "choice": "stickler",
+                "confidence": 0.95
+              }
+            ]
+          },
+          {
+            "file": "velvet.py",
+            "diff": "--- a/velvet.py\n+++ b/velvet.py\n@@ -0,0 +1,9 @@\n+    logger.debug(total)\n+    return total\n+    except BaseException:\n+    return total\n+def render(items, cache=({},)):\n+    total = compute_total(rows)\n+    rows.append(item)\n+    data = []\n+    limit = default_limit()\n",
+            "verdicts": [
+              {
+                "line": 6,
+                "pattern": "broad handler",
+                "model": "jev-1.13.0",
+                "choice": "stickler",
+                "confidence": 0.42
+              },
+              {
+                "line": 6,
+                "pattern": "broad handler",
+                "model": "openai/gpt-6-luna",
+                "choice": "clean",
+                "confidence": 0.18
+              },
+              {
+                "line": 11,
+                "pattern": "near placeholder name",
+                "model": "jev-1.13.0",
+                "choice": "stickler",
+                "confidence": 0.83
+              }
+            ]
+          },
+          {
+            "file": "octant.py",
+            "diff": "--- a/octant.py\n+++ b/octant.py\n@@ -0,0 +1,6 @@\n+    total = compute_total(rows)\n+def pack(items, pair=([], {})):\n+    rows.append(item)\n+    limit = default_limit()\n+    tmp = fetch_rows()\n+    value = next_value()\n",
+            "verdicts": [
+              {
+                "line": 5,
+                "pattern": "shared member default",
+                "model": "openai/gpt-6-luna",
+                "choice": "stickler",
+                "confidence": 0.9
+              },
+              {
+                "line": 8,
+                "pattern": "near placeholder name",
+                "model": "jev-1.13.0",
+                "choice": "clean",
+                "confidence": 0.9
+              },
+              {
+                "line": 8,
+                "pattern": "near placeholder name",
+                "model": "openai/gpt-6-luna",
+                "choice": "stickler",
+                "confidence": 0.87
+              }
+            ]
+          },
+          {
+            "file": "fable.py",
+            "diff": "--- a/fable.py\n+++ b/fable.py\n@@ -0,0 +1,4 @@\n+    limit = default_limit()\n+    value = next_value()\n+def render(items, cache=({},)):\n+    logger.debug(total)\n"
+          },
+          {
+            "file": "magnet.py",
+            "diff": "--- a/magnet.py\n+++ b/magnet.py\n@@ -0,0 +1,8 @@\n+    logger.debug(total)\n+    except BaseException:\n+    return total\n+    total = compute_total(rows)\n+def pack(items, pair=([], {})):\n+    total = compute_total(rows)\n+    data = read_items()\n+    return total\n",
+            "verdicts": [
+              {
+                "line": 5,
+                "pattern": "broad handler",
+                "model": "jev-1.13.0",
+                "choice": "stickler",
+                "confidence": 0.92
+              },
+              {
+                "line": 8,
+                "pattern": "shared member default",
+                "model": "openai/gpt-6-luna",
+                "choice": "stickler",
+                "confidence": 0.78
+              },
+              {
+                "line": 10,
+                "pattern": "near placeholder name",
+                "model": "jev-1.13.0",
+                "choice": "clean",
+                "confidence": 0.8
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "label": "constructed verdicts set 4",
+      "change_set": {
+        "files": [
+          {
+            "file": "walnut.py",
+            "diff": "--- a/walnut.py\n+++ b/walnut.py\n@@ -0,0 +1,9 @@\n+    total = compute_total(rows)\n+    rows.append(item)\n+    except BaseException:\n+    rows.append(item)\n+def pack(items, pair=([], {})):\n+    limit = default_limit()\n+    value = next_value()\n+tmp = fetch_rows()\n+    total = compute_total(rows)\n",
+            "verdicts": [
+              {
+                "line": 11,
+                "pattern": "near placeholder name",
+                "model": "openai/gpt-6-luna",
+                "choice": "stickler",
+                "confidence": 0.95
+              }
+            ]
+          },
+          {
+            "file": "pollen.py",
+            "diff": "--- a/pollen.py\n+++ b/pollen.py\n@@ -0,0 +1,6 @@\n+    limit = default_limit()\n+def render(items, cache=({},)):\n+    value = next_value()\n+    logger.debug(total)\n+temp = {}\n+    rows.append(item)\n",
+            "verdicts": [
+              {
+                "line": 5,
+                "pattern": "shared member default",
+                "model": "jev-1.13.0",
+                "choice": "clean",
+                "confidence": 0.74
+              },
+              {
+                "line": 8,
+                "pattern": "near placeholder name",
+                "model": "openai/gpt-6-luna",
+                "choice": "stickler",
+                "confidence": 0.83
+              }
+            ]
+          },
+          {
+            "file": "garnet.py",
+            "diff": "--- a/garnet.py\n+++ b/garnet.py\n@@ -0,0 +1,4 @@\n+    logger.debug(total)\n+    return total\n+def pack(items, pair=([], {})):\n+    limit = default_limit()\n",
+            "verdicts": [
+              {
+                "line": 6,
+                "pattern": "shared member default",
+                "model": "jev-1.13.0",
+                "choice": "stickler",
+                "confidence": 0.9
+              },
+              {
+                "line": 6,
+                "pattern": "shared member default",
+                "model": "openai/gpt-6-luna",
+                "choice": "stickler",
+                "confidence": 0.87
+              }
+            ]
+          },
+          {
+            "file": "needle.py",
+            "diff": "--- a/needle.py\n+++ b/needle.py\n@@ -0,0 +1,8 @@\n+    total = compute_total(rows)\n+    except BaseException:\n+    rows.append(item)\n+    limit = default_limit()\n+def render(items, cache=({},)):\n+    limit = default_limit()\n+tmp = load_entries()\n+    value = next_value()\n",
+            "verdicts": [
+              {
+                "line": 8,
+                "pattern": "shared member default",
+                "model": "jev-1.13.0",
+                "choice": "clean",
+                "confidence": 0.86
+              }
+            ]
+          },
+          {
+            "file": "umbra.py",
+            "diff": "--- a/umbra.py\n+++ b/umbra.py\n@@ -0,0 +1,6 @@\n+    limit = default_limit()\n+    value = next_value()\n+def pack(items, pair=([], {})):\n+    value = next_value()\n+temp = []\n+    logger.debug(total)\n",
+            "verdicts": [
+              {
+                "line": 6,
+                "pattern": "shared member default",
+                "model": "jev-1.13.0",
+                "choice": "stickler",
+                "confidence": 0.92
+              },
+              {
+                "line": 8,
+                "pattern": "near placeholder name",
+                "model": "openai/gpt-6-luna",
+                "choice": "stickler",
+                "confidence": 0.78
+              },
+              {
+                "line": 8,
+                "pattern": "near placeholder name",
+                "model": "jev-1.13.0",
+                "choice": "stickler",
+                "confidence": 0.95
+              }
+            ]
+          },
+          {
+            "file": "nectar.py",
+            "diff": "--- a/nectar.py\n+++ b/nectar.py\n@@ -0,0 +1,3 @@\n+    logger.debug(total)\n+def render(items, cache=({},)):\n+    return total\n"
+          },
+          {
+            "file": "ember.py",
+            "diff": "--- a/ember.py\n+++ b/ember.py\n@@ -0,0 +1,9 @@\n+    total = compute_total(rows)\n+    rows.append(item)\n+    except BaseException:\n+    rows.append(item)\n+def pack(items, pair=([], {})):\n+    limit = default_limit()\n+    value = next_value()\n+tmp = {}\n+    total = compute_total(rows)\n",
+            "verdicts": [
+              {
+                "line": 6,
+                "pattern": "broad handler",
+                "model": "openai/gpt-6-luna",
+                "choice": "stickler",
+                "confidence": 0.83
+              },
+              {
+                "line": 8,
+                "pattern": "shared member default",
+                "model": "jev-1.13.0",
+                "choice": "stickler",
+                "confidence": 0.9
+              },
+              {
+                "line": 11,
+                "pattern": "near placeholder name",
+                "model": "openai/gpt-6-luna",
+                "choice": "stickler",
+                "confidence": 0.87
+              }
+            ]
+          },
+          {
+            "file": "lantern.py",
+            "diff": "--- a/lantern.py\n+++ b/lantern.py\n@@ -0,0 +1,6 @@\n+    limit = default_limit()\n+def render(items, cache=({},)):\n+    value = next_value()\n+    logger.debug(total)\n+temp = read_items()\n+    rows.append(item)\n",
+            "verdicts": [
+              {
+                "line": 5,
+                "pattern": "shared member default",
+                "model": "jev-1.13.0",
+                "choice": "clean",
+                "confidence": 0.69
+              },
+              {
+                "line": 5,
+                "pattern": "shared member default",
+                "model": "openai/gpt-6-luna",
+                "choice": "stickler",
+                "confidence": 0.92
+              }
+            ]
+          },
+          {
+            "file": "saddle.py",
+            "diff": "--- a/saddle.py\n+++ b/saddle.py\n@@ -0,0 +1,4 @@\n+    logger.debug(total)\n+    return total\n+def pack(items, pair=([], {})):\n+    limit = default_limit()\n",
+            "verdicts": [
+              {
+                "line": 6,
+                "pattern": "shared member default",
+                "model": "jev-1.13.0",
+                "choice": "stickler",
+                "confidence": 0.78
+              }
+            ]
+          },
+          {
+            "file": "zephyr.py",
+            "diff": "--- a/zephyr.py\n+++ b/zephyr.py\n@@ -0,0 +1,8 @@\n+    total = compute_total(rows)\n+    except BaseException:\n+    rows.append(item)\n+    limit = default_limit()\n+def render(items, cache=({},)):\n+    limit = default_limit()\n+tmp = []\n+    value = next_value()\n",
+            "verdicts": [
+              {
+                "line": 5,
+                "pattern": "broad handler",
+                "model": "openai/gpt-6-luna",
+                "choice": "stickler",
+                "confidence": 0.95
+              },
+              {
+                "line": 8,
+                "pattern": "shared member default",
+                "model": "jev-1.13.0",
+                "choice": "clean",
+                "confidence": 0.9
+              },
+              {
+                "line": 10,
+                "pattern": "near placeholder name",
+                "model": "openai/gpt-6-luna",
+                "choice": "stickler",
+                "confidence": 0.83
+              },
+              {
+                "line": 10,
+                "pattern": "near placeholder name",
+                "model": "jev-1.13.0",
+                "choice": "stickler",
+                "confidence": 0.9
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "label": "constructed verdicts set 5",
+      "change_set": {
+        "files": [
+          {
+            "file": "fable.py",
+            "diff": "--- a/fable.py\n+++ b/fable.py\n@@ -0,0 +1,9 @@\n+    limit = default_limit()\n+    value = next_value()\n+def render(items, cache=({},)):\n+    value = next_value()\n+    temp = load_entries()\n+    logger.debug(total)\n+    return total\n+    except BaseException:\n+    logger.debug(total)\n",
+            "verdicts": [
+              {
+                "line": 8,
+                "pattern": "near placeholder name",
+                "model": "openai/gpt-6-luna",
+                "choice": "stickler",
+                "confidence": 0.87
+              },
+              {
+                "line": 11,
+                "pattern": "broad handler",
+                "model": "jev-1.13.0",
+                "choice": "clean",
+                "confidence": 0.8
+              }
+            ]
+          },
+          {
+            "file": "magnet.py",
+            "diff": "--- a/magnet.py\n+++ b/magnet.py\n@@ -0,0 +1,6 @@\n+    logger.debug(total)\n+    data = []\n+    return total\n+    total = compute_total(rows)\n+    except BaseException:\n+    return total\n",
+            "verdicts": [
+              {
+                "line": 8,
+                "pattern": "broad handler",
+                "model": "jev-1.13.0",
+                "choice": "stickler",
+                "confidence": 0.92
+              },
+              {
+                "line": 8,
+                "pattern": "broad handler",
+                "model": "openai/gpt-6-luna",
+                "choice": "stickler",
+                "confidence": 0.78
+              }
+            ]
+          },
+          {
+            "file": "timber.py",
+            "diff": "--- a/timber.py\n+++ b/timber.py\n@@ -0,0 +1,4 @@\n+    total = compute_total(rows)\n+    rows.append(item)\n+    tmp = fetch_rows()\n+    total = compute_total(rows)\n"
+          },
+          {
+            "file": "mosaic.py",
+            "diff": "--- a/mosaic.py\n+++ b/mosaic.py\n@@ -0,0 +1,8 @@\n+    limit = default_limit()\n+def pack(items, pair=([], {})):\n+    value = next_value()\n+    logger.debug(total)\n+    temp = {}\n+    logger.debug(total)\n+    except BaseException:\n+    rows.append(item)\n",
+            "verdicts": [
+              {
+                "line": 5,
+                "pattern": "shared member default",
+                "model": "jev-1.13.0",
+                "choice": "clean",
+                "confidence": 0.74
+              },
+              {
+                "line": 8,
+                "pattern": "near placeholder name",
+                "model": "openai/gpt-6-luna",
+                "choice": "stickler",
+                "confidence": 0.95
+              },
+              {
+                "line": 10,
+                "pattern": "broad handler",
+                "model": "jev-1.13.0",
+                "choice": "stickler",
+                "confidence": 0.83
+              }
+            ]
+          },
+          {
+            "file": "dagger.py",
+            "diff": "--- a/dagger.py\n+++ b/dagger.py\n@@ -0,0 +1,6 @@\n+    logger.debug(total)\n+    return total\n+    data = read_items()\n+    return total\n+    except BaseException:\n+    limit = default_limit()\n",
+            "verdicts": [
+              {
+                "line": 6,
+                "pattern": "near placeholder name",
+                "model": "openai/gpt-6-luna",
+                "choice": "stickler",
+                "confidence": 0.9
+              },
+              {
+                "line": 6,
+                "pattern": "near placeholder name",
+                "model": "jev-1.13.0",
+                "choice": "stickler",
+                "confidence": 0.47
+              }
+            ]
+          },
+          {
+            "file": "kettle.py",
+            "diff": "--- a/kettle.py\n+++ b/kettle.py\n@@ -0,0 +1,3 @@\n+    total = compute_total(rows)\n+    tmp = load_entries()\n+    value = next_value()\n"
+          },
+          {
+            "file": "riddle.py",
+            "diff": "--- a/riddle.py\n+++ b/riddle.py\n@@ -0,0 +1,9 @@\n+    limit = default_limit()\n+    value = next_value()\n+def render(items, cache=({},)):\n+    value = next_value()\n+    temp = []\n+    logger.debug(total)\n+    return total\n+    except BaseException:\n+    logger.debug(total)\n",
+            "verdicts": [
+              {
+                "line": 6,
+                "pattern": "shared member default",
+                "model": "jev-1.13.0",
+                "choice": "stickler",
+                "confidence": 0.87
+              },
+              {
+                "line": 8,
+                "pattern": "near placeholder name",
+                "model": "openai/gpt-6-luna",
+                "choice": "stickler",
+                "confidence": 0.92
+              },
+              {
+                "line": 11,
+                "pattern": "broad handler",
+                "model": "jev-1.13.0",
+                "choice": "clean",
+                "confidence": 0.86
+              },
+              {
+                "line": 11,
+                "pattern": "broad handler",
+                "model": "openai/gpt-6-luna",
+                "choice": "stickler",
+                "confidence": 0.78
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "label": "constructed verdicts set 6",
+      "change_set": {
+        "files": [
+          {
+            "file": "nectar.py",
+            "diff": "--- a/nectar.py\n+++ b/nectar.py\n@@ -0,0 +1,8 @@\n+    logger.debug(total)\n+data = fetch_rows()\n+    return total\n+    total = compute_total(rows)\n+    except BaseException:\n+    total = compute_total(rows)\n+def pack(items, pair=([], {})):\n+    return total\n",
+            "verdicts": [
+              {
+                "line": 8,
+                "pattern": "broad handler",
+                "model": "jev-1.13.0",
+                "choice": "stickler",
+                "confidence": 0.95
+              },
+              {
+                "line": 10,
+                "pattern": "shared member default",
+                "model": "jev-1.13.0",
+                "choice": "stickler",
+                "confidence": 0.35
+              }
+            ]
+          },
+          {
+            "file": "ember.py",
+            "diff": "--- a/ember.py\n+++ b/ember.py\n@@ -0,0 +1,6 @@\n+    total = compute_total(rows)\n+    rows.append(item)\n+    except BaseException:\n+    rows.append(item)\n+def render(items, cache=({},)):\n+    total = compute_total(rows)\n",
+            "verdicts": [
+              {
+                "line": 6,
+                "pattern": "broad handler",
+                "model": "jev-1.13.0",
+                "choice": "clean",
+                "confidence": 0.69
+              }
+            ]
+          },
+          {
+            "file": "lantern.py",
+            "diff": "--- a/lantern.py\n+++ b/lantern.py\n@@ -0,0 +1,3 @@\n+    limit = default_limit()\n+    except BaseException:\n+    rows.append(item)\n"
+          },
+          {
+            "file": "saddle.py",
+            "diff": "--- a/saddle.py\n+++ b/saddle.py\n@@ -0,0 +1,9 @@\n+    logger.debug(total)\n+    return total\n+data = load_entries()\n+    return total\n+    except BaseException:\n+    total = compute_total(rows)\n+    rows.append(item)\n+def render(items, cache=({},)):\n+    limit = default_limit()\n",
+            "verdicts": [
+              {
+                "line": 6,
+                "pattern": "near placeholder name",
+                "model": "openai/gpt-6-luna",
+                "choice": "stickler",
+                "confidence": 0.83
+              },
+              {
+                "line": 8,
+                "pattern": "broad handler",
+                "model": "jev-1.13.0",
+                "choice": "clean",
+                "confidence": 0.9
+              },
+              {
+                "line": 11,
+                "pattern": "shared member default",
+                "model": "openai/gpt-6-luna",
+                "choice": "stickler",
+                "confidence": 0.9
+              }
+            ]
+          },
+          {
+            "file": "zephyr.py",
+            "diff": "--- a/zephyr.py\n+++ b/zephyr.py\n@@ -0,0 +1,6 @@\n+    total = compute_total(rows)\n+    except BaseException:\n+    rows.append(item)\n+    limit = default_limit()\n+def pack(items, pair=([], {})):\n+    value = next_value()\n",
+            "verdicts": [
+              {
+                "line": 5,
+                "pattern": "broad handler",
+                "model": "jev-1.13.0",
+                "choice": "stickler",
+                "confidence": 0.87
+              },
+              {
+                "line": 5,
+                "pattern": "broad handler",
+                "model": "openai/gpt-6-luna",
+                "choice": "stickler",
+                "confidence": 0.92
+              }
+            ]
+          },
+          {
+            "file": "cobble.py",
+            "diff": "--- a/cobble.py\n+++ b/cobble.py\n@@ -0,0 +1,4 @@\n+    limit = default_limit()\n+    value = next_value()\n+    except BaseException:\n+    logger.debug(total)\n",
+            "verdicts": [
+              {
+                "line": 6,
+                "pattern": "broad handler",
+                "model": "jev-1.13.0",
+                "choice": "clean",
+                "confidence": 0.8
+              }
+            ]
+          },
+          {
+            "file": "jasper.py",
+            "diff": "--- a/jasper.py\n+++ b/jasper.py\n@@ -0,0 +1,8 @@\n+    logger.debug(total)\n+data = {}\n+    return total\n+    total = compute_total(rows)\n+    except BaseException:\n+    total = compute_total(rows)\n+def pack(items, pair=([], {})):\n+    return total\n",
+            "verdicts": [
+              {
+                "line": 8,
+                "pattern": "broad handler",
+                "model": "jev-1.13.0",
+                "choice": "stickler",
+                "confidence": 0.78
+              },
+              {
+                "line": 10,
+                "pattern": "shared member default",
+                "model": "openai/gpt-6-luna",
+                "choice": "stickler",
+                "confidence": 0.95
+              },
+              {
+                "line": 10,
+                "pattern": "shared member default",
+                "model": "jev-1.13.0",
+                "choice": "stickler",
+                "confidence": 0.83
+              }
+            ]
+          },
+          {
+            "file": "quartz.py",
+            "diff": "--- a/quartz.py\n+++ b/quartz.py\n@@ -0,0 +1,6 @@\n+    total = compute_total(rows)\n+    rows.append(item)\n+    except BaseException:\n+    rows.append(item)\n+def render(items, cache=({},)):\n+    total = compute_total(rows)\n",
+            "verdicts": [
+              {
+                "line": 8,
+                "pattern": "shared member default",
+                "model": "openai/gpt-6-luna",
+                "choice": "stickler",
+                "confidence": 0.9
+              }
+            ]
+          },
+          {
+            "file": "xenon.py",
+            "diff": "--- a/xenon.py\n+++ b/xenon.py\n@@ -0,0 +1,3 @@\n+    limit = default_limit()\n+    except BaseException:\n+    rows.append(item)\n",
+            "verdicts": [
+              {
+                "line": 5,
+                "pattern": "broad handler",
+                "model": "jev-1.13.0",
+                "choice": "stickler",
+                "confidence": 0.87
+              }
+            ]
+          },
+          {
+            "file": "anchor.py",
+            "diff": "--- a/anchor.py\n+++ b/anchor.py\n@@ -0,0 +1,9 @@\n+    logger.debug(total)\n+    return total\n+data = []\n+    return total\n+    except BaseException:\n+    total = compute_total(rows)\n+    rows.append(item)\n+def render(items, cache=({},)):\n+    limit = default_limit()\n",
+            "verdicts": [
+              {
+                "line": 6,
+                "pattern": "near placeholder name",
+                "model": "openai/gpt-6-luna",
+                "choice": "stickler",
+                "confidence": 0.92
+              },
+              {
+                "line": 8,
+                "pattern": "broad handler",
+                "model": "jev-1.13.0",
+                "choice": "clean",
+                "confidence": 0.74
+              },
+              {
+                "line": 8,
+                "pattern": "broad handler",
+                "model": "openai/gpt-6-luna",
+                "choice": "stickler",
+                "confidence": 0.78
+              }
+            ]
+          },
+          {
+            "file": "harbor.py",
+            "diff": "--- a/harbor.py\n+++ b/harbor.py\n@@ -0,0 +1,6 @@\n+    total = compute_total(rows)\n+    except BaseException:\n+    rows.append(item)\n+    limit = default_limit()\n+def pack(items, pair=([], {})):\n+    value = next_value()\n",
+            "verdicts": [
+              {
+                "line": 5,
+                "pattern": "broad handler",
+                "model": "jev-1.13.0",
+                "choice": "stickler",
+                "confidence": 0.95
+              },
+              {
+                "line": 8,
+                "pattern": "shared member default",
+                "model": "openai/gpt-6-luna",
+                "choice": "stickler",
+                "confidence": 0.83
+              }
+            ]
+          },
+          {
+            "file": "onyx.py",
+            "diff": "--- a/onyx.py\n+++ b/onyx.py\n@@ -0,0 +1,4 @@\n+    limit = default_limit()\n+    value = next_value()\n+    except BaseException:\n+    logger.debug(total)\n",
+            "verdicts": [
+              {
+                "line": 6,
+                "pattern": "broad handler",
+                "model": "jev-1.13.0",
+                "choice": "clean",
+                "confidence": 0.86
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "label": "constructed verdicts set 7",
+      "change_set": {
+        "files": [
+          {
+            "file": "yonder.py",
+            "diff": "--- a/yonder.py\n+++ b/yonder.py\n@@ -0,0 +1,3 @@\n+    logger.debug(total)\n+data = []\n+    return total\n",
+            "verdicts": [
+              {
+                "line": 5,
+                "pattern": "near placeholder name",
+                "model": "openai/gpt-6-luna",
+                "choice": "stickler",
+                "confidence": 0.9
+              },
+              {
+                "line": 5,
+                "pattern": "near placeholder name",
+                "model": "jev-1.13.0",
+                "choice": "clean",
+                "confidence": 0.69
+              }
+            ]
+          },
+          {
+            "file": "beacon.py",
+            "diff": "--- a/beacon.py\n+++ b/beacon.py\n@@ -0,0 +1,9 @@\n+    total = compute_total(rows)\n+    rows.append(item)\n+def pack(items, pair=([], {})):\n+    rows.append(item)\n+tmp = fetch_rows()\n+    limit = default_limit()\n+    value = next_value()\n+    except BaseException:\n+    total = compute_total(rows)\n",
+            "verdicts": [
+              {
+                "line": 8,
+                "pattern": "near placeholder name",
+                "model": "openai/gpt-6-luna",
+                "choice": "stickler",
+                "confidence": 0.87
+              },
+              {
+                "line": 11,
+                "pattern": "broad handler",
+                "model": "jev-1.13.0",
+                "choice": "clean",
+                "confidence": 0.9
+              }
+            ]
+          },
+          {
+            "file": "island.py",
+            "diff": "--- a/island.py\n+++ b/island.py\n@@ -0,0 +1,6 @@\n+    limit = default_limit()\n+temp = {}\n+    value = next_value()\n+    logger.debug(total)\n+    except BaseException:\n+    rows.append(item)\n",
+            "verdicts": [
+              {
+                "line": 8,
+                "pattern": "broad handler",
+                "model": "jev-1.13.0",
+                "choice": "stickler",
+                "confidence": 0.92
+              },
+              {
+                "line": 8,
+                "pattern": "broad handler",
+                "model": "openai/gpt-6-luna",
+                "choice": "stickler",
+                "confidence": 0.78
+              }
+            ]
+          },
+          {
+            "file": "pumice.py",
+            "diff": "--- a/pumice.py\n+++ b/pumice.py\n@@ -0,0 +1,4 @@\n+    logger.debug(total)\n+    return total\n+data = read_items()\n+    limit = default_limit()\n"
+          }
+        ]
+      }
+    },
+    {
+      "label": "constructed verdicts set 8",
+      "change_set": {
+        "files": [
+          {
+            "file": "zephyr.py",
+            "diff": "--- a/zephyr.py\n+++ b/zephyr.py\n@@ -0,0 +1,3 @@\n+    total = compute_total(rows)\n+    except BaseException:\n+    value = next_value()\n",
+            "verdicts": [
+              {
+                "line": 5,
+                "pattern": "broad handler",
+                "model": "jev-1.13.0",
+                "choice": "clean",
+                "confidence": 0.8
+              }
+            ]
+          },
+          {
+            "file": "cobble.py",
+            "diff": "--- a/cobble.py\n+++ b/cobble.py\n@@ -0,0 +1,9 @@\n+    limit = default_limit()\n+    value = next_value()\n+    temp = {}\n+    value = next_value()\n+    except BaseException:\n+    logger.debug(total)\n+    return total\n+def pack(items, pair=([], {})):\n+    logger.debug(total)\n",
+            "verdicts": [
+              {
+                "line": 6,
+                "pattern": "near placeholder name",
+                "model": "openai/gpt-6-luna",
+                "choice": "stickler",
+                "confidence": 0.95
+              },
+              {
+                "line": 8,
+                "pattern": "broad handler",
+                "model": "jev-1.13.0",
+                "choice": "stickler",
+                "confidence": 0.83
+              },
+              {
+                "line": 11,
+                "pattern": "shared member default",
+                "model": "openai/gpt-6-luna",
+                "choice": "stickler",
+                "confidence": 0.9
+              },
+              {
+                "line": 11,
+                "pattern": "shared member default",
+                "model": "jev-1.13.0",
+                "choice": "stickler",
+                "confidence": 0.87
+              }
+            ]
+          },
+          {
+            "file": "jasper.py",
+            "diff": "--- a/jasper.py\n+++ b/jasper.py\n@@ -0,0 +1,6 @@\n+    logger.debug(total)\n+    except BaseException:\n+    return total\n+    total = compute_total(rows)\n+def render(items, cache=({},)):\n+    return total\n"
+          },
+          {
+            "file": "quartz.py",
+            "diff": "--- a/quartz.py\n+++ b/quartz.py\n@@ -0,0 +1,4 @@\n+    total = compute_total(rows)\n+    rows.append(item)\n+    except BaseException:\n+    total = compute_total(rows)\n",
+            "verdicts": [
+              {
+                "line": 6,
+                "pattern": "broad handler",
+                "model": "jev-1.13.0",
+                "choice": "stickler",
+                "confidence": 0.92
+              }
+            ]
+          },
+          {
+            "file": "xenon.py",
+            "diff": "--- a/xenon.py\n+++ b/xenon.py\n@@ -0,0 +1,8 @@\n+    limit = default_limit()\n+    temp = []\n+    value = next_value()\n+    logger.debug(total)\n+    except BaseException:\n+    logger.debug(total)\n+def render(items, cache=({},)):\n+    rows.append(item)\n",
+            "verdicts": [
+              {
+                "line": 5,
+                "pattern": "near placeholder name",
+                "model": "openai/gpt-6-luna",
+                "choice": "stickler",
+                "confidence": 0.78
+              },
+              {
+                "line": 8,
+                "pattern": "broad handler",
+                "model": "jev-1.13.0",
+                "choice": "clean",
+                "confidence": 0.74
+              },
+              {
+                "line": 8,
+                "pattern": "broad handler",
+                "model": "openai/gpt-6-luna",
+                "choice": "stickler",
+                "confidence": 0.25
+              }
+            ]
+          },
+          {
+            "file": "anchor.py",
+            "diff": "--- a/anchor.py\n+++ b/anchor.py\n@@ -0,0 +1,6 @@\n+    logger.debug(total)\n+    return total\n+    except BaseException:\n+    return total\n+def pack(items, pair=([], {})):\n+    limit = default_limit()\n",
+            "verdicts": [
+              {
+                "line": 6,
+                "pattern": "broad handler",
+                "model": "jev-1.13.0",
+                "choice": "stickler",
+                "confidence": 0.95
+              },
+              {
+                "line": 8,
+                "pattern": "shared member default",
+                "model": "openai/gpt-6-luna",
+                "choice": "stickler",
+                "confidence": 0.83
+              }
+            ]
+          },
+          {
+            "file": "harbor.py",
+            "diff": "--- a/harbor.py\n+++ b/harbor.py\n@@ -0,0 +1,3 @@\n+    total = compute_total(rows)\n+    except BaseException:\n+    value = next_value()\n",
+            "verdicts": [
+              {
+                "line": 5,
+                "pattern": "broad handler",
+                "model": "jev-1.13.0",
+                "choice": "clean",
+                "confidence": 0.86
+              }
+            ]
+          },
+          {
+            "file": "onyx.py",
+            "diff": "--- a/onyx.py\n+++ b/onyx.py\n@@ -0,0 +1,9 @@\n+    limit = default_limit()\n+    value = next_value()\n+    temp = read_items()\n+    value = next_value()\n+    except BaseException:\n+    logger.debug(total)\n+    return total\n+def pack(items, pair=([], {})):\n+    logger.debug(total)\n",
+            "verdicts": [
+              {
+                "line": 11,
+                "pattern": "shared member default",
+                "model": "openai/gpt-6-luna",
+                "choice": "stickler",
+                "confidence": 0.9
+              }
+            ]
+          },
+          {
+            "file": "velvet.py",
+            "diff": "--- a/velvet.py\n+++ b/velvet.py\n@@ -0,0 +1,6 @@\n+    logger.debug(total)\n+    except BaseException:\n+    return total\n+    total = compute_total(rows)\n+def render(items, cache=({},)):\n+    return total\n",
+            "verdicts": [
+              {
+                "line": 5,
+                "pattern": "broad handler",
+                "model": "jev-1.13.0",
+                "choice": "clean",
+                "confidence": 0.69
+              },
+              {
+                "line": 8,
+                "pattern": "shared member default",
+                "model": "openai/gpt-6-luna",
+                "choice": "stickler",
+                "confidence": 0.87
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "label": "constructed verdicts set 9",
+      "change_set": {
+        "files": [
+          {
+            "file": "beacon.py",
+            "diff": "--- a/beacon.py\n+++ b/beacon.py\n@@ -0,0 +1,6 @@\n+    total = compute_total(rows)\n+    rows.append(item)\n+    except BaseException:\n+    rows.append(item)\n+def pack(items, pair=([], {})):\n+    total = compute_total(rows)\n",
+            "verdicts": [
+              {
+                "line": 6,
+                "pattern": "broad handler",
+                "model": "jev-1.13.0",
+                "choice": "stickler",
+                "confidence": 0.3
+              },
+              {
+                "line": 6,
+                "pattern": "broad handler",
+                "model": "openai/gpt-6-luna",
+                "choice": "clean",
+                "confidence": 0.42
+              }
+            ]
+          },
+          {
+            "file": "island.py",
+            "diff": "--- a/island.py\n+++ b/island.py\n@@ -0,0 +1,3 @@\n+    limit = default_limit()\n+    except BaseException:\n+    rows.append(item)\n",
+            "verdicts": [
+              {
+                "line": 5,
+                "pattern": "broad handler",
+                "model": "jev-1.13.0",
+                "choice": "clean",
+                "confidence": 0.9
+              }
+            ]
+          },
+          {
+            "file": "pumice.py",
+            "diff": "--- a/pumice.py\n+++ b/pumice.py\n@@ -0,0 +1,9 @@\n+    logger.debug(total)\n+    return total\n+    data = fetch_rows()\n+    return total\n+    except BaseException:\n+    total = compute_total(rows)\n+    rows.append(item)\n+def pack(items, pair=([], {})):\n+    limit = default_limit()\n",
+            "verdicts": [
+              {
+                "line": 8,
+                "pattern": "broad handler",
+                "model": "jev-1.13.0",
+                "choice": "stickler",
+                "confidence": 0.92
+              },
+              {
+                "line": 11,
+                "pattern": "shared member default",
+                "model": "openai/gpt-6-luna",
+                "choice": "stickler",
+                "confidence": 0.78
+              },
+              {
+                "line": 11,
+                "pattern": "shared member default",
+                "model": "jev-1.13.0",
+                "choice": "clean",
+                "confidence": 0.8
+              }
+            ]
+          },
+          {
+            "file": "walnut.py",
+            "diff": "--- a/walnut.py\n+++ b/walnut.py\n@@ -0,0 +1,6 @@\n+    total = compute_total(rows)\n+    except BaseException:\n+    rows.append(item)\n+    limit = default_limit()\n+def render(items, cache=({},)):\n+    value = next_value()\n",
+            "verdicts": [
+              {
+                "line": 8,
+                "pattern": "shared member default",
+                "model": "openai/gpt-6-luna",
+                "choice": "stickler",
+                "confidence": 0.95
+              }
+            ]
+          },
+          {
+            "file": "pollen.py",
+            "diff": "--- a/pollen.py\n+++ b/pollen.py\n@@ -0,0 +1,4 @@\n+    limit = default_limit()\n+    value = next_value()\n+    except BaseException:\n+    logger.debug(total)\n",
+            "verdicts": [
+              {
+                "line": 6,
+                "pattern": "broad handler",
+                "model": "jev-1.13.0",
+                "choice": "stickler",
+                "confidence": 0.83
+              }
+            ]
+          },
+          {
+            "file": "garnet.py",
+            "diff": "--- a/garnet.py\n+++ b/garnet.py\n@@ -0,0 +1,8 @@\n+    logger.debug(total)\n+    data = load_entries()\n+    return total\n+    total = compute_total(rows)\n+    except BaseException:\n+    total = compute_total(rows)\n+def render(items, cache=({},)):\n+    return total\n",
+            "verdicts": [
+              {
+                "line": 5,
+                "pattern": "near placeholder name",
+                "model": "openai/gpt-6-luna",
+                "choice": "stickler",
+                "confidence": 0.9
+              },
+              {
+                "line": 8,
+                "pattern": "broad handler",
+                "model": "jev-1.13.0",
+                "choice": "clean",
+                "confidence": 0.74
+              },
+              {
+                "line": 8,
+                "pattern": "broad handler",
+                "model": "openai/gpt-6-luna",
+                "choice": "stickler",
+                "confidence": 0.87
+              }
+            ]
+          },
+          {
+            "file": "needle.py",
+            "diff": "--- a/needle.py\n+++ b/needle.py\n@@ -0,0 +1,6 @@\n+    total = compute_total(rows)\n+    rows.append(item)\n+    except BaseException:\n+    rows.append(item)\n+def pack(items, pair=([], {})):\n+    total = compute_total(rows)\n",
+            "verdicts": [
+              {
+                "line": 6,
+                "pattern": "broad handler",
+                "model": "jev-1.13.0",
+                "choice": "stickler",
+                "confidence": 0.92
+              },
+              {
+                "line": 8,
+                "pattern": "shared member default",
+                "model": "openai/gpt-6-luna",
+                "choice": "stickler",
+                "confidence": 0.78
+              }
+            ]
+          },
+          {
+            "file": "umbra.py",
+            "diff": "--- a/umbra.py\n+++ b/umbra.py\n@@ -0,0 +1,3 @@\n+    limit = default_limit()\n+    except BaseException:\n+    rows.append(item)\n",
+            "verdicts": [
+              {
+                "line": 5,
+                "pattern": "broad handler",
+                "model": "jev-1.13.0",
+                "choice": "clean",
+                "confidence": 0.86
+              }
+            ]
+          },
+          {
+            "file": "nectar.py",
+            "diff": "--- a/nectar.py\n+++ b/nectar.py\n@@ -0,0 +1,9 @@\n+    logger.debug(total)\n+    return total\n+    data = {}\n+    return total\n+    except BaseException:\n+    total = compute_total(rows)\n+    rows.append(item)\n+def pack(items, pair=([], {})):\n+    limit = default_limit()\n",
+            "verdicts": [
+              {
+                "line": 6,
+                "pattern": "near placeholder name",
+                "model": "openai/gpt-6-luna",
+                "choice": "stickler",
+                "confidence": 0.95
+              },
+              {
+                "line": 6,
+                "pattern": "near placeholder name",
+                "model": "jev-1.13.0",
+                "choice": "stickler",
+                "confidence": 0.83
+              },
+              {
+                "line": 11,
+                "pattern": "shared member default",
+                "model": "openai/gpt-6-luna",
+                "choice": "stickler",
+                "confidence": 0.9
+              }
+            ]
+          },
+          {
+            "file": "ember.py",
+            "diff": "--- a/ember.py\n+++ b/ember.py\n@@ -0,0 +1,6 @@\n+    total = compute_total(rows)\n+    except BaseException:\n+    rows.append(item)\n+    limit = default_limit()\n+def render(items, cache=({},)):\n+    value = next_value()\n",
+            "verdicts": [
+              {
+                "line": 5,
+                "pattern": "broad handler",
+                "model": "jev-1.13.0",
+                "choice": "clean",
+                "confidence": 0.69
+              }
+            ]
+          },
+          {
+            "file": "lantern.py",
+            "diff": "--- a/lantern.py\n+++ b/lantern.py\n@@ -0,0 +1,4 @@\n+    limit = default_limit()\n+    value = next_value()\n+    except BaseException:\n+    logger.debug(total)\n",
+            "verdicts": [
+              {
+                "line": 6,
+                "pattern": "broad handler",
+                "model": "jev-1.13.0",
+                "choice": "stickler",
+                "confidence": 0.87
+              },
+              {
+                "line": 6,
+                "pattern": "broad handler",
+                "model": "openai/gpt-6-luna",
+                "choice": "stickler",
+                "confidence": 0.92
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "label": "constructed verdicts set 10",
+      "change_set": {
+        "files": [
+          {
+            "file": "velvet.py",
+            "diff": "--- a/velvet.py\n+++ b/velvet.py\n@@ -0,0 +1,3 @@\n+    logger.debug(total)\n+data = read_items()\n+    return total\n"
+          },
+          {
+            "file": "octant.py",
+            "diff": "--- a/octant.py\n+++ b/octant.py\n@@ -0,0 +1,9 @@\n+    total = compute_total(rows)\n+    rows.append(item)\n+def pack(items, pair=([], {})):\n+    rows.append(item)\n+tmp = load_entries()\n+    limit = default_limit()\n+    value = next_value()\n+    except BaseException:\n+    total = compute_total(rows)\n",
+            "verdicts": [
+              {
+                "line": 6,
+                "pattern": "shared member default",
+                "model": "jev-1.13.0",
+                "choice": "clean",
+                "confidence": 0.9
+              },
+              {
+                "line": 8,
+                "pattern": "near placeholder name",
+                "model": "openai/gpt-6-luna",
+                "choice": "stickler",
+                "confidence": 0.78
+              },
+              {
+                "line": 11,
+                "pattern": "broad handler",
+                "model": "jev-1.13.0",
+                "choice": "stickler",
+                "confidence": 0.95
+              }
+            ]
+          },
+          {
+            "file": "fable.py",
+            "diff": "--- a/fable.py\n+++ b/fable.py\n@@ -0,0 +1,6 @@\n+    limit = default_limit()\n+temp = []\n+    value = next_value()\n+    logger.debug(total)\n+    except BaseException:\n+    rows.append(item)\n",
+            "verdicts": [
+              {
+                "line": 5,
+                "pattern": "near placeholder name",
+                "model": "openai/gpt-6-luna",
+                "choice": "stickler",
+                "confidence": 0.83
+              },
+              {
+                "line": 5,
+                "pattern": "near placeholder name",
+                "model": "jev-1.13.0",
+                "choice": "stickler",
+                "confidence": 0.9
+              }
+            ]
+          },
+          {
+            "file": "magnet.py",
+            "diff": "--- a/magnet.py\n+++ b/magnet.py\n@@ -0,0 +1,4 @@\n+    logger.debug(total)\n+    return total\n+data = fetch_rows()\n+    limit = default_limit()\n"
+          },
+          {
+            "file": "timber.py",
+            "diff": "--- a/timber.py\n+++ b/timber.py\n@@ -0,0 +1,8 @@\n+    total = compute_total(rows)\n+def render(items, cache=({},)):\n+    rows.append(item)\n+    limit = default_limit()\n+tmp = {}\n+    limit = default_limit()\n+    except BaseException:\n+    value = next_value()\n",
+            "verdicts": [
+              {
+                "line": 5,
+                "pattern": "shared member default",
+                "model": "jev-1.13.0",
+                "choice": "stickler",
+                "confidence": 0.87
+              },
+              {
+                "line": 8,
+                "pattern": "near placeholder name",
+                "model": "openai/gpt-6-luna",
+                "choice": "stickler",
+                "confidence": 0.92
+              },
+              {
+                "line": 10,
+                "pattern": "broad handler",
+                "model": "jev-1.13.0",
+                "choice": "clean",
+                "confidence": 0.8
+              },
+              {
+                "line": 10,
+                "pattern": "broad handler",
+                "model": "openai/gpt-6-luna",
+                "choice": "stickler",
+                "confidence": 0.78
+              }
+            ]
+          },
+          {
+            "file": "mosaic.py",
+            "diff": "--- a/mosaic.py\n+++ b/mosaic.py\n@@ -0,0 +1,6 @@\n+    limit = default_limit()\n+    value = next_value()\n+temp = read_items()\n+    value = next_value()\n+    except BaseException:\n+    logger.debug(total)\n",
+            "verdicts": [
+              {
+                "line": 8,
+                "pattern": "broad handler",
+                "model": "jev-1.13.0",
+                "choice": "stickler",
+                "confidence": 0.95
+              }
+            ]
+          },
+          {
+            "file": "dagger.py",
+            "diff": "--- a/dagger.py\n+++ b/dagger.py\n@@ -0,0 +1,3 @@\n+    logger.debug(total)\n+data = load_entries()\n+    return total\n",
+            "verdicts": [
+              {
+                "line": 5,
+                "pattern": "near placeholder name",
+                "model": "openai/gpt-6-luna",
+                "choice": "stickler",
+                "confidence": 0.83
+              }
+            ]
+          },
+          {
+            "file": "kettle.py",
+            "diff": "--- a/kettle.py\n+++ b/kettle.py\n@@ -0,0 +1,9 @@\n+    total = compute_total(rows)\n+    rows.append(item)\n+def pack(items, pair=([], {})):\n+    rows.append(item)\n+tmp = []\n+    limit = default_limit()\n+    value = next_value()\n+    except BaseException:\n+    total = compute_total(rows)\n",
+            "verdicts": [
+              {
+                "line": 6,
+                "pattern": "shared member default",
+                "model": "jev-1.13.0",
+                "choice": "clean",
+                "confidence": 0.74
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}
