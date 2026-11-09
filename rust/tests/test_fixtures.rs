@@ -13,6 +13,14 @@
 //! count as the census block of the large set. The large diff is
 //! pinned by dimension pins and by the per shape counts of the
 //! check, standing as literals counted from the construction.
+//! The large verdicts collection of Round 13 is pinned by
+//! dimension pins read off the fixture itself under the
+//! parameters the preamble of CK-27 states, by the four shape
+//! requirements that preamble names, and by the closing
+//! relations of the verdicts reading against the census and
+//! the outcomes reading over the same collection, the
+//! outcomes relation holding the constructed literal three
+//! for the collection's unjudged flags carrying verdicts.
 //! Every pin runs offline on the constructed fixtures, and no
 //! pin makes a live call.
 
@@ -24,7 +32,10 @@ use stickler::changeset::load_changeset;
 use stickler::checker::check_diff_detailed;
 use stickler::cli::cli_main;
 use stickler::json::{parse, JsonValue};
-use stickler::render::render_borderline;
+use stickler::outcomes::outcomes_reading_of;
+use stickler::render::{render_borderline, render_verdicts};
+use stickler::verdicts::{is_contested, line_outcome, verdict_outcome};
+use stickler::verdicts_reading::{load_verdicts, verdicts_reading_of};
 
 fn root() -> PathBuf {
     PathBuf::from(env!("CARGO_MANIFEST_DIR"))
@@ -329,4 +340,169 @@ fn large_diff_shape_counts_stand_as_literals() {
     let (code, out) = run_on_example("check", "large_check.diff");
     assert_eq!(code, 1);
     assert!(out.contains("Objections, 40"));
+}
+
+/// The dimension pins of the large verdicts collection,
+/// read off the fixture itself under the parameters the
+/// preamble of CK-27 states. The pin fails against the
+/// tree Round 12 closed on by the absence of the fixture
+/// it reads.
+#[test]
+fn verdicts_collection_dimensions_hold() {
+    let value = parsed_example("verdicts_collection.json");
+    assert!(load_verdicts(&value).is_empty());
+    let sets = value.get("sets").and_then(|sets| sets.as_array()).unwrap();
+    assert_eq!(sets.len(), 10);
+    for set in sets {
+        let label = set
+            .get("label")
+            .and_then(|label| label.as_jstring())
+            .unwrap()
+            .to_rust_string()
+            .unwrap();
+        assert!(
+            label.contains("constructed"),
+            "the set {label} is named as constructed"
+        );
+        let files = set
+            .get("change_set")
+            .unwrap()
+            .get("files")
+            .and_then(|files| files.as_array())
+            .unwrap();
+        assert!(
+            (4..=12).contains(&files.len()),
+            "a set holds {} files",
+            files.len()
+        );
+    }
+    let census = census_of(&value);
+    assert_eq!(census.sets.len(), 10);
+    let flags = census.total.borderline;
+    assert!(
+        (120..=200).contains(&flags),
+        "the collection holds {flags} flagged lines"
+    );
+    let reading = verdicts_reading_of(&value);
+    assert_eq!(reading.flags_read, flags);
+    let groups: Vec<_> = reading
+        .sections
+        .iter()
+        .flat_map(|section| section.groups.iter())
+        .collect();
+    let carrying = groups.len();
+    assert!(
+        carrying * 100 >= 55 * flags && carrying * 100 <= 75 * flags,
+        "{carrying} of {flags} flagged lines carry verdicts"
+    );
+    let verdicts_total: usize = groups.iter().map(|group| group.verdicts.len()).sum();
+    assert!(
+        (90..=160).contains(&verdicts_total),
+        "the collection holds {verdicts_total} verdicts"
+    );
+    assert!(groups
+        .iter()
+        .all(|group| (1..=2).contains(&group.verdicts.len())));
+    let abstentions = groups
+        .iter()
+        .flat_map(|group| group.verdicts.iter())
+        .filter(|verdict| verdict_outcome(verdict) == "abstained")
+        .count();
+    assert!(
+        abstentions * 100 >= 5 * verdicts_total && abstentions * 100 <= 15 * verdicts_total,
+        "{abstentions} of {verdicts_total} verdicts abstained"
+    );
+    assert!(groups
+        .iter()
+        .flat_map(|group| group.verdicts.iter())
+        .all(|verdict| verdict.model == "jev-1.13.0" || verdict.model == "openai/gpt-6-luna"));
+}
+
+/// The four shape requirements the preamble of CK-27
+/// states over the large verdicts collection, counted
+/// from the reading the collection builds. The pin
+/// fails against the tree Round 12 closed on by the
+/// absence of the module it names.
+#[test]
+fn verdicts_collection_shape_requirements_hold() {
+    let value = parsed_example("verdicts_collection.json");
+    let reading = verdicts_reading_of(&value);
+    assert!(
+        reading
+            .sections
+            .iter()
+            .any(|section| section.groups.is_empty()),
+        "one set carries no verdicts at all"
+    );
+    let groups: Vec<_> = reading
+        .sections
+        .iter()
+        .flat_map(|section| section.groups.iter())
+        .collect();
+    assert!(
+        groups.iter().any(|group| is_contested(&group.verdicts)),
+        "one flag is contested"
+    );
+    assert!(
+        groups
+            .iter()
+            .any(|group| line_outcome(&group.verdicts) == "unjudged"),
+        "one flag carries only abstentions"
+    );
+    assert_eq!(
+        groups
+            .iter()
+            .filter(|group| line_outcome(&group.verdicts) == "unjudged")
+            .count(),
+        3,
+        "exactly three unjudged flags carry verdicts"
+    );
+}
+
+/// The closing relations of the verdicts reading over
+/// the large verdicts collection, against the census
+/// and the outcomes reading over the same collection
+/// and against its own section counts. The pin fails
+/// against the tree Round 12 closed on by the absence
+/// of the module and the command it names.
+#[test]
+fn verdicts_collection_closing_relations_hold() {
+    let (code, out) = run_on_example("verdicts", "verdicts_collection.json");
+    assert_eq!(code, 0);
+    let value = parsed_example("verdicts_collection.json");
+    let census = census_of(&value);
+    let outcomes = outcomes_reading_of(&value);
+    let closings = out.split("\n\n").last().unwrap();
+    assert_eq!(count_after(closings, "Sets read, "), census.sets.len());
+    assert_eq!(
+        count_after(closings, "Flags read, "),
+        census.total.borderline
+    );
+    assert_eq!(
+        count_after(closings, "Flags with verdicts, "),
+        outcomes.sections[0].flags.len() + outcomes.sections[1].flags.len() + 3
+    );
+    assert_eq!(
+        count_after(closings, "Chose stickler, ")
+            + count_after(closings, "Chose clean, ")
+            + count_after(closings, "Abstained, "),
+        count_after(closings, "Verdicts read, ")
+    );
+    let section_counts: Vec<usize> = out
+        .lines()
+        .filter(|line| line.starts_with("Verdicts read, "))
+        .map(|line| {
+            line.strip_prefix("Verdicts read, ")
+                .unwrap()
+                .parse()
+                .unwrap()
+        })
+        .collect();
+    assert_eq!(section_counts.len(), 11);
+    assert_eq!(
+        section_counts[..10].iter().sum::<usize>(),
+        section_counts[10]
+    );
+    assert_eq!(section_counts[10], count_after(closings, "Verdicts read, "));
+    assert_eq!(out, render_verdicts(&verdicts_reading_of(&value)));
 }

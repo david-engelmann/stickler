@@ -23,3 +23,4 @@ pub mod scan;
 pub mod sets;
 pub mod split;
 pub mod verdicts;
+pub mod verdicts_reading;
