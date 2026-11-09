@@ -33,7 +33,8 @@ use stickler::checker::check_diff_detailed;
 use stickler::cli::cli_main;
 use stickler::json::{parse, JsonValue};
 use stickler::outcomes::outcomes_reading_of;
-use stickler::render::{render_borderline, render_verdicts};
+use stickler::render::{render_borderline, render_shapes, render_verdicts};
+use stickler::shapes::{load_shapes, shapes_reading_of};
 use stickler::verdicts::{is_contested, line_outcome, verdict_outcome};
 use stickler::verdicts_reading::{load_verdicts, verdicts_reading_of};
 
@@ -505,4 +506,226 @@ fn verdicts_collection_closing_relations_hold() {
     );
     assert_eq!(section_counts[10], count_after(closings, "Verdicts read, "));
     assert_eq!(out, render_verdicts(&verdicts_reading_of(&value)));
+}
+
+/// The dimension pins of the constructed shapes
+/// collection, read off the fixture itself under the
+/// parameters the preamble of the Round 14 section
+/// states. The pin fails against the tree Round 13
+/// closed on by the absence of the fixture it reads.
+#[test]
+fn shapes_collection_dimensions_hold() {
+    let value = parsed_example("shapes_collection.json");
+    assert!(load_shapes(&value).is_empty());
+    let sets = value.get("sets").and_then(|sets| sets.as_array()).unwrap();
+    assert_eq!(sets.len(), 2);
+    for set in sets {
+        let label = set
+            .get("label")
+            .and_then(|label| label.as_jstring())
+            .unwrap()
+            .to_rust_string()
+            .unwrap();
+        assert!(
+            label.contains("constructed"),
+            "the set {label} is named as constructed"
+        );
+        let files = set
+            .get("change_set")
+            .unwrap()
+            .get("files")
+            .and_then(|files| files.as_array())
+            .unwrap();
+        assert!(
+            (3..=6).contains(&files.len()),
+            "a set holds {} files",
+            files.len()
+        );
+        assert!(
+            files.iter().all(|file| !file.contains_key("verdicts")),
+            "no verdict stands in the set {label}"
+        );
+    }
+    let census = census_of(&value);
+    assert!(
+        (24..=40).contains(&census.total.judgements),
+        "the collection holds {} judgements",
+        census.total.judgements
+    );
+}
+
+/// The first shape requirement of the constructed
+/// shapes collection, each set carrying judgements
+/// under at least four of the six shapes, counted from
+/// the census tallies of its sets. The pin fails
+/// against the tree Round 13 closed on by the absence
+/// of the fixture it reads, and against a miscounted
+/// construction by the tallies it reads.
+#[test]
+fn shapes_collection_each_set_carries_four_shapes() {
+    let value = parsed_example("shapes_collection.json");
+    let census = census_of(&value);
+    assert_eq!(census.sets.len(), 2);
+    for set in &census.sets {
+        let standing = set.tally.shapes.iter().filter(|count| **count > 0).count();
+        assert!(
+            standing >= 4,
+            "the set {} carries {standing} shapes",
+            set.label
+        );
+    }
+}
+
+/// The second shape requirement, at least two shapes
+/// carrying judgements from both sets, counted from
+/// the census tallies of its sets.
+#[test]
+fn shapes_collection_two_shapes_carry_both_sets() {
+    let value = parsed_example("shapes_collection.json");
+    let census = census_of(&value);
+    let shared = (0..6)
+        .filter(|shape| census.sets.iter().all(|set| set.tally.shapes[*shape] > 0))
+        .count();
+    assert!(
+        shared >= 2,
+        "{shared} shapes carry judgements from both sets"
+    );
+}
+
+/// The third shape requirement, the placeholder name
+/// shape carrying at least two judgements in each set,
+/// counted from the census tallies of its sets.
+#[test]
+fn shapes_collection_placeholder_name_stands_twice_in_each_set() {
+    let value = parsed_example("shapes_collection.json");
+    let census = census_of(&value);
+    for set in &census.sets {
+        assert!(
+            set.tally.shapes[3] >= 2,
+            "the set {} carries {} placeholder name judgements",
+            set.label,
+            set.tally.shapes[3]
+        );
+    }
+}
+
+/// The fourth shape requirement, every shape's
+/// collection total standing at least at two, counted
+/// from the census total tally.
+#[test]
+fn shapes_collection_every_shape_total_stands_at_two() {
+    let value = parsed_example("shapes_collection.json");
+    let census = census_of(&value);
+    for (shape, count) in census.total.shapes.iter().enumerate() {
+        assert!(
+            *count >= 2,
+            "shape {shape} carries {count} judgements in total"
+        );
+    }
+}
+
+/// The fifth shape requirement, at least one file in
+/// each set carrying two judgements of different
+/// shapes, counted from the shapes reading, a file
+/// standing in two sections under one set.
+#[test]
+fn shapes_collection_a_file_in_each_set_stands_in_two_sections() {
+    let value = parsed_example("shapes_collection.json");
+    let reading = shapes_reading_of(&value);
+    let labels: Vec<String> = reading
+        .sections
+        .iter()
+        .flat_map(|section| {
+            section
+                .judgements
+                .iter()
+                .map(|judgement| judgement.set_label.clone())
+        })
+        .collect();
+    for label in ["constructed shapes set 1", "constructed shapes set 2"] {
+        assert!(labels.iter().any(|held| held == label));
+        let stands_twice = reading.sections.iter().enumerate().any(|(index, section)| {
+            section.judgements.iter().any(|first| {
+                first.set_label == label
+                    && reading
+                        .sections
+                        .iter()
+                        .enumerate()
+                        .any(|(other_index, other)| {
+                            other_index != index
+                                && other
+                                    .judgements
+                                    .iter()
+                                    .any(|held| held.set_label == label && held.file == first.file)
+                        })
+            })
+        });
+        assert!(
+            stands_twice,
+            "one file of the set {label} stands in two sections"
+        );
+    }
+}
+
+/// The sixth shape requirement, at least one file
+/// carrying two judgements of the same shape, counted
+/// from the shapes reading, one section holding two
+/// lines over one file of one set.
+#[test]
+fn shapes_collection_a_file_carries_two_judgements_of_one_shape() {
+    let value = parsed_example("shapes_collection.json");
+    let reading = shapes_reading_of(&value);
+    let stands = reading.sections.iter().any(|section| {
+        section.judgements.iter().any(|first| {
+            section
+                .judgements
+                .iter()
+                .filter(|held| held.file == first.file && held.set_label == first.set_label)
+                .count()
+                >= 2
+        })
+    });
+    assert!(stands, "one file carries two judgements of one shape");
+}
+
+/// The closing relations of the shapes reading over
+/// the constructed shapes collection, against the
+/// census over the same collection and against its
+/// own section counts. The pin fails against the tree
+/// Round 13 closed on by the absence of the module and
+/// the command it names, and its dimension companions
+/// fail there by the fixture's absence.
+#[test]
+fn shapes_collection_closing_relations_hold() {
+    let (code, out) = run_on_example("shapes", "shapes_collection.json");
+    assert_eq!(code, 0);
+    let value = parsed_example("shapes_collection.json");
+    let census = census_of(&value);
+    let reading = shapes_reading_of(&value);
+    for (index, section) in reading.sections.iter().enumerate() {
+        assert_eq!(
+            section.judgements.len(),
+            census.total.shapes[index],
+            "section {index} binds to the census shape line for its shape"
+        );
+    }
+    let closings = out.split("\n\n").last().unwrap();
+    assert_eq!(count_after(closings, "Sets read, "), census.sets.len());
+    assert_eq!(
+        count_after(closings, "Judgements read, "),
+        census.total.judgements
+    );
+    let section_counts: Vec<usize> = out
+        .lines()
+        .filter(|line| line.starts_with("Judgements read, "))
+        .map(|line| {
+            line.strip_prefix("Judgements read, ")
+                .unwrap()
+                .parse()
+                .unwrap()
+        })
+        .collect();
+    assert_eq!(section_counts.len(), 7);
+    assert_eq!(section_counts[..6].iter().sum::<usize>(), section_counts[6]);
+    assert_eq!(out, render_shapes(&reading));
 }

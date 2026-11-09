@@ -93,6 +93,10 @@ name = "test_setup"
 path = "rust/tests/test_setup.rs"
 
 [[test]]
+name = "test_shapes_reading"
+path = "rust/tests/test_shapes_reading.rs"
+
+[[test]]
 name = "test_split"
 path = "rust/tests/test_split.rs"
 

@@ -100,9 +100,9 @@ Contested flags, 2
 
 ## Usage
 
-The twelve commands each read one file and print one rendering. The examples below run over the files under examples, and every output block is captured from the command it follows.
+The thirteen commands each read one file and print one rendering. The examples below run over the files under examples, and every output block is captured from the command it follows.
 
-The input formats are specified in CONTRACT.md, in the section The formats, version 1, which states each form completely with its literal keys, the review form of CK-1 that render reads, the unified diff as text under CK-3 and CK-5 that check reads, the change set form of CK-6 and CK-8 that review reads, the collection form of CK-12 that the collection commands read, the pair form of CK-14 that rejudged reads, the split form of CK-15 that split reads, and the collection form under CK-27 that verdicts reads.
+The input formats are specified in CONTRACT.md, in the section The formats, version 1, which states each form completely with its literal keys, the review form of CK-1 that render reads, the unified diff as text under CK-3 and CK-5 that check reads, the change set form of CK-6 and CK-8 that review reads, the collection form of CK-12 that the collection commands read, the pair form of CK-14 that rejudged reads, the split form of CK-15 that split reads, the collection form under CK-27 that verdicts reads, and the collection form under CK-29 that shapes reads.
 
 The check command reads a unified diff and builds a review with the built in checker. The checker holds a fixed set of rules over the shapes of code a diff can carry, and each objection it raises names the rule the code breaks and the change that would clear the objection. The six rules read Python shaped code, a bare except clause, a def line default, a print call and their kin, and a diff of another language's code raises nothing and reads as an empty accepted review, so the silence a stranger meets is a scope fact and not a judgement of their code.
 
@@ -737,6 +737,43 @@ Chose clean, 5
 Abstained, 3
 ```
 
+The shapes command reads a collection in the census form and prints the shapes reading. The reading states one section per shape, in the order the contract states them, naming each judgement of the collection standing under that shape with its file, its standing number among the judgements of its file, its category, and the set it stands in, or the no judgements line where no judgement of the collection stands under a shape, and a closing count of the judgements stated per section, and it closes with counts over the whole collection.
+
+```sh
+stickler shapes examples/shapes.json
+```
+
+```text
+Shapes
+
+Shape, bare except
+report.py, judgement 2, smell, set, round 2 set
+Judgements read, 1
+
+Shape, print call
+report.py, judgement 3, smell, set, round 2 set
+Judgements read, 1
+
+Shape, mutable default
+report.py, judgement 1, structure, set, round 2 set
+Judgements read, 1
+
+Shape, placeholder name
+No judgements
+Judgements read, 0
+
+Shape, call default
+basket.py, judgement 2, structure, set, round 2 set
+Judgements read, 1
+
+Shape, class attribute
+basket.py, judgement 1, structure, set, round 2 set
+Judgements read, 1
+
+Sets read, 3
+Judgements read, 5
+```
+
 ## Status
 
 Seeded in October 2026. Setup has landed, and Rounds 1 to 13 have closed, with all slices merged on main. Part of the Spectacle line in the 39 repo storefront perfection programme.
@@ -770,6 +807,8 @@ Seeded in October 2026. Setup has landed, and Rounds 1 to 13 have closed, with a
 - Slice 13 has landed. It carries the formats of the repo stated at version 1 in the contract with the consolidated formats section, the static outcome word fencing in the split and rejudged renderings, the outcomes reading over a recorded collection of change sets, one section per judgement in the order the contract states them, naming each flag of the collection standing under that judgement with file, line, pattern, and the set it stands in, with per section flags read counts and closing counts over the whole collection, with the outcomes example under examples standing over the same collection as the census example, and the outcomes command beside check, render, review, census, rejudged, split, contested, pattern, files, and borderline, and the constructed large change set and large diff under examples, with the suite running offline on the recorded verdicts.
 - Contract, CK-27 and CK-28 met, with FIX-CK-28. They stand in full form in CONTRACT.md with the FIX-CK-28 repair amendment, and Round 13 closed on the merged slice 14 after three reviews and three delta reviews on the repair, one red team Minor repaired and two record figures corrected.
 - Slice 14 has landed. It carries the verdicts reading over a recorded collection of change sets, one section per set in collection order, naming each flag of the set carrying at least one recorded verdict with file, line, pattern, and the set it stands in, the verdict pairs of the flag in the standing set review form, and a closing count of the pairs stated per section, with closing counts over the whole collection, with the verdicts example under examples standing over the same collection as the census example, and the verdicts command beside check, render, review, census, rejudged, split, contested, pattern, files, borderline, and outcomes, and the constructed large verdicts collection under examples, with the suite running offline on the recorded verdicts.
+- Contract, CK-29 and CK-30 stated. They stand in full form in CONTRACT.md, and Round 14 stands open on slice 15 in review.
+- Slice 15 is built and in review. It carries the shapes reading over a recorded collection of change sets, one section per shape in the order the contract states them, naming each judgement of the collection standing under that shape with file, standing number, category, and the set it stands in, with per section judgements read counts and closing counts over the whole collection, with the shapes example under examples standing over the same collection as the census example, and the shapes command beside check, render, review, census, rejudged, split, contested, pattern, files, borderline, outcomes, and verdicts, and the loader doc list restatement in the one drift free form across the nine loader docs, and the constructed shapes collection under examples, with the suite running offline on the recorded verdicts.
 - The Rust port has landed. It carries the behavior the Python package carried, checked against the same goldens, and the Python tree stands removed under PORT-9.
 - Local gate, cargo test, cargo fmt --check, and cargo clippy --all-targets -- -D warnings. CI runs the same commands.
 

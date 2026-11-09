@@ -151,8 +151,13 @@ fn readme_reports_the_round_4_standing() {
     // standing in review, so the count stood at one
     // while Round 13 was built, until the Round 13
     // closure landed slice 14 and the count returned to
+    // zero. Adjusted again with the Round 14 slice, as
+    // the named mechanical consequence of slice 15
+    // standing in review, so the count stands at one
+    // while Round 14 is built, until the Round 14
+    // closure lands slice 15 and the count returns to
     // zero.
-    assert_eq!(text.matches("built and in review").count(), 0);
+    assert_eq!(text.matches("built and in review").count(), 1);
 }
 
 #[test]
@@ -351,9 +356,70 @@ fn contract_carries_the_round_13_obligations() {
     assert!(text.contains("- CK-28."));
     assert!(text.contains("the label FIX-CK-27 is not consumed"));
     let sets = read("rust/src/sets.rs");
-    assert!(sets.contains("CK-25, and CK-27 in CONTRACT.md"));
+    // Adjusted with the Round 14 slice, as the named mechanical
+    // consequence of CK-29 joining the obligations the sets.rs
+    // sentence names. The sentence gains CK-29, so the pinned
+    // substring gains it too, in the form the Round 14 pin
+    // below reads as well.
+    assert!(sets.contains("CK-25, CK-27, and CK-29 in CONTRACT.md"));
     let readme = read("README.md");
     assert!(readme.contains("the collection form under CK-27 that verdicts reads"));
+}
+
+/// The Round 14 obligations pin. It fails against the
+/// tree Round 13 closed on by the absence of every text
+/// it reads.
+#[test]
+fn contract_carries_the_round_14_obligations() {
+    let text = read("CONTRACT.md");
+    assert!(text.contains("- CK-29."));
+    assert!(text.contains("- CK-30."));
+    let sets = read("rust/src/sets.rs");
+    assert!(sets.contains("CK-25, CK-27, and CK-29 in CONTRACT.md"));
+    let readme = read("README.md");
+    assert!(readme.contains("the collection form under CK-29 that shapes reads"));
+}
+
+/// The doc list pin of the Round 14 slice. Each of the
+/// nine loader docs carries the one shared sentence
+/// naming the shared set entry validation as the one
+/// home every collection loader calls, and none of the
+/// nine carries a caller enumeration in the loaders
+/// both call or loaders all call forms. It fails
+/// against the tree Round 13 closed on by content on
+/// eight of the nine files, the ninth standing absent
+/// on that tree with its module, and it passes on any
+/// tree whose docs stand restated, including a tree
+/// carrying the restatement without the reading, which
+/// is correct, because the pin guards the docs and the
+/// reading pins guard the reading.
+#[test]
+fn the_nine_loader_docs_carry_the_one_shared_sentence() {
+    for module in [
+        "census",
+        "rejudged",
+        "contested",
+        "pattern",
+        "files",
+        "borderline",
+        "outcomes",
+        "verdicts_reading",
+        "shapes",
+    ] {
+        let text = read(&format!("rust/src/{module}.rs"));
+        assert!(
+            text.contains("the one home every collection loader calls"),
+            "loader doc {module}"
+        );
+        assert!(
+            !text.contains("loaders both call"),
+            "loader doc {module} enumerates no callers"
+        );
+        assert!(
+            !text.contains("loaders all call"),
+            "loader doc {module} enumerates no callers"
+        );
+    }
 }
 
 #[test]
@@ -379,6 +445,34 @@ fn readme_reports_the_round_13_status() {
         outcomes, and the constructed large verdicts collection under \
         examples, with the suite running offline on the recorded \
         verdicts.";
+    assert!(text.lines().any(|line| line == slice_line));
+    assert!(text.contains("Closed perfection rounds, 13 of 100"));
+}
+
+/// The Round 14 status pin, in the standing form. It
+/// fails on the base README by content, the two lines
+/// it holds standing absent there, and passes on the
+/// slice README.
+#[test]
+fn readme_reports_the_round_14_status() {
+    let text = read("README.md");
+    let standing = "- Contract, CK-29 and CK-30 stated. They stand in full form in \
+        CONTRACT.md, and Round 14 stands open on slice 15 in review.";
+    assert!(text.lines().any(|line| line == standing));
+    let slice_line = "- Slice 15 is built and in review. It carries the \
+        shapes reading over a recorded collection of change sets, one \
+        section per shape in the order the contract states them, naming \
+        each judgement of the collection standing under that shape with \
+        file, standing number, category, and the set it stands in, with \
+        per section judgements read counts and closing counts over the \
+        whole collection, with the shapes example under examples \
+        standing over the same collection as the census example, and \
+        the shapes command beside check, render, review, census, \
+        rejudged, split, contested, pattern, files, borderline, \
+        outcomes, and verdicts, and the loader doc list restatement \
+        in the one drift free form across the nine loader docs, and \
+        the constructed shapes collection under examples, with the \
+        suite running offline on the recorded verdicts.";
     assert!(text.lines().any(|line| line == slice_line));
     assert!(text.contains("Closed perfection rounds, 13 of 100"));
 }

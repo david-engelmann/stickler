@@ -12,6 +12,7 @@ use crate::outcomes::OutcomesReading;
 use crate::pattern::PatternReading;
 use crate::rejudged::Rejudged;
 use crate::review::{validate_review, verdict_for};
+use crate::shapes::ShapesReading;
 use crate::split::Split;
 use crate::verdicts::{is_abstention, is_contested, line_outcome, reason_for, verdict_outcome};
 use crate::verdicts_reading::VerdictsReading;
@@ -534,6 +535,59 @@ pub fn render_outcomes_defects(defects: &[String]) -> String {
 /// Render a malformed verdicts file with its defects named.
 pub fn render_verdicts_defects(defects: &[String]) -> String {
     render_defects_headed("Verdicts", defects)
+}
+
+/// Render a malformed shapes file with its defects named.
+pub fn render_shapes_defects(defects: &[String]) -> String {
+    render_defects_headed("Shapes", defects)
+}
+
+/// Render a shapes reading under CK-30.
+///
+/// The reading states one section per shape of the
+/// checker in the order CK-3 and CK-5 state them,
+/// naming every judgement of the collection standing
+/// under that shape with its file, its standing
+/// number among the judgements of its file, its
+/// category, and the set it stands in, or the no
+/// judgements line where none stands, and closes
+/// with the counts of the collection. The closing
+/// judgements read count prints as the sum over the
+/// sections stated, in the relations CK-30 states
+/// for it, and the closing sets read count stands
+/// as the builder counts it. Every field prints
+/// under the one line rule, the shape name of a
+/// section head fenced like every other field, so
+/// the rendering holds the rule for any reading it
+/// is handed, as the collection readings before it
+/// stand closed from their first writing. The same
+/// collection always renders byte identical.
+pub fn render_shapes(reading: &ShapesReading) -> String {
+    let mut lines = vec!["Shapes".to_string()];
+    let mut judgements_read = 0usize;
+    for section in &reading.sections {
+        lines.push(String::new());
+        lines.push(format!("Shape, {}", one_line_field(&section.shape)));
+        if section.judgements.is_empty() {
+            lines.push("No judgements".to_string());
+        } else {
+            for judgement in &section.judgements {
+                lines.push(format!(
+                    "{}, judgement {}, {}, set, {}",
+                    one_line_field(&judgement.file),
+                    judgement.number,
+                    one_line_field(&judgement.category),
+                    one_line_field(&judgement.set_label)
+                ));
+            }
+        }
+        judgements_read += section.judgements.len();
+        lines.push(format!("Judgements read, {}", section.judgements.len()));
+    }
+    lines.push(String::new());
+    lines.push(format!("Sets read, {}", reading.sets_read));
+    lines.push(format!("Judgements read, {judgements_read}"));
+    lines.join("\n") + "\n"
 }
 
 /// Render a verdicts reading under CK-28.

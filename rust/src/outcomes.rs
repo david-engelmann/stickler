@@ -83,9 +83,7 @@ fn flags_of(results: &[FileResult], set_label: &str) -> Vec<(&'static str, Outco
 /// Never fails, whatever it is handed.
 ///
 /// Each entry is validated through the shared set entry
-/// validation, the one home the census, rejudged,
-/// contested, pattern, files, and borderline loaders all
-/// call.
+/// validation, the one home every collection loader calls.
 pub fn load_outcomes(value: &JsonValue) -> Vec<String> {
     let mut defects = Vec::new();
     if !value.is_object() {

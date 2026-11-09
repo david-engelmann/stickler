@@ -78,8 +78,7 @@ fn inputs_of(results: &[FileResult]) -> Vec<Input> {
 /// Never fails, whatever it is handed.
 ///
 /// Each entry is validated through the shared set entry
-/// validation, the one home the census and rejudged loaders
-/// both call.
+/// validation, the one home every collection loader calls.
 pub fn load_rejudged(value: &JsonValue) -> Vec<String> {
     let mut defects = Vec::new();
     if !value.is_object() {

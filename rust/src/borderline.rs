@@ -58,8 +58,7 @@ pub struct BorderlineReading {
 /// file. Never fails, whatever it is handed.
 ///
 /// Each entry is validated through the shared set entry
-/// validation, the one home the census, rejudged,
-/// contested, pattern, and files loaders all call.
+/// validation, the one home every collection loader calls.
 pub fn load_borderline(value: &JsonValue) -> Vec<String> {
     let mut defects = Vec::new();
     if !value.is_object() {

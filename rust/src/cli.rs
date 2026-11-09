@@ -1,6 +1,7 @@
-//! The stickler command line. Twelve commands, check,
+//! The stickler command line. Thirteen commands, check,
 //! render, review, census, rejudged, split, contested,
-//! pattern, files, borderline, outcomes, and verdicts.
+//! pattern, files, borderline, outcomes, verdicts, and
+//! shapes.
 //!
 //! The surface stands as two functions over two readings of
 //! the arguments. The binary entry, run below, collects the
@@ -32,10 +33,11 @@ use crate::render::{
     render_contested, render_contested_defects, render_defects, render_defects_units, render_files,
     render_files_defects, render_outcomes, render_outcomes_defects, render_pattern,
     render_pattern_defects, render_rejudged, render_rejudged_defects, render_review,
-    render_set_defects, render_set_review, render_split, render_split_defects, render_verdicts,
-    render_verdicts_defects,
+    render_set_defects, render_set_review, render_shapes, render_shapes_defects, render_split,
+    render_split_defects, render_verdicts, render_verdicts_defects,
 };
 use crate::review::verdict_for;
+use crate::shapes::{load_shapes, shapes_reading_of};
 use crate::split::{load_split, split_of};
 use crate::verdicts::line_outcome;
 use crate::verdicts_reading::{load_verdicts, verdicts_reading_of};
@@ -54,7 +56,8 @@ const USAGE: &str = "Usage, stickler check DIFF_FILE\n\
                      Usage, stickler files FILES_JSON\n\
                      Usage, stickler borderline BORDERLINE_JSON\n\
                      Usage, stickler outcomes OUTCOMES_JSON\n\
-                     Usage, stickler verdicts VERDICTS_JSON\n";
+                     Usage, stickler verdicts VERDICTS_JSON\n\
+                     Usage, stickler shapes SHAPES_JSON\n";
 
 /// The outcome of one command line run, holding the exit code
 /// and the text for each of the two output streams.
@@ -520,6 +523,34 @@ fn verdicts_command(path: &JString) -> ByteOutcome {
     text_outcome(0, render_verdicts(&verdicts_reading_of(&value)))
 }
 
+fn shapes_command(path: &JString) -> ByteOutcome {
+    let text = match read_text(path) {
+        Err(()) => {
+            return text_outcome(
+                2,
+                render_shapes_defects(&["the shapes file could not be read".to_string()]),
+            );
+        }
+        Ok(text) => text,
+    };
+    let value = match json::parse(&text) {
+        Err(_) => {
+            return text_outcome(
+                2,
+                render_shapes_defects(&[
+                    "the file does not hold a JSON shapes collection".to_string()
+                ]),
+            );
+        }
+        Ok(value) => value,
+    };
+    let defects = load_shapes(&value);
+    if !defects.is_empty() {
+        return text_outcome(2, render_shapes_defects(&defects));
+    }
+    text_outcome(0, render_shapes(&shapes_reading_of(&value)))
+}
+
 /// Run the command line over code unit arguments and return
 /// the outcome as raw bytes.
 pub fn cli_main_units(args: &[JString]) -> ByteOutcome {
@@ -559,6 +590,9 @@ pub fn cli_main_units(args: &[JString]) -> ByteOutcome {
         }
         if args[0].equals("verdicts") {
             return verdicts_command(&args[1]);
+        }
+        if args[0].equals("shapes") {
+            return shapes_command(&args[1]);
         }
     }
     ByteOutcome {
