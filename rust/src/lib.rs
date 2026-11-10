@@ -14,6 +14,7 @@ pub mod choices;
 pub mod cli;
 pub mod contested;
 pub mod files;
+pub mod grounds;
 pub mod json;
 pub mod outcomes;
 pub mod pattern;

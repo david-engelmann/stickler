@@ -46,6 +46,24 @@
 //! three relation pins are compile absent against that
 //! tree by the absence of the categories module they
 //! name.
+//! The constructed grounds collection of Round 17 is
+//! pinned by dimension pins read off the fixture itself
+//! under the parameters the preamble of the Round 17
+//! section states, by the six shape requirements that
+//! preamble names, counted from the grounds reading
+//! and the pattern reading over the collection, and by
+//! the closing relations of the grounds reading
+//! against the verdicts reading and the pattern
+//! reading over the same collection and against its
+//! own section counts. The whole of this file is
+//! compile absent against the tree Round 16 closed on
+//! by the grounds module it imports, so no pin of this
+//! round stands at base to fail by the fixture's
+//! absence alone, and the dimension and requirement
+//! pins are additionally able to fail against a
+//! miscounted construction on the counts they read,
+//! and the three relation pins are compile absent by
+//! the same absence.
 //! Every pin runs offline on the constructed fixtures, and no
 //! pin makes a live call.
 
@@ -58,10 +76,13 @@ use stickler::changeset::load_changeset;
 use stickler::checker::check_diff_detailed;
 use stickler::choices::{choices_reading_of, load_choices};
 use stickler::cli::cli_main;
+use stickler::grounds::{grounds_reading_of, load_grounds};
 use stickler::json::{parse, JsonValue};
 use stickler::outcomes::outcomes_reading_of;
+use stickler::pattern::pattern_reading_of;
 use stickler::render::{
-    render_borderline, render_categories, render_choices, render_shapes, render_verdicts,
+    render_borderline, render_categories, render_choices, render_grounds, render_shapes,
+    render_verdicts,
 };
 use stickler::shapes::{load_shapes, shapes_reading_of};
 use stickler::verdicts::{is_contested, line_outcome, verdict_outcome};
@@ -1406,4 +1427,360 @@ fn choices_collection_internal_sums_hold() {
     assert_eq!(section_counts[..3].iter().sum::<usize>(), section_counts[3]);
     assert_eq!(section_counts[3], count_after(closings, "Verdicts read, "));
     assert_eq!(out, render_choices(&choices_reading_of(&value)));
+}
+
+/// The first dimension pin of the constructed grounds
+/// collection, read off the fixture itself under the
+/// parameters the preamble of the Round 17 section
+/// states. The whole file is compile absent against
+/// the tree Round 16 closed on by the grounds module
+/// it imports, and the pin can fail against a
+/// miscounted construction on the counts it reads.
+#[test]
+fn grounds_collection_holds_two_sets_named_as_constructed() {
+    let value = parsed_example("grounds_collection.json");
+    assert!(load_grounds(&value).is_empty());
+    let sets = value.get("sets").and_then(|sets| sets.as_array()).unwrap();
+    assert_eq!(sets.len(), 2);
+    for set in sets {
+        let label = set
+            .get("label")
+            .and_then(|label| label.as_jstring())
+            .unwrap()
+            .to_rust_string()
+            .unwrap();
+        assert!(
+            label.contains("constructed"),
+            "the set {label} is named as constructed"
+        );
+    }
+}
+
+/// The second dimension pin of the constructed grounds
+/// collection, each set holding between three and six
+/// files, read off the fixture itself.
+#[test]
+fn grounds_collection_files_per_set_stand_between_three_and_six() {
+    let value = parsed_example("grounds_collection.json");
+    let sets = value.get("sets").and_then(|sets| sets.as_array()).unwrap();
+    for set in sets {
+        let files = set
+            .get("change_set")
+            .unwrap()
+            .get("files")
+            .and_then(|files| files.as_array())
+            .unwrap();
+        assert!(
+            (3..=6).contains(&files.len()),
+            "a set holds {} files",
+            files.len()
+        );
+    }
+}
+
+/// The third dimension pin of the constructed grounds
+/// collection, the flagged lines across the collection
+/// standing between sixteen and twenty eight, counted
+/// from the census over the collection.
+#[test]
+fn grounds_collection_flagged_lines_stand_between_sixteen_and_twenty_eight() {
+    let value = parsed_example("grounds_collection.json");
+    let census = census_of(&value);
+    assert!(
+        (16..=28).contains(&census.total.borderline),
+        "the collection holds {} flagged lines",
+        census.total.borderline
+    );
+}
+
+/// The fourth dimension pin of the constructed grounds
+/// collection, the verdicts across the collection
+/// standing between twenty four and forty four,
+/// counted from the verdicts reading over the
+/// collection.
+#[test]
+fn grounds_collection_verdicts_stand_between_twenty_four_and_forty_four() {
+    let value = parsed_example("grounds_collection.json");
+    let reading = verdicts_reading_of(&value);
+    let verdicts: usize = reading
+        .sections
+        .iter()
+        .flat_map(|section| section.groups.iter())
+        .map(|group| group.verdicts.len())
+        .sum();
+    assert!(
+        (24..=44).contains(&verdicts),
+        "the collection holds {verdicts} verdicts"
+    );
+}
+
+/// The first shape requirement of the constructed
+/// grounds collection, every pattern carrying verdicts
+/// from both sets, counted from the grounds reading,
+/// each section holding at least one flag group
+/// carrying each set's label.
+#[test]
+fn grounds_collection_every_pattern_carries_verdicts_from_both_sets() {
+    let value = parsed_example("grounds_collection.json");
+    let reading = grounds_reading_of(&value);
+    for section in &reading.sections {
+        for label in ["constructed grounds set 1", "constructed grounds set 2"] {
+            assert!(
+                section.groups.iter().any(|group| group.set_label == label),
+                "the pattern {} carries no verdict of the set {label}",
+                section.pattern
+            );
+        }
+    }
+}
+
+/// The second shape requirement, every pattern's
+/// collection total of pairs standing at least at
+/// four, counted from the grounds reading.
+#[test]
+fn grounds_collection_every_pattern_total_stands_at_least_at_four() {
+    let value = parsed_example("grounds_collection.json");
+    let reading = grounds_reading_of(&value);
+    for section in &reading.sections {
+        let pairs: usize = section
+            .groups
+            .iter()
+            .map(|group| group.verdicts.len())
+            .sum();
+        assert!(
+            pairs >= 4,
+            "the pattern {} carries {pairs} pairs in total",
+            section.pattern
+        );
+    }
+}
+
+/// The third shape requirement, at least one flag of
+/// each pattern carrying two verdicts, counted from
+/// the grounds reading, each section holding a group
+/// of two or more pairs.
+#[test]
+fn grounds_collection_a_flag_of_each_pattern_carries_two_verdicts() {
+    let value = parsed_example("grounds_collection.json");
+    let reading = grounds_reading_of(&value);
+    for section in &reading.sections {
+        assert!(
+            section.groups.iter().any(|group| group.verdicts.len() >= 2),
+            "no flag of the pattern {} carries two verdicts",
+            section.pattern
+        );
+    }
+}
+
+/// The fourth shape requirement, at least one flag
+/// carrying verdicts of both labels, counted from the
+/// grounds reading, one group holding a verdict whose
+/// outcome stands as stickler and one whose outcome
+/// stands as clean under the one outcome helper.
+#[test]
+fn grounds_collection_a_flag_carries_verdicts_of_both_labels() {
+    let value = parsed_example("grounds_collection.json");
+    let reading = grounds_reading_of(&value);
+    let stands = reading
+        .sections
+        .iter()
+        .flat_map(|section| section.groups.iter())
+        .any(|group| {
+            group
+                .verdicts
+                .iter()
+                .any(|verdict| verdict_outcome(verdict) == "stickler")
+                && group
+                    .verdicts
+                    .iter()
+                    .any(|verdict| verdict_outcome(verdict) == "clean")
+        });
+    assert!(stands, "one flag carries verdicts of both labels");
+}
+
+/// The fifth shape requirement, at least one flag
+/// carrying only abstentions, counted from the grounds
+/// reading, one group standing whose every verdict's
+/// outcome stands as abstained under the one outcome
+/// helper.
+#[test]
+fn grounds_collection_a_flag_carries_only_abstentions() {
+    let value = parsed_example("grounds_collection.json");
+    let reading = grounds_reading_of(&value);
+    let stands = reading
+        .sections
+        .iter()
+        .flat_map(|section| section.groups.iter())
+        .any(|group| {
+            !group.verdicts.is_empty()
+                && group
+                    .verdicts
+                    .iter()
+                    .all(|verdict| verdict_outcome(verdict) == "abstained")
+        });
+    assert!(stands, "one flag carries only abstentions");
+}
+
+/// The sixth shape requirement, at least one flag
+/// carrying no verdicts at all, counted against the
+/// pattern reading over the collection, a flag that
+/// reading names under its pattern standing in no
+/// grounds section.
+#[test]
+fn grounds_collection_a_flag_carries_no_verdicts() {
+    let value = parsed_example("grounds_collection.json");
+    let reading = grounds_reading_of(&value);
+    let pattern = pattern_reading_of(&value);
+    let stands = pattern.sections.iter().any(|section| {
+        section.flags.iter().any(|flag| {
+            !reading
+                .sections
+                .iter()
+                .flat_map(|grounds_section| grounds_section.groups.iter())
+                .any(|group| {
+                    group.file == flag.file
+                        && group.line == flag.line
+                        && group.set_label == flag.set_label
+                })
+        })
+    });
+    assert!(stands, "one flag carries no verdicts");
+}
+
+/// The verdicts relation of the constructed grounds
+/// collection, each of the seven closing counts of the
+/// grounds reading standing count for count against
+/// the same named count of the verdicts reading over
+/// the same collection, both readings run here, and
+/// the command output standing byte identical to the
+/// library rendering.
+#[test]
+fn grounds_collection_closings_bind_to_the_verdicts_reading() {
+    let (code, out) = run_on_example("grounds", "grounds_collection.json");
+    assert_eq!(code, 0);
+    let value = parsed_example("grounds_collection.json");
+    let verdicts = render_verdicts(&verdicts_reading_of(&value));
+    let grounds_closings = out.split("\n\n").last().unwrap();
+    let verdicts_closings = verdicts.split("\n\n").last().unwrap();
+    for prefix in [
+        "Sets read, ",
+        "Flags read, ",
+        "Flags with verdicts, ",
+        "Verdicts read, ",
+        "Chose stickler, ",
+        "Chose clean, ",
+        "Abstained, ",
+    ] {
+        assert_eq!(
+            count_after(grounds_closings, prefix),
+            count_after(verdicts_closings, prefix),
+            "{prefix} binds to the verdicts reading"
+        );
+    }
+    assert_eq!(out, render_grounds(&grounds_reading_of(&value)));
+}
+
+/// The pattern relation of the constructed grounds
+/// collection, the flag groups of each grounds section
+/// being exactly the flags the pattern reading names
+/// under that pattern that carry at least one verdict,
+/// in the same order, and each section's closing count
+/// equal to the pairs standing on those flags in the
+/// verdicts reading over the same collection, all
+/// three readings run here.
+#[test]
+fn grounds_collection_sections_bind_to_the_pattern_reading() {
+    let value = parsed_example("grounds_collection.json");
+    let reading = grounds_reading_of(&value);
+    let pattern = pattern_reading_of(&value);
+    let verdicts = verdicts_reading_of(&value);
+    let pair_count = |set_label: &str, file: &str, line: usize, pattern: &str| -> Option<usize> {
+        verdicts
+            .sections
+            .iter()
+            .filter(|section| section.label == set_label)
+            .flat_map(|section| section.groups.iter())
+            .find(|group| group.file == file && group.line == line && group.pattern == pattern)
+            .map(|group| group.verdicts.len())
+    };
+    for (grounds_section, pattern_section) in reading.sections.iter().zip(pattern.sections.iter()) {
+        assert_eq!(grounds_section.pattern, pattern_section.pattern);
+        let expected: Vec<_> = pattern_section
+            .flags
+            .iter()
+            .filter(|flag| {
+                pair_count(
+                    &flag.set_label,
+                    &flag.file,
+                    flag.line,
+                    &grounds_section.pattern,
+                )
+                .is_some()
+            })
+            .collect();
+        assert_eq!(
+            grounds_section.groups.len(),
+            expected.len(),
+            "section {}",
+            grounds_section.pattern
+        );
+        for (group, flag) in grounds_section.groups.iter().zip(expected.iter()) {
+            assert_eq!(group.file, flag.file, "section {}", grounds_section.pattern);
+            assert_eq!(group.line, flag.line, "section {}", grounds_section.pattern);
+            assert_eq!(
+                group.set_label, flag.set_label,
+                "section {}",
+                grounds_section.pattern
+            );
+        }
+        let stated: usize = grounds_section
+            .groups
+            .iter()
+            .map(|group| group.verdicts.len())
+            .sum();
+        let counted: usize = expected
+            .iter()
+            .map(|flag| {
+                pair_count(
+                    &flag.set_label,
+                    &flag.file,
+                    flag.line,
+                    &grounds_section.pattern,
+                )
+                .unwrap()
+            })
+            .sum();
+        assert_eq!(stated, counted, "section {}", grounds_section.pattern);
+    }
+}
+
+/// The internal sums of the grounds reading over the
+/// constructed grounds collection, the section closing
+/// counts summing to the closing verdicts read count
+/// and the three outcome counts summing to the same,
+/// read from the rendered text.
+#[test]
+fn grounds_collection_internal_sums_hold() {
+    let value = parsed_example("grounds_collection.json");
+    let rendered = render_grounds(&grounds_reading_of(&value));
+    let section_counts: Vec<usize> = rendered
+        .lines()
+        .filter(|line| line.starts_with("Verdicts read, "))
+        .map(|line| {
+            line.strip_prefix("Verdicts read, ")
+                .unwrap()
+                .parse()
+                .unwrap()
+        })
+        .collect();
+    assert_eq!(section_counts.len(), 4);
+    assert_eq!(section_counts[..3].iter().sum::<usize>(), section_counts[3]);
+    let closings = rendered.split("\n\n").last().unwrap();
+    assert_eq!(section_counts[3], count_after(closings, "Verdicts read, "));
+    assert_eq!(
+        count_after(closings, "Chose stickler, ")
+            + count_after(closings, "Chose clean, ")
+            + count_after(closings, "Abstained, "),
+        count_after(closings, "Verdicts read, ")
+    );
 }
