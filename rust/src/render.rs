@@ -5,6 +5,7 @@ use crate::borderline::BorderlineReading;
 use crate::census::{Census, CensusSet, Tally};
 use crate::changeset::{FileResult, Judgements};
 use crate::checker::{BORDERLINE_PATTERNS, SHAPES};
+use crate::choices::ChoicesReading;
 use crate::contested::Contested;
 use crate::files::FilesReading;
 use crate::json::{JString, JsonValue};
@@ -542,6 +543,11 @@ pub fn render_shapes_defects(defects: &[String]) -> String {
     render_defects_headed("Shapes", defects)
 }
 
+/// Render a malformed choices file with its defects named.
+pub fn render_choices_defects(defects: &[String]) -> String {
+    render_defects_headed("Choices", defects)
+}
+
 /// Render a shapes reading under CK-30.
 ///
 /// The reading states one section per shape of the
@@ -672,6 +678,111 @@ pub fn render_verdicts(reading: &VerdictsReading) -> String {
     lines.push(format!("Sets read, {}", reading.sections.len()));
     lines.push(format!("Flags read, {}", reading.flags_read));
     lines.push(format!("Flags with verdicts, {flags_with_verdicts}"));
+    lines.push(format!("Verdicts read, {verdicts_read}"));
+    lines.push(format!("Chose stickler, {chose_stickler}"));
+    lines.push(format!("Chose clean, {chose_clean}"));
+    lines.push(format!("Abstained, {abstained}"));
+    lines.join("\n") + "\n"
+}
+
+/// The section head an outcome stands under in a
+/// choices rendering. For the three outcome words the
+/// head is a fixed literal of the rendering and not a
+/// handed field, in the form CK-26 states for its
+/// heads. A handed outcome word outside the three
+/// prints fenced as its own head, in the posture
+/// CK-32 states for it.
+fn outcome_head(outcome: &str) -> String {
+    match outcome {
+        "stickler" => "Chose stickler".to_string(),
+        "clean" => "Chose clean".to_string(),
+        "abstained" => "Abstained".to_string(),
+        other => one_line_field(other).to_string(),
+    }
+}
+
+/// Render a choices reading under CK-32.
+///
+/// The reading states one section per outcome of the
+/// seat in the order CK-28 states the outcome counts,
+/// naming each flag of the collection carrying at
+/// least one verdict standing under that outcome with
+/// its file, line, and pattern and the label of its
+/// set, the verdict pairs of the flag standing under
+/// the section's outcome in the standing set review
+/// form, or the no verdicts line where no verdict of
+/// the collection stands under the outcome, and closes
+/// with the counts of the collection. The section
+/// counts print as the counts of the pairs stated, and
+/// the closing verdicts read count and the three
+/// outcome counts print as the sums over the sections
+/// stated, in the relations CK-32 states for them, the
+/// outcome counts counted over the sections carrying
+/// their outcome word, so the pairs of a handed
+/// section carrying an outcome word outside the three
+/// count in the verdicts read count and in none of the
+/// three. The closing sets read, flags read, and flags
+/// with verdicts counts stand as the builder counts
+/// them, in the carve out FIX-CK-21 states. Every
+/// field prints under the one line rule, so the
+/// rendering holds the rule for any reading it is
+/// handed, as the collection readings before it stand
+/// closed from their first writing. The same
+/// collection always renders byte identical.
+pub fn render_choices(reading: &ChoicesReading) -> String {
+    let mut lines = vec!["Choices".to_string()];
+    let mut verdicts_read = 0usize;
+    let mut chose_stickler = 0usize;
+    let mut chose_clean = 0usize;
+    let mut abstained = 0usize;
+    for section in &reading.sections {
+        lines.push(String::new());
+        lines.push(outcome_head(&section.outcome));
+        if section.groups.is_empty() {
+            lines.push("No verdicts".to_string());
+        }
+        let mut section_verdicts = 0usize;
+        for group in &section.groups {
+            lines.push(format!(
+                "{}, line {}, {}, set, {}",
+                one_line_field(&group.file),
+                group.line,
+                one_line_field(&group.pattern),
+                one_line_field(&group.set_label)
+            ));
+            for entry in &group.verdicts {
+                section_verdicts += 1;
+                if is_abstention(entry) {
+                    lines.push(format!(
+                        "Verdict, {}, abstained",
+                        one_line_field(&entry.model)
+                    ));
+                } else {
+                    lines.push(format!(
+                        "Verdict, {}, {}",
+                        one_line_field(&entry.model),
+                        one_line_field(&entry.choice)
+                    ));
+                }
+                lines.push(format!("Reason, {}", one_line_field(&reason_for(entry))));
+            }
+        }
+        verdicts_read += section_verdicts;
+        match section.outcome.as_str() {
+            "stickler" => chose_stickler += section_verdicts,
+            "clean" => chose_clean += section_verdicts,
+            "abstained" => abstained += section_verdicts,
+            _ => {}
+        }
+        lines.push(format!("Verdicts read, {section_verdicts}"));
+    }
+    lines.push(String::new());
+    lines.push(format!("Sets read, {}", reading.sets_read));
+    lines.push(format!("Flags read, {}", reading.flags_read));
+    lines.push(format!(
+        "Flags with verdicts, {}",
+        reading.flags_with_verdicts
+    ));
     lines.push(format!("Verdicts read, {verdicts_read}"));
     lines.push(format!("Chose stickler, {chose_stickler}"));
     lines.push(format!("Chose clean, {chose_clean}"));

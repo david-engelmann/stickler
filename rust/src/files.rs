@@ -6,8 +6,7 @@
 //! one file, across all sets, stands as one list rather
 //! than being read out of one set review at a time. It
 //! exists for the same recorded inputs as the census,
-//! contested, and pattern readings, over the same
-//! collection loading whole into all four. The loader
+//! over the same collection loading whole. The loader
 //! validates each entry through the shared set entry
 //! validation and each member through the change set
 //! loader, the flags and verdicts come from the set

@@ -9,6 +9,7 @@ pub mod borderline;
 pub mod census;
 pub mod changeset;
 pub mod checker;
+pub mod choices;
 pub mod cli;
 pub mod contested;
 pub mod files;

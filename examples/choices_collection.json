@@ -1,0 +1,858 @@
+{
+  "sets": [
+    {
+      "label": "constructed choices set 1",
+      "change_set": {
+        "files": [
+          {
+            "file": "clover.py",
+            "diff": "--- a/clover.py\n+++ b/clover.py\n@@ -0,0 +1,5 @@\n+    return rows[0]\n+    total = compute_total(rows)\n+count = len(data)\n+temp = []\n+tmp = []\n",
+            "verdicts": [
+              {
+                "line": 7,
+                "pattern": "near placeholder name",
+                "model": "jev-1.13.0",
+                "choice": "stickler",
+                "confidence": 0.98
+              },
+              {
+                "line": 7,
+                "pattern": "near placeholder name",
+                "model": "openai/gpt-6-luna",
+                "choice": "clean",
+                "confidence": 0.93
+              },
+              {
+                "line": 8,
+                "pattern": "near placeholder name",
+                "model": "jev-1.13.0",
+                "choice": "stickler",
+                "confidence": 0.84
+              },
+              {
+                "line": 8,
+                "pattern": "near placeholder name",
+                "model": "openai/gpt-6-luna",
+                "choice": "stickler",
+                "confidence": 0.95
+              }
+            ]
+          },
+          {
+            "file": "temple.py",
+            "diff": "--- a/temple.py\n+++ b/temple.py\n@@ -0,0 +1,8 @@\n+tmp = []\n+temp = []\n+    rows.append(item)\n+tmp = []\n+    return rows[0]\n+count = len(data)\n+    rows.append(item)\n+    logger.debug(total)\n",
+            "verdicts": [
+              {
+                "line": 4,
+                "pattern": "near placeholder name",
+                "model": "jev-1.13.0",
+                "choice": "stickler",
+                "confidence": 0.08
+              },
+              {
+                "line": 4,
+                "pattern": "near placeholder name",
+                "model": "openai/gpt-6-luna",
+                "choice": "clean",
+                "confidence": 0.93
+              },
+              {
+                "line": 5,
+                "pattern": "near placeholder name",
+                "model": "jev-1.13.0",
+                "choice": "clean",
+                "confidence": 0.26
+              },
+              {
+                "line": 7,
+                "pattern": "near placeholder name",
+                "model": "jev-1.13.0",
+                "choice": "clean",
+                "confidence": 0.6
+              },
+              {
+                "line": 7,
+                "pattern": "near placeholder name",
+                "model": "openai/gpt-6-luna",
+                "choice": "stickler",
+                "confidence": 0.76
+              }
+            ]
+          },
+          {
+            "file": "gospel.py",
+            "diff": "--- a/gospel.py\n+++ b/gospel.py\n@@ -0,0 +1,4 @@\n+    total = compute_total(rows)\n+    value = next_value()\n+data = load_entries()\n+tmp = []\n",
+            "verdicts": [
+              {
+                "line": 6,
+                "pattern": "near placeholder name",
+                "model": "openai/gpt-6-luna",
+                "choice": "clean",
+                "confidence": 0.15
+              },
+              {
+                "line": 6,
+                "pattern": "near placeholder name",
+                "model": "jev-1.13.0",
+                "choice": "stickler",
+                "confidence": 0.66
+              },
+              {
+                "line": 7,
+                "pattern": "near placeholder name",
+                "model": "openai/gpt-6-luna",
+                "choice": "clean",
+                "confidence": 0.58
+              }
+            ]
+          },
+          {
+            "file": "pepper.py",
+            "diff": "--- a/pepper.py\n+++ b/pepper.py\n@@ -0,0 +1,7 @@\n+    return rows[0]\n+temp = {}\n+def weigh(rows, memo=([],)):\n+    logger.debug(total)\n+def weigh(rows, memo=([], {})):\n+    return rows[0]\n+    return rows[0]\n",
+            "verdicts": [
+              {
+                "line": 6,
+                "pattern": "shared member default",
+                "model": "jev-1.13.0",
+                "choice": "clean",
+                "confidence": 0.83
+              }
+            ]
+          },
+          {
+            "file": "laurel.py",
+            "diff": "--- a/laurel.py\n+++ b/laurel.py\n@@ -0,0 +1,4 @@\n+    return rows[0]\n+    except BaseException:\n+    rows.append(item)\n+data = load_entries()\n",
+            "verdicts": [
+              {
+                "line": 7,
+                "pattern": "near placeholder name",
+                "model": "openai/gpt-6-luna",
+                "choice": "clean",
+                "confidence": 0.97
+              }
+            ]
+          },
+          {
+            "file": "willow.py",
+            "diff": "--- a/willow.py\n+++ b/willow.py\n@@ -0,0 +1,4 @@\n+tmp = []\n+    except BaseException:\n+    value = next_value()\n+count = len(data)\n",
+            "verdicts": [
+              {
+                "line": 5,
+                "pattern": "broad handler",
+                "model": "jev-1.13.0",
+                "choice": "stickler",
+                "confidence": 0.92
+              },
+              {
+                "line": 5,
+                "pattern": "broad handler",
+                "model": "openai/gpt-6-luna",
+                "choice": "stickler",
+                "confidence": 0.84
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "label": "constructed choices set 2",
+      "change_set": {
+        "files": [
+          {
+            "file": "herald.py",
+            "diff": "--- a/herald.py\n+++ b/herald.py\n@@ -0,0 +1,6 @@\n+    rows.append(item)\n+    value = next_value()\n+count = len(data)\n+    return total\n+def fetch(rows, memo=([],)):\n+temp = []\n",
+            "verdicts": [
+              {
+                "line": 8,
+                "pattern": "shared member default",
+                "model": "jev-1.13.0",
+                "choice": "clean",
+                "confidence": 0.96
+              },
+              {
+                "line": 8,
+                "pattern": "shared member default",
+                "model": "openai/gpt-6-luna",
+                "choice": "stickler",
+                "confidence": 0.93
+              },
+              {
+                "line": 9,
+                "pattern": "near placeholder name",
+                "model": "openai/gpt-6-luna",
+                "choice": "clean",
+                "confidence": 0.76
+              }
+            ]
+          },
+          {
+            "file": "kestrel.py",
+            "diff": "--- a/kestrel.py\n+++ b/kestrel.py\n@@ -0,0 +1,5 @@\n+count = len(data)\n+    return total\n+temp = {}\n+    except BaseException:\n+def gather(rows, memo=({},)):\n",
+            "verdicts": [
+              {
+                "line": 6,
+                "pattern": "near placeholder name",
+                "model": "jev-1.13.0",
+                "choice": "clean",
+                "confidence": 0.77
+              },
+              {
+                "line": 7,
+                "pattern": "broad handler",
+                "model": "jev-1.13.0",
+                "choice": "stickler",
+                "confidence": 0.11
+              },
+              {
+                "line": 8,
+                "pattern": "shared member default",
+                "model": "jev-1.13.0",
+                "choice": "stickler",
+                "confidence": 0.92
+              }
+            ]
+          },
+          {
+            "file": "birch.py",
+            "diff": "--- a/birch.py\n+++ b/birch.py\n@@ -0,0 +1,6 @@\n+    logger.debug(total)\n+    total = compute_total(rows)\n+    total = compute_total(rows)\n+data = load_entries()\n+    limit = default_limit()\n+    except BaseException:\n",
+            "verdicts": [
+              {
+                "line": 7,
+                "pattern": "near placeholder name",
+                "model": "jev-1.13.0",
+                "choice": "clean",
+                "confidence": 0.69
+              },
+              {
+                "line": 7,
+                "pattern": "near placeholder name",
+                "model": "openai/gpt-6-luna",
+                "choice": "clean",
+                "confidence": 0.65
+              },
+              {
+                "line": 9,
+                "pattern": "broad handler",
+                "model": "openai/gpt-6-luna",
+                "choice": "clean",
+                "confidence": 0.88
+              }
+            ]
+          },
+          {
+            "file": "anchor.py",
+            "diff": "--- a/anchor.py\n+++ b/anchor.py\n@@ -0,0 +1,4 @@\n+    return total\n+    return rows[0]\n+    except BaseException:\n+def weigh(rows, memo=({},)):\n"
+          },
+          {
+            "file": "orchard.py",
+            "diff": "--- a/orchard.py\n+++ b/orchard.py\n@@ -0,0 +1,6 @@\n+    return total\n+    logger.debug(total)\n+temp = []\n+    limit = default_limit()\n+temp = {}\n+def tally(rows, memo=({},)):\n",
+            "verdicts": [
+              {
+                "line": 6,
+                "pattern": "near placeholder name",
+                "model": "openai/gpt-6-luna",
+                "choice": "stickler",
+                "confidence": 0.72
+              },
+              {
+                "line": 6,
+                "pattern": "near placeholder name",
+                "model": "jev-1.13.0",
+                "choice": "clean",
+                "confidence": 0.57
+              },
+              {
+                "line": 9,
+                "pattern": "shared member default",
+                "model": "openai/gpt-6-luna",
+                "choice": "stickler",
+                "confidence": 0.43
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "label": "constructed choices set 3",
+      "change_set": {
+        "files": [
+          {
+            "file": "bronze.py",
+            "diff": "--- a/bronze.py\n+++ b/bronze.py\n@@ -0,0 +1,6 @@\n+data = load_entries()\n+    value = next_value()\n+    return rows[0]\n+    total = compute_total(rows)\n+temp = {}\n+temp = {}\n",
+            "verdicts": [
+              {
+                "line": 4,
+                "pattern": "near placeholder name",
+                "model": "openai/gpt-6-luna",
+                "choice": "clean",
+                "confidence": 0.56
+              },
+              {
+                "line": 8,
+                "pattern": "near placeholder name",
+                "model": "openai/gpt-6-luna",
+                "choice": "stickler",
+                "confidence": 0.62
+              }
+            ]
+          },
+          {
+            "file": "kettle.py",
+            "diff": "--- a/kettle.py\n+++ b/kettle.py\n@@ -0,0 +1,6 @@\n+    logger.debug(total)\n+    value = next_value()\n+tmp = []\n+    rows.append(item)\n+    return total\n+tmp = []\n",
+            "verdicts": [
+              {
+                "line": 6,
+                "pattern": "near placeholder name",
+                "model": "jev-1.13.0",
+                "choice": "stickler",
+                "confidence": 0.18
+              }
+            ]
+          },
+          {
+            "file": "yonder.py",
+            "diff": "--- a/yonder.py\n+++ b/yonder.py\n@@ -0,0 +1,8 @@\n+data = load_entries()\n+data = load_entries()\n+    return rows[0]\n+def fetch(rows, memo=([],)):\n+    return rows[0]\n+    limit = default_limit()\n+    logger.debug(total)\n+    logger.debug(total)\n",
+            "verdicts": [
+              {
+                "line": 4,
+                "pattern": "near placeholder name",
+                "model": "jev-1.13.0",
+                "choice": "clean",
+                "confidence": 0.91
+              },
+              {
+                "line": 5,
+                "pattern": "near placeholder name",
+                "model": "openai/gpt-6-luna",
+                "choice": "clean",
+                "confidence": 0.87
+              },
+              {
+                "line": 7,
+                "pattern": "shared member default",
+                "model": "openai/gpt-6-luna",
+                "choice": "stickler",
+                "confidence": 0.57
+              },
+              {
+                "line": 7,
+                "pattern": "shared member default",
+                "model": "jev-1.13.0",
+                "choice": "clean",
+                "confidence": 0.05
+              }
+            ]
+          },
+          {
+            "file": "jacket.py",
+            "diff": "--- a/jacket.py\n+++ b/jacket.py\n@@ -0,0 +1,8 @@\n+def plan(rows, memo=({},)):\n+def merge(rows, memo=({},)):\n+    rows.append(item)\n+    value = next_value()\n+    rows.append(item)\n+    value = next_value()\n+def gather(rows, memo=([],)):\n+    value = next_value()\n",
+            "verdicts": [
+              {
+                "line": 4,
+                "pattern": "shared member default",
+                "model": "jev-1.13.0",
+                "choice": "clean",
+                "confidence": 0.65
+              },
+              {
+                "line": 5,
+                "pattern": "shared member default",
+                "model": "openai/gpt-6-luna",
+                "choice": "clean",
+                "confidence": 0.9
+              }
+            ]
+          },
+          {
+            "file": "ladder.py",
+            "diff": "--- a/ladder.py\n+++ b/ladder.py\n@@ -0,0 +1,5 @@\n+temp = {}\n+    value = next_value()\n+    return total\n+def grid(rows, memo=([],)):\n+tmp = []\n",
+            "verdicts": [
+              {
+                "line": 4,
+                "pattern": "near placeholder name",
+                "model": "jev-1.13.0",
+                "choice": "stickler",
+                "confidence": 0.66
+              },
+              {
+                "line": 4,
+                "pattern": "near placeholder name",
+                "model": "openai/gpt-6-luna",
+                "choice": "stickler",
+                "confidence": 0.79
+              },
+              {
+                "line": 7,
+                "pattern": "shared member default",
+                "model": "openai/gpt-6-luna",
+                "choice": "clean",
+                "confidence": 0.79
+              },
+              {
+                "line": 8,
+                "pattern": "near placeholder name",
+                "model": "openai/gpt-6-luna",
+                "choice": "stickler",
+                "confidence": 0.43
+              },
+              {
+                "line": 8,
+                "pattern": "near placeholder name",
+                "model": "jev-1.13.0",
+                "choice": "clean",
+                "confidence": 0.87
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "label": "constructed choices set 4",
+      "change_set": {
+        "files": [
+          {
+            "file": "nettle.py",
+            "diff": "--- a/nettle.py\n+++ b/nettle.py\n@@ -0,0 +1,7 @@\n+count = len(data)\n+    limit = default_limit()\n+    except BaseException:\n+data = load_entries()\n+    total = compute_total(rows)\n+    except BaseException:\n+    return rows[0]\n",
+            "verdicts": [
+              {
+                "line": 7,
+                "pattern": "near placeholder name",
+                "model": "openai/gpt-6-luna",
+                "choice": "clean",
+                "confidence": 0.77
+              }
+            ]
+          },
+          {
+            "file": "fable.py",
+            "diff": "--- a/fable.py\n+++ b/fable.py\n@@ -0,0 +1,8 @@\n+    return rows[0]\n+    except BaseException:\n+temp = {}\n+count = len(data)\n+    return rows[0]\n+    logger.debug(total)\n+    value = next_value()\n+temp = []\n",
+            "verdicts": [
+              {
+                "line": 5,
+                "pattern": "broad handler",
+                "model": "openai/gpt-6-luna",
+                "choice": "stickler",
+                "confidence": 0.72
+              },
+              {
+                "line": 11,
+                "pattern": "near placeholder name",
+                "model": "jev-1.13.0",
+                "choice": "clean",
+                "confidence": 0.66
+              }
+            ]
+          },
+          {
+            "file": "flint.py",
+            "diff": "--- a/flint.py\n+++ b/flint.py\n@@ -0,0 +1,6 @@\n+    rows.append(item)\n+    total = compute_total(rows)\n+data = load_entries()\n+    total = compute_total(rows)\n+    logger.debug(total)\n+temp = []\n",
+            "verdicts": [
+              {
+                "line": 6,
+                "pattern": "near placeholder name",
+                "model": "jev-1.13.0",
+                "choice": "stickler",
+                "confidence": 0.88
+              }
+            ]
+          },
+          {
+            "file": "ribbon.py",
+            "diff": "--- a/ribbon.py\n+++ b/ribbon.py\n@@ -0,0 +1,7 @@\n+data = load_entries()\n+    limit = default_limit()\n+temp = {}\n+    total = compute_total(rows)\n+data = load_entries()\n+    rows.append(item)\n+    limit = default_limit()\n",
+            "verdicts": [
+              {
+                "line": 4,
+                "pattern": "near placeholder name",
+                "model": "openai/gpt-6-luna",
+                "choice": "stickler",
+                "confidence": 0.56
+              },
+              {
+                "line": 4,
+                "pattern": "near placeholder name",
+                "model": "jev-1.13.0",
+                "choice": "stickler",
+                "confidence": 0.9
+              },
+              {
+                "line": 6,
+                "pattern": "near placeholder name",
+                "model": "openai/gpt-6-luna",
+                "choice": "stickler",
+                "confidence": 0.6
+              },
+              {
+                "line": 8,
+                "pattern": "near placeholder name",
+                "model": "openai/gpt-6-luna",
+                "choice": "clean",
+                "confidence": 0.86
+              }
+            ]
+          },
+          {
+            "file": "rowan.py",
+            "diff": "--- a/rowan.py\n+++ b/rowan.py\n@@ -0,0 +1,6 @@\n+    limit = default_limit()\n+    return rows[0]\n+    total = compute_total(rows)\n+temp = []\n+tmp = []\n+tmp = []\n",
+            "verdicts": [
+              {
+                "line": 8,
+                "pattern": "near placeholder name",
+                "model": "jev-1.13.0",
+                "choice": "stickler",
+                "confidence": 0.92
+              },
+              {
+                "line": 9,
+                "pattern": "near placeholder name",
+                "model": "openai/gpt-6-luna",
+                "choice": "stickler",
+                "confidence": 0.8
+              },
+              {
+                "line": 9,
+                "pattern": "near placeholder name",
+                "model": "jev-1.13.0",
+                "choice": "stickler",
+                "confidence": 0.59
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "label": "constructed choices set 5",
+      "change_set": {
+        "files": [
+          {
+            "file": "magnet.py",
+            "diff": "--- a/magnet.py\n+++ b/magnet.py\n@@ -0,0 +1,8 @@\n+def grid(rows, memo=([], {})):\n+    rows.append(item)\n+    return rows[0]\n+    rows.append(item)\n+data = load_entries()\n+tmp = []\n+count = len(data)\n+    logger.debug(total)\n",
+            "verdicts": [
+              {
+                "line": 4,
+                "pattern": "shared member default",
+                "model": "openai/gpt-6-luna",
+                "choice": "clean",
+                "confidence": 0.93
+              },
+              {
+                "line": 9,
+                "pattern": "near placeholder name",
+                "model": "openai/gpt-6-luna",
+                "choice": "clean",
+                "confidence": 0.76
+              },
+              {
+                "line": 9,
+                "pattern": "near placeholder name",
+                "model": "jev-1.13.0",
+                "choice": "clean",
+                "confidence": 0.59
+              }
+            ]
+          },
+          {
+            "file": "garnet.py",
+            "diff": "--- a/garnet.py\n+++ b/garnet.py\n@@ -0,0 +1,8 @@\n+    limit = default_limit()\n+    limit = default_limit()\n+    except BaseException:\n+    except BaseException:\n+    value = next_value()\n+    rows.append(item)\n+    limit = default_limit()\n+data = load_entries()\n",
+            "verdicts": [
+              {
+                "line": 6,
+                "pattern": "broad handler",
+                "model": "jev-1.13.0",
+                "choice": "clean",
+                "confidence": 0.96
+              },
+              {
+                "line": 7,
+                "pattern": "broad handler",
+                "model": "jev-1.13.0",
+                "choice": "clean",
+                "confidence": 0.57
+              },
+              {
+                "line": 11,
+                "pattern": "near placeholder name",
+                "model": "jev-1.13.0",
+                "choice": "clean",
+                "confidence": 0.7
+              }
+            ]
+          },
+          {
+            "file": "quartz.py",
+            "diff": "--- a/quartz.py\n+++ b/quartz.py\n@@ -0,0 +1,7 @@\n+    logger.debug(total)\n+    total = compute_total(rows)\n+tmp = []\n+tmp = []\n+tmp = []\n+    logger.debug(total)\n+    return rows[0]\n",
+            "verdicts": [
+              {
+                "line": 6,
+                "pattern": "near placeholder name",
+                "model": "jev-1.13.0",
+                "choice": "stickler",
+                "confidence": 0.75
+              },
+              {
+                "line": 6,
+                "pattern": "near placeholder name",
+                "model": "openai/gpt-6-luna",
+                "choice": "clean",
+                "confidence": 0.64
+              }
+            ]
+          },
+          {
+            "file": "zenith.py",
+            "diff": "--- a/zenith.py\n+++ b/zenith.py\n@@ -0,0 +1,6 @@\n+    rows.append(item)\n+    return rows[0]\n+def pack(rows, memo=({},)):\n+    total = compute_total(rows)\n+    return rows[0]\n+temp = {}\n"
+          }
+        ]
+      }
+    },
+    {
+      "label": "constructed choices set 6",
+      "change_set": {
+        "files": [
+          {
+            "file": "dorset.py",
+            "diff": "--- a/dorset.py\n+++ b/dorset.py\n@@ -0,0 +1,5 @@\n+data = load_entries()\n+    return rows[0]\n+tmp = []\n+data = load_entries()\n+    value = next_value()\n",
+            "verdicts": [
+              {
+                "line": 7,
+                "pattern": "near placeholder name",
+                "model": "jev-1.13.0",
+                "choice": "clean",
+                "confidence": 0.67
+              },
+              {
+                "line": 7,
+                "pattern": "near placeholder name",
+                "model": "openai/gpt-6-luna",
+                "choice": "stickler",
+                "confidence": 0.86
+              }
+            ]
+          },
+          {
+            "file": "harbor.py",
+            "diff": "--- a/harbor.py\n+++ b/harbor.py\n@@ -0,0 +1,8 @@\n+    return total\n+data = load_entries()\n+temp = {}\n+    total = compute_total(rows)\n+def gather(rows, memo=([],)):\n+    value = next_value()\n+    return total\n+    total = compute_total(rows)\n",
+            "verdicts": [
+              {
+                "line": 5,
+                "pattern": "near placeholder name",
+                "model": "openai/gpt-6-luna",
+                "choice": "clean",
+                "confidence": 0.84
+              },
+              {
+                "line": 5,
+                "pattern": "near placeholder name",
+                "model": "jev-1.13.0",
+                "choice": "stickler",
+                "confidence": 0.94
+              },
+              {
+                "line": 6,
+                "pattern": "near placeholder name",
+                "model": "jev-1.13.0",
+                "choice": "stickler",
+                "confidence": 0.57
+              },
+              {
+                "line": 6,
+                "pattern": "near placeholder name",
+                "model": "openai/gpt-6-luna",
+                "choice": "clean",
+                "confidence": 0.95
+              }
+            ]
+          },
+          {
+            "file": "saffron.py",
+            "diff": "--- a/saffron.py\n+++ b/saffron.py\n@@ -0,0 +1,7 @@\n+    logger.debug(total)\n+    total = compute_total(rows)\n+temp = {}\n+tmp = []\n+    total = compute_total(rows)\n+    logger.debug(total)\n+    rows.append(item)\n",
+            "verdicts": [
+              {
+                "line": 6,
+                "pattern": "near placeholder name",
+                "model": "jev-1.13.0",
+                "choice": "clean",
+                "confidence": 0.98
+              },
+              {
+                "line": 7,
+                "pattern": "near placeholder name",
+                "model": "openai/gpt-6-luna",
+                "choice": "stickler",
+                "confidence": 0.84
+              }
+            ]
+          },
+          {
+            "file": "indigo.py",
+            "diff": "--- a/indigo.py\n+++ b/indigo.py\n@@ -0,0 +1,7 @@\n+temp = {}\n+    return rows[0]\n+    rows.append(item)\n+temp = []\n+    return total\n+    logger.debug(total)\n+    limit = default_limit()\n",
+            "verdicts": [
+              {
+                "line": 4,
+                "pattern": "near placeholder name",
+                "model": "openai/gpt-6-luna",
+                "choice": "clean",
+                "confidence": 0.6
+              }
+            ]
+          },
+          {
+            "file": "saddle.py",
+            "diff": "--- a/saddle.py\n+++ b/saddle.py\n@@ -0,0 +1,7 @@\n+    logger.debug(total)\n+    logger.debug(total)\n+def render(rows, memo=({1, 2},)):\n+    return total\n+tmp = []\n+    except BaseException:\n+    total = compute_total(rows)\n",
+            "verdicts": [
+              {
+                "line": 8,
+                "pattern": "near placeholder name",
+                "model": "jev-1.13.0",
+                "choice": "stickler",
+                "confidence": 0.71
+              },
+              {
+                "line": 8,
+                "pattern": "near placeholder name",
+                "model": "openai/gpt-6-luna",
+                "choice": "stickler",
+                "confidence": 0.56
+              },
+              {
+                "line": 9,
+                "pattern": "broad handler",
+                "model": "jev-1.13.0",
+                "choice": "stickler",
+                "confidence": 0.62
+              },
+              {
+                "line": 9,
+                "pattern": "broad handler",
+                "model": "openai/gpt-6-luna",
+                "choice": "clean",
+                "confidence": 0.72
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "label": "constructed choices set 7",
+      "change_set": {
+        "files": [
+          {
+            "file": "inkwell.py",
+            "diff": "--- a/inkwell.py\n+++ b/inkwell.py\n@@ -0,0 +1,7 @@\n+    logger.debug(total)\n+def render(rows, memo=({1, 2},)):\n+    limit = default_limit()\n+    rows.append(item)\n+count = len(data)\n+def tally(rows, memo=([], {})):\n+    rows.append(item)\n",
+            "verdicts": [
+              {
+                "line": 5,
+                "pattern": "shared member default",
+                "model": "jev-1.13.0",
+                "choice": "stickler",
+                "confidence": 0.86
+              }
+            ]
+          },
+          {
+            "file": "ember.py",
+            "diff": "--- a/ember.py\n+++ b/ember.py\n@@ -0,0 +1,8 @@\n+    rows.append(item)\n+    return rows[0]\n+data = load_entries()\n+    logger.debug(total)\n+    logger.debug(total)\n+    value = next_value()\n+temp = {}\n+tmp = []\n",
+            "verdicts": [
+              {
+                "line": 6,
+                "pattern": "near placeholder name",
+                "model": "openai/gpt-6-luna",
+                "choice": "stickler",
+                "confidence": 0.32
+              },
+              {
+                "line": 6,
+                "pattern": "near placeholder name",
+                "model": "jev-1.13.0",
+                "choice": "clean",
+                "confidence": 0.96
+              },
+              {
+                "line": 10,
+                "pattern": "near placeholder name",
+                "model": "jev-1.13.0",
+                "choice": "stickler",
+                "confidence": 0.59
+              }
+            ]
+          },
+          {
+            "file": "meadow.py",
+            "diff": "--- a/meadow.py\n+++ b/meadow.py\n@@ -0,0 +1,7 @@\n+    total = compute_total(rows)\n+    return total\n+temp = []\n+    rows.append(item)\n+    return total\n+temp = {}\n+    logger.debug(total)\n",
+            "verdicts": [
+              {
+                "line": 9,
+                "pattern": "near placeholder name",
+                "model": "openai/gpt-6-luna",
+                "choice": "clean",
+                "confidence": 0.82
+              }
+            ]
+          },
+          {
+            "file": "velvet.py",
+            "diff": "--- a/velvet.py\n+++ b/velvet.py\n@@ -0,0 +1,4 @@\n+def render(rows, memo=({},)):\n+    rows.append(item)\n+    rows.append(item)\n+    except BaseException:\n",
+            "verdicts": [
+              {
+                "line": 4,
+                "pattern": "shared member default",
+                "model": "openai/gpt-6-luna",
+                "choice": "stickler",
+                "confidence": 0.88
+              },
+              {
+                "line": 4,
+                "pattern": "shared member default",
+                "model": "jev-1.13.0",
+                "choice": "stickler",
+                "confidence": 0.28
+              },
+              {
+                "line": 7,
+                "pattern": "broad handler",
+                "model": "jev-1.13.0",
+                "choice": "stickler",
+                "confidence": 0.86
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "label": "constructed choices set 8",
+      "change_set": {
+        "files": [
+          {
+            "file": "sable.py",
+            "diff": "--- a/sable.py\n+++ b/sable.py\n@@ -0,0 +1,7 @@\n+    return total\n+    value = next_value()\n+def weigh(rows, memo=({},)):\n+data = load_entries()\n+def pack(rows, memo=([], {})):\n+    total = compute_total(rows)\n+    logger.debug(total)\n"
+          },
+          {
+            "file": "marble.py",
+            "diff": "--- a/marble.py\n+++ b/marble.py\n@@ -0,0 +1,5 @@\n+    limit = default_limit()\n+def sift(rows, memo=({},)):\n+    limit = default_limit()\n+temp = {}\n+    rows.append(item)\n"
+          },
+          {
+            "file": "juniper.py",
+            "diff": "--- a/juniper.py\n+++ b/juniper.py\n@@ -0,0 +1,5 @@\n+temp = {}\n+temp = []\n+    rows.append(item)\n+count = len(data)\n+data = load_entries()\n"
+          },
+          {
+            "file": "umber.py",
+            "diff": "--- a/umber.py\n+++ b/umber.py\n@@ -0,0 +1,6 @@\n+tmp = []\n+    value = next_value()\n+    logger.debug(total)\n+    limit = default_limit()\n+tmp = []\n+def build(rows, memo=([], {})):\n"
+          },
+          {
+            "file": "needle.py",
+            "diff": "--- a/needle.py\n+++ b/needle.py\n@@ -0,0 +1,4 @@\n+    logger.debug(total)\n+tmp = []\n+    logger.debug(total)\n+temp = []\n"
+          },
+          {
+            "file": "alder.py",
+            "diff": "--- a/alder.py\n+++ b/alder.py\n@@ -0,0 +1,7 @@\n+    total = compute_total(rows)\n+    rows.append(item)\n+    total = compute_total(rows)\n+tmp = []\n+    return total\n+def fetch(rows, memo=([], {})):\n+def fetch(rows, memo=([], {})):\n"
+          }
+        ]
+      }
+    }
+  ]
+}
