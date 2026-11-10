@@ -64,6 +64,24 @@
 //! miscounted construction on the counts they read,
 //! and the three relation pins are compile absent by
 //! the same absence.
+//! The constructed judgements collection of Round 18
+//! is pinned by dimension pins read off the fixture
+//! itself under the parameters the preamble of the
+//! Round 18 section states, by the six shape
+//! requirements that preamble names, counted from the
+//! judgements reading and the outcomes reading over
+//! the collection, and by the closing relations of
+//! the judgements reading against the verdicts
+//! reading and the outcomes reading over the same
+//! collection and against its own section counts. The
+//! fixture file stands absent against the tree Round
+//! 17 closed on, so the dimension and requirement
+//! pins fail there by the fixture's absence read at
+//! run time, and the three relation pins are compile
+//! absent by the judgements module's absence in their
+//! judgements half, and the dimension and requirement
+//! pins are additionally able to fail against a
+//! miscounted construction on the counts they read.
 //! Every pin runs offline on the constructed fixtures, and no
 //! pin makes a live call.
 
@@ -78,11 +96,12 @@ use stickler::choices::{choices_reading_of, load_choices};
 use stickler::cli::cli_main;
 use stickler::grounds::{grounds_reading_of, load_grounds};
 use stickler::json::{parse, JsonValue};
+use stickler::judgements::{judgements_reading_of, load_judgements};
 use stickler::outcomes::outcomes_reading_of;
 use stickler::pattern::pattern_reading_of;
 use stickler::render::{
-    render_borderline, render_categories, render_choices, render_grounds, render_shapes,
-    render_verdicts,
+    render_borderline, render_categories, render_choices, render_grounds, render_judgements,
+    render_shapes, render_verdicts,
 };
 use stickler::shapes::{load_shapes, shapes_reading_of};
 use stickler::verdicts::{is_contested, line_outcome, verdict_outcome};
@@ -1763,6 +1782,363 @@ fn grounds_collection_sections_bind_to_the_pattern_reading() {
 fn grounds_collection_internal_sums_hold() {
     let value = parsed_example("grounds_collection.json");
     let rendered = render_grounds(&grounds_reading_of(&value));
+    let section_counts: Vec<usize> = rendered
+        .lines()
+        .filter(|line| line.starts_with("Verdicts read, "))
+        .map(|line| {
+            line.strip_prefix("Verdicts read, ")
+                .unwrap()
+                .parse()
+                .unwrap()
+        })
+        .collect();
+    assert_eq!(section_counts.len(), 4);
+    assert_eq!(section_counts[..3].iter().sum::<usize>(), section_counts[3]);
+    let closings = rendered.split("\n\n").last().unwrap();
+    assert_eq!(section_counts[3], count_after(closings, "Verdicts read, "));
+    assert_eq!(
+        count_after(closings, "Chose stickler, ")
+            + count_after(closings, "Chose clean, ")
+            + count_after(closings, "Abstained, "),
+        count_after(closings, "Verdicts read, ")
+    );
+}
+
+/// The first dimension pin of the constructed
+/// judgements collection, read off the fixture itself
+/// under the parameters the preamble of the Round 18
+/// section states. The fixture stands absent against
+/// the tree Round 17 closed on, so the pin fails
+/// there by the fixture's absence, and the pin can
+/// fail against a miscounted construction on the
+/// counts it reads.
+#[test]
+fn judgements_collection_holds_two_sets_named_as_constructed() {
+    let value = parsed_example("judgements_collection.json");
+    assert!(load_judgements(&value).is_empty());
+    let sets = value.get("sets").and_then(|sets| sets.as_array()).unwrap();
+    assert_eq!(sets.len(), 2);
+    for set in sets {
+        let label = set
+            .get("label")
+            .and_then(|label| label.as_jstring())
+            .unwrap()
+            .to_rust_string()
+            .unwrap();
+        assert!(
+            label.contains("constructed"),
+            "the set {label} is named as constructed"
+        );
+    }
+}
+
+/// The second dimension pin of the constructed
+/// judgements collection, each set holding between
+/// three and six files, read off the fixture itself.
+#[test]
+fn judgements_collection_files_per_set_stand_between_three_and_six() {
+    let value = parsed_example("judgements_collection.json");
+    let sets = value.get("sets").and_then(|sets| sets.as_array()).unwrap();
+    for set in sets {
+        let files = set
+            .get("change_set")
+            .unwrap()
+            .get("files")
+            .and_then(|files| files.as_array())
+            .unwrap();
+        assert!(
+            (3..=6).contains(&files.len()),
+            "a set holds {} files",
+            files.len()
+        );
+    }
+}
+
+/// The third dimension pin of the constructed
+/// judgements collection, the flagged lines across
+/// the collection standing between sixteen and twenty
+/// eight, counted from the census over the collection.
+#[test]
+fn judgements_collection_flagged_lines_stand_between_sixteen_and_twenty_eight() {
+    let value = parsed_example("judgements_collection.json");
+    let census = census_of(&value);
+    assert!(
+        (16..=28).contains(&census.total.borderline),
+        "the collection holds {} flagged lines",
+        census.total.borderline
+    );
+}
+
+/// The fourth dimension pin of the constructed
+/// judgements collection, the verdicts across the
+/// collection standing between twenty four and forty
+/// four, counted from the verdicts reading over the
+/// collection.
+#[test]
+fn judgements_collection_verdicts_stand_between_twenty_four_and_forty_four() {
+    let value = parsed_example("judgements_collection.json");
+    let reading = verdicts_reading_of(&value);
+    let verdicts: usize = reading
+        .sections
+        .iter()
+        .flat_map(|section| section.groups.iter())
+        .map(|group| group.verdicts.len())
+        .sum();
+    assert!(
+        (24..=44).contains(&verdicts),
+        "the collection holds {verdicts} verdicts"
+    );
+}
+
+/// The first shape requirement of the constructed
+/// judgements collection, every judgement carrying
+/// verdicts from both sets, counted from the
+/// judgements reading, each section holding at least
+/// one flag group carrying each set's label.
+#[test]
+fn judgements_collection_every_judgement_carries_verdicts_from_both_sets() {
+    let value = parsed_example("judgements_collection.json");
+    let reading = judgements_reading_of(&value);
+    for section in &reading.sections {
+        for label in [
+            "constructed judgements set 1",
+            "constructed judgements set 2",
+        ] {
+            assert!(
+                section.groups.iter().any(|group| group.set_label == label),
+                "the judgement {} carries no verdict of the set {label}",
+                section.judgement
+            );
+        }
+    }
+}
+
+/// The second shape requirement, every judgement's
+/// collection total of pairs standing at least at
+/// four, counted from the judgements reading.
+#[test]
+fn judgements_collection_every_judgement_total_stands_at_least_at_four() {
+    let value = parsed_example("judgements_collection.json");
+    let reading = judgements_reading_of(&value);
+    for section in &reading.sections {
+        let pairs: usize = section
+            .groups
+            .iter()
+            .map(|group| group.verdicts.len())
+            .sum();
+        assert!(
+            pairs >= 4,
+            "the judgement {} carries {pairs} pairs in total",
+            section.judgement
+        );
+    }
+}
+
+/// The third shape requirement, at least one flag of
+/// each judgement carrying two verdicts, counted from
+/// the judgements reading, each section holding a
+/// group of two or more pairs.
+#[test]
+fn judgements_collection_a_flag_of_each_judgement_carries_two_verdicts() {
+    let value = parsed_example("judgements_collection.json");
+    let reading = judgements_reading_of(&value);
+    for section in &reading.sections {
+        assert!(
+            section.groups.iter().any(|group| group.verdicts.len() >= 2),
+            "no flag of the judgement {} carries two verdicts",
+            section.judgement
+        );
+    }
+}
+
+/// The fourth shape requirement, at least one flag
+/// carrying verdicts of both labels, counted from the
+/// judgements reading, one group holding a verdict
+/// whose outcome stands as stickler and one whose
+/// outcome stands as clean under the one outcome
+/// helper.
+#[test]
+fn judgements_collection_a_flag_carries_verdicts_of_both_labels() {
+    let value = parsed_example("judgements_collection.json");
+    let reading = judgements_reading_of(&value);
+    let stands = reading
+        .sections
+        .iter()
+        .flat_map(|section| section.groups.iter())
+        .any(|group| {
+            group
+                .verdicts
+                .iter()
+                .any(|verdict| verdict_outcome(verdict) == "stickler")
+                && group
+                    .verdicts
+                    .iter()
+                    .any(|verdict| verdict_outcome(verdict) == "clean")
+        });
+    assert!(stands, "one flag carries verdicts of both labels");
+}
+
+/// The fifth shape requirement, at least one flag
+/// carrying only abstentions, counted from the
+/// judgements reading, one group standing whose every
+/// verdict's outcome stands as abstained under the
+/// one outcome helper.
+#[test]
+fn judgements_collection_a_flag_carries_only_abstentions() {
+    let value = parsed_example("judgements_collection.json");
+    let reading = judgements_reading_of(&value);
+    let stands = reading
+        .sections
+        .iter()
+        .flat_map(|section| section.groups.iter())
+        .any(|group| {
+            !group.verdicts.is_empty()
+                && group
+                    .verdicts
+                    .iter()
+                    .all(|verdict| verdict_outcome(verdict) == "abstained")
+        });
+    assert!(stands, "one flag carries only abstentions");
+}
+
+/// The sixth shape requirement, at least one flag
+/// carrying no verdicts at all, counted against the
+/// outcomes reading over the collection, a flag that
+/// reading names under its judgement standing in no
+/// judgements section.
+#[test]
+fn judgements_collection_a_flag_carries_no_verdicts() {
+    let value = parsed_example("judgements_collection.json");
+    let reading = judgements_reading_of(&value);
+    let outcomes = outcomes_reading_of(&value);
+    let stands = outcomes.sections.iter().any(|section| {
+        section.flags.iter().any(|flag| {
+            !reading
+                .sections
+                .iter()
+                .flat_map(|judgements_section| judgements_section.groups.iter())
+                .any(|group| {
+                    group.file == flag.file
+                        && group.line == flag.line
+                        && group.set_label == flag.set_label
+                })
+        })
+    });
+    assert!(stands, "one flag carries no verdicts");
+}
+
+/// The verdicts relation of the constructed judgements
+/// collection, each of the seven closing counts of the
+/// judgements reading standing count for count against
+/// the same named count of the verdicts reading over
+/// the same collection, both readings run here, and
+/// the command output standing byte identical to the
+/// library rendering.
+#[test]
+fn judgements_collection_closings_bind_to_the_verdicts_reading() {
+    let (code, out) = run_on_example("judgements", "judgements_collection.json");
+    assert_eq!(code, 0);
+    let value = parsed_example("judgements_collection.json");
+    let verdicts = render_verdicts(&verdicts_reading_of(&value));
+    let judgements_closings = out.split("\n\n").last().unwrap();
+    let verdicts_closings = verdicts.split("\n\n").last().unwrap();
+    for prefix in [
+        "Sets read, ",
+        "Flags read, ",
+        "Flags with verdicts, ",
+        "Verdicts read, ",
+        "Chose stickler, ",
+        "Chose clean, ",
+        "Abstained, ",
+    ] {
+        assert_eq!(
+            count_after(judgements_closings, prefix),
+            count_after(verdicts_closings, prefix),
+            "{prefix} binds to the verdicts reading"
+        );
+    }
+    assert_eq!(out, render_judgements(&judgements_reading_of(&value)));
+}
+
+/// The outcomes relation of the constructed judgements
+/// collection, the flag groups of each judgements
+/// section being exactly the flags the outcomes
+/// reading names under that judgement that carry at
+/// least one verdict, in the same order, and each
+/// section's closing count equal to the pairs standing
+/// on those flags in the verdicts reading over the
+/// same collection, all three readings run here.
+#[test]
+fn judgements_collection_sections_bind_to_the_outcomes_reading() {
+    let value = parsed_example("judgements_collection.json");
+    let reading = judgements_reading_of(&value);
+    let outcomes = outcomes_reading_of(&value);
+    let verdicts = verdicts_reading_of(&value);
+    let pair_count = |set_label: &str, file: &str, line: usize, pattern: &str| -> Option<usize> {
+        verdicts
+            .sections
+            .iter()
+            .filter(|section| section.label == set_label)
+            .flat_map(|section| section.groups.iter())
+            .find(|group| group.file == file && group.line == line && group.pattern == pattern)
+            .map(|group| group.verdicts.len())
+    };
+    for (judgements_section, outcomes_section) in
+        reading.sections.iter().zip(outcomes.sections.iter())
+    {
+        assert_eq!(judgements_section.judgement, outcomes_section.judgement);
+        let expected: Vec<_> = outcomes_section
+            .flags
+            .iter()
+            .filter(|flag| {
+                pair_count(&flag.set_label, &flag.file, flag.line, &flag.pattern).is_some()
+            })
+            .collect();
+        assert_eq!(
+            judgements_section.groups.len(),
+            expected.len(),
+            "section {}",
+            judgements_section.judgement
+        );
+        for (group, flag) in judgements_section.groups.iter().zip(expected.iter()) {
+            assert_eq!(
+                group.file, flag.file,
+                "section {}",
+                judgements_section.judgement
+            );
+            assert_eq!(
+                group.line, flag.line,
+                "section {}",
+                judgements_section.judgement
+            );
+            assert_eq!(
+                group.set_label, flag.set_label,
+                "section {}",
+                judgements_section.judgement
+            );
+        }
+        let stated: usize = judgements_section
+            .groups
+            .iter()
+            .map(|group| group.verdicts.len())
+            .sum();
+        let counted: usize = expected
+            .iter()
+            .map(|flag| pair_count(&flag.set_label, &flag.file, flag.line, &flag.pattern).unwrap())
+            .sum();
+        assert_eq!(stated, counted, "section {}", judgements_section.judgement);
+    }
+}
+
+/// The internal sums of the judgements reading over
+/// the constructed judgements collection, the section
+/// closing counts summing to the closing verdicts read
+/// count and the three outcome counts summing to the
+/// same, read from the rendered text.
+#[test]
+fn judgements_collection_internal_sums_hold() {
+    let value = parsed_example("judgements_collection.json");
+    let rendered = render_judgements(&judgements_reading_of(&value));
     let section_counts: Vec<usize> = rendered
         .lines()
         .filter(|line| line.starts_with("Verdicts read, "))

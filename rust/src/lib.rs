@@ -16,6 +16,7 @@ pub mod contested;
 pub mod files;
 pub mod grounds;
 pub mod json;
+pub mod judgements;
 pub mod outcomes;
 pub mod pattern;
 pub mod pycompat;
