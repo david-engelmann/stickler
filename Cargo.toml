@@ -25,6 +25,10 @@ name = "test_borderline_reading"
 path = "rust/tests/test_borderline_reading.rs"
 
 [[test]]
+name = "test_categories_reading"
+path = "rust/tests/test_categories_reading.rs"
+
+[[test]]
 name = "test_census"
 path = "rust/tests/test_census.rs"
 
