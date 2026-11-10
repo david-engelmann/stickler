@@ -340,6 +340,57 @@ fn the_usage_text_names_the_shapes_command() {
     );
 }
 
+/// The choices command pins of CK-31. Each one fails
+/// against the tree Round 14 closed on by execution,
+/// the base command line answering a choices invocation
+/// with the usage text and a nonzero exit and no
+/// rendering on its output stream, so the example pin
+/// fails on its exit code and output, the malformed
+/// pin on its output, and the usage pin on the text it
+/// reads.
+#[test]
+fn choices_on_the_example_exits_0_and_matches_its_golden() {
+    let example = root()
+        .join("examples")
+        .join("choices.json")
+        .to_string_lossy()
+        .into_owned();
+    let (code, out, _err) = run(&["choices", &example]);
+    assert_eq!(code, 0);
+    assert!(out.starts_with("Choices\n"));
+    let golden = std::fs::read_to_string(root().join("examples").join("choices.txt")).unwrap();
+    assert_eq!(out, golden);
+}
+
+#[test]
+fn choices_on_a_malformed_file_exits_2_and_names_the_defects() {
+    let dir = temp_dir("choices-malformed");
+    let path = write(
+        &dir,
+        "choices.json",
+        "{\"sets\": [{\"change_set\": {\"files\": []}}]}",
+    );
+    let (code, out, _err) = run(&["choices", &path]);
+    assert_eq!(code, 2);
+    assert_eq!(
+        out,
+        "Choices\n\
+         Verdict, invalid\n\
+         Defects, 1\n\
+         Defect, sets[0].label is missing\n"
+    );
+}
+
+#[test]
+fn the_usage_text_names_the_choices_command() {
+    let (code, _out, err) = run(&["choices"]);
+    assert_eq!(code, 2);
+    assert!(
+        err.contains("Usage, stickler choices CHOICES_JSON\n"),
+        "{err}"
+    );
+}
+
 #[test]
 fn the_smelly_example_sends_back_and_the_clean_example_accepts() {
     let smelly = root()
@@ -695,12 +746,13 @@ fn run_units(args: &[&[u8]]) -> ByteOutcome {
     cli_main_units(&owned)
 }
 
-// Adjusted with the Round 14 slice, as the named mechanical
-// consequence of CK-29 adding the shapes command to the
-// command line. The usage text gains the shapes line,
+// Adjusted with the Round 15 slice, as the named mechanical
+// consequence of CK-31 adding the choices command to the
+// command line. The usage text gains the choices line,
 // so the pinned bytes gain it too, and the three assertions
 // standing on this constant hold the new text. The constant
-// was adjusted before with the Round 13 slice, when CK-27
+// was adjusted before with the Round 14 slice, when CK-29
+// added the shapes command, with the Round 13 slice, when CK-27
 // added the verdicts command, with the Round 11 slice, when CK-24
 // added the borderline command, with the Round 10 slice, when CK-22
 // added the files command, with the Round 9 slice, when CK-20
@@ -722,7 +774,8 @@ const USAGE_BYTES: &[u8] = b"Usage, stickler check DIFF_FILE\n\
     Usage, stickler borderline BORDERLINE_JSON\n\
     Usage, stickler outcomes OUTCOMES_JSON\n\
     Usage, stickler verdicts VERDICTS_JSON\n\
-    Usage, stickler shapes SHAPES_JSON\n";
+    Usage, stickler shapes SHAPES_JSON\n\
+    Usage, stickler choices CHOICES_JSON\n";
 
 #[test]
 fn check_names_a_readable_raw_byte_diff_by_its_surrogate_defect() {

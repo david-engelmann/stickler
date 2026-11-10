@@ -37,6 +37,10 @@ name = "test_checker"
 path = "rust/tests/test_checker.rs"
 
 [[test]]
+name = "test_choices_reading"
+path = "rust/tests/test_choices_reading.rs"
+
+[[test]]
 name = "test_cli"
 path = "rust/tests/test_cli.rs"
 

@@ -21,6 +21,15 @@
 //! the outcomes reading over the same collection, the
 //! outcomes relation holding the constructed literal three
 //! for the collection's unjudged flags carrying verdicts.
+//! The constructed choices collection of Round 15 is pinned
+//! by dimension pins read off the fixture itself under the
+//! parameters the preamble of the Round 15 section states,
+//! by the six shape requirements that preamble names,
+//! counted from the choices reading and the verdicts
+//! reading over the collection, and by the closing
+//! relations of the choices reading against the verdicts
+//! reading and the census over the same collection and
+//! against its own section counts.
 //! Every pin runs offline on the constructed fixtures, and no
 //! pin makes a live call.
 
@@ -30,10 +39,11 @@ use stickler::borderline::{borderline_reading_of, load_borderline};
 use stickler::census::{census_of, load_census};
 use stickler::changeset::load_changeset;
 use stickler::checker::check_diff_detailed;
+use stickler::choices::{choices_reading_of, load_choices};
 use stickler::cli::cli_main;
 use stickler::json::{parse, JsonValue};
 use stickler::outcomes::outcomes_reading_of;
-use stickler::render::{render_borderline, render_shapes, render_verdicts};
+use stickler::render::{render_borderline, render_choices, render_shapes, render_verdicts};
 use stickler::shapes::{load_shapes, shapes_reading_of};
 use stickler::verdicts::{is_contested, line_outcome, verdict_outcome};
 use stickler::verdicts_reading::{load_verdicts, verdicts_reading_of};
@@ -728,4 +738,315 @@ fn shapes_collection_closing_relations_hold() {
     assert_eq!(section_counts.len(), 7);
     assert_eq!(section_counts[..6].iter().sum::<usize>(), section_counts[6]);
     assert_eq!(out, render_shapes(&reading));
+}
+
+/// The dimension pins of the constructed choices
+/// collection, read off the fixture itself under the
+/// parameters the preamble of the Round 15 section
+/// states. The pin fails against the tree Round 14
+/// closed on by the absence of the fixture it reads.
+#[test]
+fn choices_collection_dimensions_hold() {
+    let value = parsed_example("choices_collection.json");
+    assert!(load_choices(&value).is_empty());
+    let sets = value.get("sets").and_then(|sets| sets.as_array()).unwrap();
+    assert!(
+        (6..=10).contains(&sets.len()),
+        "the collection holds {} sets",
+        sets.len()
+    );
+    for set in sets {
+        let label = set
+            .get("label")
+            .and_then(|label| label.as_jstring())
+            .unwrap()
+            .to_rust_string()
+            .unwrap();
+        assert!(
+            label.contains("constructed"),
+            "the set {label} is named as constructed"
+        );
+        let files = set
+            .get("change_set")
+            .unwrap()
+            .get("files")
+            .and_then(|files| files.as_array())
+            .unwrap();
+        assert!(
+            (3..=8).contains(&files.len()),
+            "a set holds {} files",
+            files.len()
+        );
+    }
+    let census = census_of(&value);
+    let flags = census.total.borderline;
+    assert!(
+        (60..=120).contains(&flags),
+        "the collection holds {flags} flagged lines"
+    );
+    let reading = choices_reading_of(&value);
+    assert_eq!(reading.flags_read, flags);
+    let carrying = reading.flags_with_verdicts;
+    assert!(
+        carrying * 100 >= 55 * flags && carrying * 100 <= 75 * flags,
+        "{carrying} of {flags} flagged lines carry verdicts"
+    );
+    assert!(
+        (60..=140).contains(&reading.verdicts_read),
+        "the collection holds {} verdicts",
+        reading.verdicts_read
+    );
+    let groups: Vec<_> = reading
+        .sections
+        .iter()
+        .flat_map(|section| section.groups.iter())
+        .collect();
+    assert!(groups
+        .iter()
+        .all(|group| (1..=2).contains(&group.verdicts.len())));
+    let pairs: Vec<_> = groups
+        .iter()
+        .flat_map(|group| group.verdicts.iter())
+        .collect();
+    assert_eq!(pairs.len(), reading.verdicts_read);
+    let abstentions = pairs
+        .iter()
+        .filter(|verdict| verdict_outcome(verdict) == "abstained")
+        .count();
+    assert!(
+        abstentions * 100 >= 5 * reading.verdicts_read
+            && abstentions * 100 <= 15 * reading.verdicts_read,
+        "{abstentions} of {} verdicts abstained",
+        reading.verdicts_read
+    );
+    assert!(pairs
+        .iter()
+        .all(|verdict| verdict.model == "jev-1.13.0" || verdict.model == "openai/gpt-6-luna"));
+}
+
+/// The first shape requirement of the constructed
+/// choices collection, at least two contested flags,
+/// counted from the verdicts reading over the
+/// collection, a contested flag standing in both
+/// label sections of the choices reading. The pin
+/// fails against the tree Round 14 closed on by the
+/// absence of the fixture it reads.
+#[test]
+fn choices_collection_two_flags_are_contested() {
+    let value = parsed_example("choices_collection.json");
+    let reading = verdicts_reading_of(&value);
+    let groups: Vec<_> = reading
+        .sections
+        .iter()
+        .flat_map(|section| section.groups.iter())
+        .collect();
+    let contested = groups
+        .iter()
+        .filter(|group| is_contested(&group.verdicts))
+        .count();
+    assert!(contested >= 2, "{contested} flags are contested");
+}
+
+/// The second shape requirement, at least one flag
+/// carrying an abstention beside a standing verdict,
+/// counted from the choices reading, a flag standing
+/// in the abstained section and in a label section.
+#[test]
+fn choices_collection_an_abstention_stands_beside_a_verdict() {
+    let value = parsed_example("choices_collection.json");
+    let reading = choices_reading_of(&value);
+    let keys = |section: &stickler::choices::ChoicesSection| {
+        section
+            .groups
+            .iter()
+            .map(|group| (group.file.clone(), group.line, group.set_label.clone()))
+            .collect::<Vec<_>>()
+    };
+    let abstained = keys(&reading.sections[2]);
+    let labelled = [keys(&reading.sections[0]), keys(&reading.sections[1])].concat();
+    assert!(
+        abstained.iter().any(|key| labelled.contains(key)),
+        "one flag stands in the abstained section and in a label section"
+    );
+}
+
+/// The third shape requirement, at least one flag
+/// carrying only abstentions, counted from the
+/// choices reading, a flag standing in the abstained
+/// section and in no label section.
+#[test]
+fn choices_collection_a_flag_carries_only_abstentions() {
+    let value = parsed_example("choices_collection.json");
+    let reading = choices_reading_of(&value);
+    let keys = |section: &stickler::choices::ChoicesSection| {
+        section
+            .groups
+            .iter()
+            .map(|group| (group.file.clone(), group.line, group.set_label.clone()))
+            .collect::<Vec<_>>()
+    };
+    let abstained = keys(&reading.sections[2]);
+    let labelled = [keys(&reading.sections[0]), keys(&reading.sections[1])].concat();
+    assert!(
+        abstained.iter().any(|key| !labelled.contains(key)),
+        "one flag stands in the abstained section alone"
+    );
+    let verdicts = verdicts_reading_of(&value);
+    assert!(verdicts
+        .sections
+        .iter()
+        .flat_map(|section| section.groups.iter())
+        .any(|group| line_outcome(&group.verdicts) == "unjudged"));
+}
+
+/// The fourth shape requirement, at least one flag
+/// carrying two verdicts that chose the same label,
+/// counted from the verdicts reading over the
+/// collection, two standing verdicts of one flag
+/// sharing their choice.
+#[test]
+fn choices_collection_a_flag_carries_two_verdicts_choosing_the_same_label() {
+    let value = parsed_example("choices_collection.json");
+    let reading = verdicts_reading_of(&value);
+    let stands = reading
+        .sections
+        .iter()
+        .flat_map(|section| section.groups.iter())
+        .any(|group| {
+            let standing: Vec<_> = group
+                .verdicts
+                .iter()
+                .filter(|verdict| verdict_outcome(verdict) != "abstained")
+                .collect();
+            standing.len() == 2 && standing[0].choice == standing[1].choice
+        });
+    assert!(
+        stands,
+        "one flag carries two verdicts choosing the same label"
+    );
+}
+
+/// The fifth shape requirement, at least one set
+/// carrying no verdicts at all, counted from the
+/// verdicts reading over the collection.
+#[test]
+fn choices_collection_a_set_carries_no_verdicts() {
+    let value = parsed_example("choices_collection.json");
+    let reading = verdicts_reading_of(&value);
+    assert!(
+        reading
+            .sections
+            .iter()
+            .any(|section| section.groups.is_empty()),
+        "one set carries no verdicts at all"
+    );
+}
+
+/// The sixth shape requirement, every outcome section
+/// carrying verdicts from at least two sets, counted
+/// from the choices reading, the set labels standing
+/// in each section spanning two or more sets.
+#[test]
+fn choices_collection_every_section_spans_two_sets() {
+    let value = parsed_example("choices_collection.json");
+    let reading = choices_reading_of(&value);
+    for section in &reading.sections {
+        let mut labels: Vec<&str> = section
+            .groups
+            .iter()
+            .map(|group| group.set_label.as_str())
+            .collect();
+        labels.sort_unstable();
+        labels.dedup();
+        assert!(
+            labels.len() >= 2,
+            "the section {} spans {} sets",
+            section.outcome,
+            labels.len()
+        );
+    }
+}
+
+/// The closing relations of the choices reading over
+/// the constructed choices collection against the
+/// verdicts reading over the same collection, each of
+/// the seven closing counts standing count for count
+/// against the same named count of the verdicts
+/// reading. The pin fails against the tree Round 14
+/// closed on by the absence of the module and the
+/// command it names.
+#[test]
+fn choices_collection_closings_bind_to_the_verdicts_reading() {
+    let (code, out) = run_on_example("choices", "choices_collection.json");
+    assert_eq!(code, 0);
+    let value = parsed_example("choices_collection.json");
+    let verdicts = render_verdicts(&verdicts_reading_of(&value));
+    let choices_closings = out.split("\n\n").last().unwrap();
+    let verdicts_closings = verdicts.split("\n\n").last().unwrap();
+    for prefix in [
+        "Sets read, ",
+        "Flags read, ",
+        "Flags with verdicts, ",
+        "Verdicts read, ",
+        "Chose stickler, ",
+        "Chose clean, ",
+        "Abstained, ",
+    ] {
+        assert_eq!(
+            count_after(choices_closings, prefix),
+            count_after(verdicts_closings, prefix),
+            "{prefix} binds to the verdicts reading"
+        );
+    }
+}
+
+/// The closing relations of the choices reading over
+/// the constructed choices collection against the
+/// census over the same collection, the flags read
+/// and sets read counts standing against the census
+/// totals.
+#[test]
+fn choices_collection_closings_bind_to_the_census() {
+    let (code, out) = run_on_example("choices", "choices_collection.json");
+    assert_eq!(code, 0);
+    let value = parsed_example("choices_collection.json");
+    let census = census_of(&value);
+    let closings = out.split("\n\n").last().unwrap();
+    assert_eq!(count_after(closings, "Sets read, "), census.sets.len());
+    assert_eq!(
+        count_after(closings, "Flags read, "),
+        census.total.borderline
+    );
+}
+
+/// The internal sums of the choices reading over the
+/// constructed choices collection, its outcome counts
+/// summing to its verdicts read count and its section
+/// counts summing to the same.
+#[test]
+fn choices_collection_internal_sums_hold() {
+    let (code, out) = run_on_example("choices", "choices_collection.json");
+    assert_eq!(code, 0);
+    let value = parsed_example("choices_collection.json");
+    let closings = out.split("\n\n").last().unwrap();
+    assert_eq!(
+        count_after(closings, "Chose stickler, ")
+            + count_after(closings, "Chose clean, ")
+            + count_after(closings, "Abstained, "),
+        count_after(closings, "Verdicts read, ")
+    );
+    let section_counts: Vec<usize> = out
+        .lines()
+        .filter(|line| line.starts_with("Verdicts read, "))
+        .map(|line| {
+            line.strip_prefix("Verdicts read, ")
+                .unwrap()
+                .parse()
+                .unwrap()
+        })
+        .collect();
+    assert_eq!(section_counts.len(), 4);
+    assert_eq!(section_counts[..3].iter().sum::<usize>(), section_counts[3]);
+    assert_eq!(section_counts[3], count_after(closings, "Verdicts read, "));
+    assert_eq!(out, render_choices(&choices_reading_of(&value)));
 }

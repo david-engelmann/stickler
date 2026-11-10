@@ -156,8 +156,13 @@ fn readme_reports_the_round_4_standing() {
     // standing in review, so the count stood at one
     // while Round 14 was built, until the Round 14
     // closure landed slice 15 and the count returned to
+    // zero. Adjusted again with the Round 15 slice, as
+    // the named mechanical consequence of slice 16
+    // standing in review, so the count stood at one
+    // while Round 15 was built, until the Round 15
+    // closure landed slice 16 and the count returned to
     // zero.
-    assert_eq!(text.matches("built and in review").count(), 0);
+    assert_eq!(text.matches("built and in review").count(), 1);
 }
 
 #[test]
@@ -356,12 +361,12 @@ fn contract_carries_the_round_13_obligations() {
     assert!(text.contains("- CK-28."));
     assert!(text.contains("the label FIX-CK-27 is not consumed"));
     let sets = read("rust/src/sets.rs");
-    // Adjusted with the Round 14 slice, as the named mechanical
-    // consequence of CK-29 joining the obligations the sets.rs
-    // sentence names. The sentence gains CK-29, so the pinned
+    // Adjusted with the Round 15 slice, as the named mechanical
+    // consequence of CK-31 joining the obligations the sets.rs
+    // sentence names. The sentence gains CK-31, so the pinned
     // substring gains it too, in the form the Round 14 pin
     // below reads as well.
-    assert!(sets.contains("CK-25, CK-27, and CK-29 in CONTRACT.md"));
+    assert!(sets.contains("CK-25, CK-27, CK-29, and CK-31 in CONTRACT.md"));
     let readme = read("README.md");
     assert!(readme.contains("the collection form under CK-27 that verdicts reads"));
 }
@@ -375,26 +380,45 @@ fn contract_carries_the_round_14_obligations() {
     assert!(text.contains("- CK-29."));
     assert!(text.contains("- CK-30."));
     let sets = read("rust/src/sets.rs");
-    assert!(sets.contains("CK-25, CK-27, and CK-29 in CONTRACT.md"));
+    assert!(sets.contains("CK-25, CK-27, CK-29, and CK-31 in CONTRACT.md"));
     let readme = read("README.md");
     assert!(readme.contains("the collection form under CK-29 that shapes reads"));
 }
 
-/// The doc list pin of the Round 14 slice. Each of the
-/// nine loader docs carries the one shared sentence
-/// naming the shared set entry validation as the one
-/// home every collection loader calls, and none of the
-/// nine carries a caller enumeration in the loaders
-/// both call or loaders all call forms. It fails
-/// against the tree Round 13 closed on by content on
-/// eight of the nine files, the ninth standing absent
-/// on that tree with its module, and it passes on any
-/// tree whose docs stand restated, including a tree
-/// carrying the restatement without the reading, which
-/// is correct, because the pin guards the docs and the
-/// reading pins guard the reading.
+/// The Round 15 obligations pin. It fails against the
+/// tree Round 14 closed on by the absence of every
+/// text it reads.
 #[test]
-fn the_nine_loader_docs_carry_the_one_shared_sentence() {
+fn contract_carries_the_round_15_obligations() {
+    let text = read("CONTRACT.md");
+    assert!(text.contains("- CK-31."));
+    assert!(text.contains("- CK-32."));
+    let sets = read("rust/src/sets.rs");
+    assert!(sets.contains("CK-25, CK-27, CK-29, and CK-31 in CONTRACT.md"));
+    let readme = read("README.md");
+    assert!(readme.contains("the collection form under CK-31 that choices reads"));
+}
+
+/// The doc list pin of the Round 14 slice, adjusted
+/// with the Round 15 slice as the named mechanical
+/// consequence of the choices loader standing as the
+/// tenth collection loader under the same guard. The
+/// module list gains choices and the count in the
+/// name and this comment moves from nine to ten, and
+/// the pin fails against the tree Round 14 closed on
+/// by the tenth module's absence. Each of the ten
+/// loader docs carries the one shared sentence
+/// naming the shared set entry validation as the one
+/// home every collection loader calls, and none of
+/// the ten carries a caller enumeration in the
+/// loaders both call or loaders all call forms. It
+/// passes on any tree whose docs stand restated,
+/// including a tree carrying the restatement without
+/// the reading, which is correct, because the pin
+/// guards the docs and the reading pins guard the
+/// reading.
+#[test]
+fn the_ten_loader_docs_carry_the_one_shared_sentence() {
     for module in [
         "census",
         "rejudged",
@@ -405,6 +429,7 @@ fn the_nine_loader_docs_carry_the_one_shared_sentence() {
         "outcomes",
         "verdicts_reading",
         "shapes",
+        "choices",
     ] {
         let text = read(&format!("rust/src/{module}.rs"));
         assert!(
@@ -418,6 +443,55 @@ fn the_nine_loader_docs_carry_the_one_shared_sentence() {
         assert!(
             !text.contains("loaders all call"),
             "loader doc {module} enumerates no callers"
+        );
+    }
+}
+
+/// The birth count pin of the Round 15 slice. Each of
+/// the six reading heads, in files, borderline,
+/// outcomes, verdicts_reading, shapes, and choices,
+/// carries the one shared sentence naming the census
+/// as the same recorded inputs over the same
+/// collection loading whole, and none of the six
+/// carries the loading whole into all form or an
+/// enumeration of fellow readings in that sentence.
+/// The doc text is read flattened, the comment
+/// markers and line wraps removed, because the
+/// sentence wraps across the head's lines. It fails
+/// against the tree Round 14 closed on in all six
+/// files, five by content, each carrying the count
+/// form there, and the sixth by its module's
+/// absence, and it passes on any tree whose heads
+/// stand restated, including a tree carrying the
+/// restatement without the reading, which is
+/// correct, because the pin guards the heads and
+/// the reading pins guard the reading.
+#[test]
+fn the_six_reading_heads_carry_the_one_shared_inputs_sentence() {
+    for module in [
+        "files",
+        "borderline",
+        "outcomes",
+        "verdicts_reading",
+        "shapes",
+        "choices",
+    ] {
+        let text = read(&format!("rust/src/{module}.rs"));
+        let flattened = text
+            .replace("//!", " ")
+            .split_whitespace()
+            .collect::<Vec<_>>()
+            .join(" ");
+        assert!(
+            flattened.contains(
+                "It exists for the same recorded inputs as the census, \
+                 over the same collection loading whole."
+            ),
+            "reading head {module}"
+        );
+        assert!(
+            !flattened.contains("loading whole into all"),
+            "reading head {module} carries no birth count"
         );
     }
 }
@@ -475,6 +549,36 @@ fn readme_reports_the_round_14_status() {
         in the one drift free form across the nine loader docs, and \
         the constructed shapes collection under examples, with the \
         suite running offline on the recorded verdicts.";
+    assert!(text.lines().any(|line| line == slice_line));
+    assert!(text.contains("Closed perfection rounds, 14 of 100"));
+}
+
+/// The Round 15 status pin, in the standing form. It
+/// fails on the base README by content, the two lines
+/// it holds standing absent there, and passes on the
+/// slice README.
+#[test]
+fn readme_reports_the_round_15_status() {
+    let text = read("README.md");
+    let standing = "- Contract, CK-31 and CK-32 stated. They stand in full form in \
+        CONTRACT.md, and Round 15 stands open on slice 16 in review.";
+    assert!(text.lines().any(|line| line == standing));
+    let slice_line = "- Slice 16 is built and in review. It carries the \
+        choices reading over a recorded collection of change sets, one \
+        section per outcome in the order the contract states them, naming \
+        each flag of the collection carrying at least one verdict \
+        standing under that outcome with file, line, pattern, and the \
+        set it stands in, the verdict pairs of the flag standing under \
+        the section's outcome in the standing set review form, and a \
+        closing count of the pairs stated per section, with closing \
+        counts over the whole collection, with the choices example \
+        under examples standing over the same collection as the census \
+        example, and the choices command beside check, render, review, \
+        census, rejudged, split, contested, pattern, files, borderline, \
+        outcomes, verdicts, and shapes, and the birth count \
+        restatement in the one drift free form across the six reading \
+        heads, and the constructed choices collection under examples, \
+        with the suite running offline on the recorded verdicts.";
     assert!(text.lines().any(|line| line == slice_line));
     assert!(text.contains("Closed perfection rounds, 14 of 100"));
 }

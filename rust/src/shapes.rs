@@ -6,10 +6,9 @@
 //! grouped by the shape that raised them rather than
 //! being read out of one set review at a time or
 //! summed out of the census tallies. It exists for the
-//! same recorded inputs as the census, contested,
-//! pattern, files, borderline, outcomes, and verdicts
-//! readings, over the same collection loading whole
-//! into all eight. The loader validates each entry
+//! same recorded inputs as the census, over the same
+//! collection loading whole. The loader validates each
+//! entry
 //! through the shared set entry validation and each
 //! member through the change set loader, the
 //! judgements of each set come from the set review,

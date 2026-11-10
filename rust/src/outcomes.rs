@@ -6,9 +6,8 @@
 //! and which stand unjudged stands as one list rather than
 //! being summed out of the census tally or read out of one
 //! set review at a time. It exists for the same recorded
-//! inputs as the census, contested, pattern, files, and
-//! borderline readings, over the same collection loading
-//! whole into all six. The loader validates each entry
+//! inputs as the census, over the same collection
+//! loading whole. The loader validates each entry
 //! through the shared set entry validation and each member
 //! through the change set loader, the flags come from the
 //! set review, and the judgement of each flag comes from
