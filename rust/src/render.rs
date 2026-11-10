@@ -11,6 +11,7 @@ use crate::contested::Contested;
 use crate::files::FilesReading;
 use crate::grounds::GroundsReading;
 use crate::json::{JString, JsonValue};
+use crate::judgements::JudgementsReading;
 use crate::outcomes::OutcomesReading;
 use crate::pattern::PatternReading;
 use crate::rejudged::Rejudged;
@@ -560,6 +561,11 @@ pub fn render_grounds_defects(defects: &[String]) -> String {
     render_defects_headed("Grounds", defects)
 }
 
+/// Render a malformed judgements file with its defects named.
+pub fn render_judgements_defects(defects: &[String]) -> String {
+    render_defects_headed("Judgements", defects)
+}
+
 /// Render a shapes reading under CK-30.
 ///
 /// The reading states one section per shape of the
@@ -892,6 +898,101 @@ pub fn render_grounds(reading: &GroundsReading) -> String {
     for section in &reading.sections {
         lines.push(String::new());
         lines.push(format!("Pattern, {}", one_line_field(&section.pattern)));
+        if section.groups.is_empty() {
+            lines.push("No verdicts".to_string());
+        }
+        let mut section_verdicts = 0usize;
+        for group in &section.groups {
+            lines.push(format!(
+                "{}, line {}, {}, set, {}",
+                one_line_field(&group.file),
+                group.line,
+                one_line_field(&group.pattern),
+                one_line_field(&group.set_label)
+            ));
+            if !group.verdicts.is_empty() {
+                flags_with_verdicts += 1;
+            }
+            for entry in &group.verdicts {
+                section_verdicts += 1;
+                if is_abstention(entry) {
+                    abstained += 1;
+                    lines.push(format!(
+                        "Verdict, {}, abstained",
+                        one_line_field(&entry.model)
+                    ));
+                } else {
+                    match verdict_outcome(entry) {
+                        "stickler" => chose_stickler += 1,
+                        "clean" => chose_clean += 1,
+                        _ => {}
+                    }
+                    lines.push(format!(
+                        "Verdict, {}, {}",
+                        one_line_field(&entry.model),
+                        one_line_field(&entry.choice)
+                    ));
+                }
+                lines.push(format!("Reason, {}", one_line_field(&reason_for(entry))));
+            }
+        }
+        verdicts_read += section_verdicts;
+        lines.push(format!("Verdicts read, {section_verdicts}"));
+    }
+    lines.push(String::new());
+    lines.push(format!("Sets read, {}", reading.sets_read));
+    lines.push(format!("Flags read, {}", reading.flags_read));
+    lines.push(format!("Flags with verdicts, {flags_with_verdicts}"));
+    lines.push(format!("Verdicts read, {verdicts_read}"));
+    lines.push(format!("Chose stickler, {chose_stickler}"));
+    lines.push(format!("Chose clean, {chose_clean}"));
+    lines.push(format!("Abstained, {abstained}"));
+    lines.join("\n") + "\n"
+}
+
+/// Render a judgements reading under CK-38.
+///
+/// The reading states one section per judgement of CK-8
+/// in the order CK-8 states them, naming each flag of
+/// the collection standing under that judgement and
+/// carrying at least one recorded verdict with its
+/// file, line, and pattern and the label of its set,
+/// all the pairs of the flag under it in the standing
+/// set review form, or the no verdicts line where no
+/// verdict of the collection stands under a judgement,
+/// and closes with the counts of the collection. The
+/// section counts print as the counts of the pairs
+/// stated, and the closing verdicts read count, the
+/// three outcome counts, and the flags with verdicts
+/// count print as the sums over the sections stated,
+/// in the relations CK-38 states for them, the outcome
+/// counts counted over the verdicts under the one
+/// outcome helper of the seat, the abstained count
+/// taken where the abstention predicate of CK-7 holds,
+/// so a handed choice outside the two labels counts in
+/// the verdicts read count and in none of the three,
+/// and the word abstained standing as a choice is no
+/// exception, under FIX-CK-28. The closing sets read
+/// and flags read counts stand as the builder counts
+/// them, in the carve out FIX-CK-21 states. Every field
+/// prints under the one line rule, and the judgement
+/// word of a section never prints as a field at all,
+/// the section head printing the one fixed literal the
+/// head helper of the outcomes rendering states for
+/// it, so the rendering holds the rule for any reading
+/// it is handed, as the collection readings before it
+/// stand closed from their first writing. The same
+/// collection always renders byte identical.
+pub fn render_judgements(reading: &JudgementsReading) -> String {
+    let mut lines = vec!["Judgements".to_string()];
+    let mut flags_with_verdicts = 0usize;
+    let mut verdicts_read = 0usize;
+    let mut chose_stickler = 0usize;
+    let mut chose_clean = 0usize;
+    let mut abstained = 0usize;
+    for section in &reading.sections {
+        lines.push(String::new());
+        lines.push(judgement_head(section.judgement).to_string());
         if section.groups.is_empty() {
             lines.push("No verdicts".to_string());
         }
