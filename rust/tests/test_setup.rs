@@ -24,7 +24,7 @@ fn agents_carries_the_canonical_marker() {
 #[test]
 fn readme_states_the_closed_round_count() {
     let text = read("README.md");
-    assert!(text.contains("Closed perfection rounds, 14 of 100"));
+    assert!(text.contains("Closed perfection rounds, 15 of 100"));
 }
 
 #[test]
@@ -162,7 +162,7 @@ fn readme_reports_the_round_4_standing() {
     // while Round 15 was built, until the Round 15
     // closure landed slice 16 and the count returned to
     // zero.
-    assert_eq!(text.matches("built and in review").count(), 1);
+    assert_eq!(text.matches("built and in review").count(), 0);
 }
 
 #[test]
@@ -180,7 +180,7 @@ fn readme_reports_the_round_5_standing() {
         example named as constructed, with the suite running offline \
         on the recorded and constructed sets.";
     assert!(text.lines().any(|line| line == slice_line));
-    assert!(text.contains("Closed perfection rounds, 14 of 100"));
+    assert!(text.contains("Closed perfection rounds, 15 of 100"));
 }
 
 #[test]
@@ -199,7 +199,7 @@ fn readme_reports_the_round_6_standing() {
         and census, with the suite running offline on the recorded \
         envelopes and sets.";
     assert!(text.lines().any(|line| line == slice_line));
-    assert!(text.contains("Closed perfection rounds, 14 of 100"));
+    assert!(text.contains("Closed perfection rounds, 15 of 100"));
 }
 
 #[test]
@@ -217,7 +217,7 @@ fn readme_reports_the_round_7_standing() {
         beside check, render, review, census, and rejudged, with the \
         suite running offline on the recorded verdicts.";
     assert!(text.lines().any(|line| line == slice_line));
-    assert!(text.contains("Closed perfection rounds, 14 of 100"));
+    assert!(text.contains("Closed perfection rounds, 15 of 100"));
 }
 
 #[test]
@@ -239,7 +239,7 @@ fn readme_reports_the_round_8_standing() {
         review, census, rejudged, and split, with the suite running \
         offline on the recorded verdicts.";
     assert!(text.lines().any(|line| line == slice_line));
-    assert!(text.contains("Closed perfection rounds, 14 of 100"));
+    assert!(text.contains("Closed perfection rounds, 15 of 100"));
 }
 
 #[test]
@@ -265,7 +265,7 @@ fn readme_reports_the_round_9_standing() {
         rejudged, split, and set review renderings, with the suite \
         running offline on the recorded verdicts.";
     assert!(text.lines().any(|line| line == slice_line));
-    assert!(text.contains("Closed perfection rounds, 14 of 100"));
+    assert!(text.contains("Closed perfection rounds, 15 of 100"));
 }
 
 #[test]
@@ -291,7 +291,7 @@ fn readme_reports_the_round_10_standing() {
         README brought to the fleet README standard, with the suite \
         running offline on the recorded verdicts.";
     assert!(text.lines().any(|line| line == slice_line));
-    assert!(text.contains("Closed perfection rounds, 14 of 100"));
+    assert!(text.contains("Closed perfection rounds, 15 of 100"));
 }
 
 #[test]
@@ -317,7 +317,7 @@ fn readme_reports_the_round_11_standing() {
         the set review rendering, with the suite running offline on the \
         recorded verdicts.";
     assert!(text.lines().any(|line| line == slice_line));
-    assert!(text.contains("Closed perfection rounds, 14 of 100"));
+    assert!(text.contains("Closed perfection rounds, 15 of 100"));
 }
 
 #[test]
@@ -345,7 +345,7 @@ fn readme_reports_the_round_12_status() {
         large change set and large diff under examples, with the suite \
         running offline on the recorded verdicts.";
     assert!(text.lines().any(|line| line == slice_line));
-    assert!(text.contains("Closed perfection rounds, 14 of 100"));
+    assert!(text.contains("Closed perfection rounds, 15 of 100"));
 }
 
 /// The Round 13 pins. The obligations pin fails against
@@ -520,7 +520,7 @@ fn readme_reports_the_round_13_status() {
         examples, with the suite running offline on the recorded \
         verdicts.";
     assert!(text.lines().any(|line| line == slice_line));
-    assert!(text.contains("Closed perfection rounds, 14 of 100"));
+    assert!(text.contains("Closed perfection rounds, 15 of 100"));
 }
 
 /// The Round 14 status pin, in the standing form. It
@@ -550,7 +550,7 @@ fn readme_reports_the_round_14_status() {
         the constructed shapes collection under examples, with the \
         suite running offline on the recorded verdicts.";
     assert!(text.lines().any(|line| line == slice_line));
-    assert!(text.contains("Closed perfection rounds, 14 of 100"));
+    assert!(text.contains("Closed perfection rounds, 15 of 100"));
 }
 
 /// The Round 15 status pin, in the standing form. It
@@ -560,10 +560,12 @@ fn readme_reports_the_round_14_status() {
 #[test]
 fn readme_reports_the_round_15_status() {
     let text = read("README.md");
-    let standing = "- Contract, CK-31 and CK-32 stated. They stand in full form in \
-        CONTRACT.md, and Round 15 stands open on slice 16 in review.";
+    let standing = "- Contract, CK-31 and CK-32 met. They stand in full form in \
+        CONTRACT.md, and Round 15 closed on the merged slice 16 \
+        after three reviews, no Major on any axis and no repair \
+        owed.";
     assert!(text.lines().any(|line| line == standing));
-    let slice_line = "- Slice 16 is built and in review. It carries the \
+    let slice_line = "- Slice 16 has landed. It carries the \
         choices reading over a recorded collection of change sets, one \
         section per outcome in the order the contract states them, naming \
         each flag of the collection carrying at least one verdict \
@@ -580,7 +582,7 @@ fn readme_reports_the_round_15_status() {
         heads, and the constructed choices collection under examples, \
         with the suite running offline on the recorded verdicts.";
     assert!(text.lines().any(|line| line == slice_line));
-    assert!(text.contains("Closed perfection rounds, 14 of 100"));
+    assert!(text.contains("Closed perfection rounds, 15 of 100"));
 }
 
 #[test]
