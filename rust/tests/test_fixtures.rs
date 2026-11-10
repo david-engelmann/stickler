@@ -30,12 +30,29 @@
 //! relations of the choices reading against the verdicts
 //! reading and the census over the same collection and
 //! against its own section counts.
+//! The constructed categories collection of Round 16 is
+//! pinned by dimension pins read off the fixture itself
+//! under the parameters the preamble of the Round 16
+//! section states, by the six shape requirements that
+//! preamble names, counted from the categories reading
+//! over the collection, and by the closing relations of
+//! the categories reading against the shapes reading
+//! regrouped by category and the census over the same
+//! collection and against its own section counts. The
+//! dimension and requirement pins fail against the
+//! tree Round 15 closed on by the absence of the
+//! fixture they read, and each one can fail against a
+//! miscounted construction on the counts it reads. The
+//! three relation pins are compile absent against that
+//! tree by the absence of the categories module they
+//! name.
 //! Every pin runs offline on the constructed fixtures, and no
 //! pin makes a live call.
 
 use std::path::PathBuf;
 
 use stickler::borderline::{borderline_reading_of, load_borderline};
+use stickler::categories::{categories_reading_of, load_categories};
 use stickler::census::{census_of, load_census};
 use stickler::changeset::load_changeset;
 use stickler::checker::check_diff_detailed;
@@ -43,7 +60,9 @@ use stickler::choices::{choices_reading_of, load_choices};
 use stickler::cli::cli_main;
 use stickler::json::{parse, JsonValue};
 use stickler::outcomes::outcomes_reading_of;
-use stickler::render::{render_borderline, render_choices, render_shapes, render_verdicts};
+use stickler::render::{
+    render_borderline, render_categories, render_choices, render_shapes, render_verdicts,
+};
 use stickler::shapes::{load_shapes, shapes_reading_of};
 use stickler::verdicts::{is_contested, line_outcome, verdict_outcome};
 use stickler::verdicts_reading::{load_verdicts, verdicts_reading_of};
@@ -738,6 +757,344 @@ fn shapes_collection_closing_relations_hold() {
     assert_eq!(section_counts.len(), 7);
     assert_eq!(section_counts[..6].iter().sum::<usize>(), section_counts[6]);
     assert_eq!(out, render_shapes(&reading));
+}
+
+/// The first dimension pin of the constructed
+/// categories collection, read off the fixture itself
+/// under the parameters the preamble of the Round 16
+/// section states. The pin fails against the tree
+/// Round 15 closed on by the absence of the fixture
+/// it reads, and against a miscounted construction
+/// on the counts it reads.
+#[test]
+fn categories_collection_holds_two_sets_named_as_constructed() {
+    let value = parsed_example("categories_collection.json");
+    assert!(load_categories(&value).is_empty());
+    let sets = value.get("sets").and_then(|sets| sets.as_array()).unwrap();
+    assert_eq!(sets.len(), 2);
+    for set in sets {
+        let label = set
+            .get("label")
+            .and_then(|label| label.as_jstring())
+            .unwrap()
+            .to_rust_string()
+            .unwrap();
+        assert!(
+            label.contains("constructed"),
+            "the set {label} is named as constructed"
+        );
+    }
+}
+
+/// The second dimension pin of the constructed
+/// categories collection, each set holding between
+/// three and six files, read off the fixture itself.
+#[test]
+fn categories_collection_files_per_set_stand_between_three_and_six() {
+    let value = parsed_example("categories_collection.json");
+    let sets = value.get("sets").and_then(|sets| sets.as_array()).unwrap();
+    for set in sets {
+        let files = set
+            .get("change_set")
+            .unwrap()
+            .get("files")
+            .and_then(|files| files.as_array())
+            .unwrap();
+        assert!(
+            (3..=6).contains(&files.len()),
+            "a set holds {} files",
+            files.len()
+        );
+    }
+}
+
+/// The third dimension pin of the constructed
+/// categories collection, the judgements across the
+/// collection standing between twenty four and forty,
+/// counted from the census over the collection.
+#[test]
+fn categories_collection_judgements_stand_between_twenty_four_and_forty() {
+    let value = parsed_example("categories_collection.json");
+    let census = census_of(&value);
+    assert!(
+        (24..=40).contains(&census.total.judgements),
+        "the collection holds {} judgements",
+        census.total.judgements
+    );
+}
+
+/// The fourth dimension pin of the constructed
+/// categories collection, no verdict standing in
+/// either set, read off the fixture itself.
+#[test]
+fn categories_collection_no_verdict_stands_in_either_set() {
+    let value = parsed_example("categories_collection.json");
+    let sets = value.get("sets").and_then(|sets| sets.as_array()).unwrap();
+    for set in sets {
+        let label = set
+            .get("label")
+            .and_then(|label| label.as_jstring())
+            .unwrap()
+            .to_rust_string()
+            .unwrap();
+        let files = set
+            .get("change_set")
+            .unwrap()
+            .get("files")
+            .and_then(|files| files.as_array())
+            .unwrap();
+        assert!(
+            files.iter().all(|file| !file.contains_key("verdicts")),
+            "no verdict stands in the set {label}"
+        );
+    }
+}
+
+/// The first shape requirement of the constructed
+/// categories collection, every category carrying
+/// judgements from both sets, counted from the
+/// categories reading, each section holding at least
+/// one judgement line carrying each set's label.
+#[test]
+fn categories_collection_every_category_carries_both_sets() {
+    let value = parsed_example("categories_collection.json");
+    let reading = categories_reading_of(&value);
+    for section in &reading.sections {
+        for label in [
+            "constructed categories set 1",
+            "constructed categories set 2",
+        ] {
+            assert!(
+                section
+                    .judgements
+                    .iter()
+                    .any(|judgement| judgement.set_label == label),
+                "the category {} carries no judgement of the set {label}",
+                section.category
+            );
+        }
+    }
+}
+
+/// The second shape requirement, the naming category
+/// carrying at least two judgements in each set,
+/// counted from the categories reading.
+#[test]
+fn categories_collection_naming_carries_two_in_each_set() {
+    let value = parsed_example("categories_collection.json");
+    let reading = categories_reading_of(&value);
+    let naming = reading
+        .sections
+        .iter()
+        .find(|section| section.category == "naming")
+        .unwrap();
+    for label in [
+        "constructed categories set 1",
+        "constructed categories set 2",
+    ] {
+        let held = naming
+            .judgements
+            .iter()
+            .filter(|judgement| judgement.set_label == label)
+            .count();
+        assert!(
+            held >= 2,
+            "the set {label} carries {held} naming judgements"
+        );
+    }
+}
+
+/// The third shape requirement, every category's
+/// collection total standing at least at four,
+/// counted from the categories reading.
+#[test]
+fn categories_collection_every_category_total_stands_at_four() {
+    let value = parsed_example("categories_collection.json");
+    let reading = categories_reading_of(&value);
+    for section in &reading.sections {
+        assert!(
+            section.judgements.len() >= 4,
+            "the category {} carries {} judgements in total",
+            section.category,
+            section.judgements.len()
+        );
+    }
+}
+
+/// The fourth shape requirement, every one of the six
+/// shapes carrying at least one judgement, counted
+/// from the census total tally over the collection.
+#[test]
+fn categories_collection_every_shape_carries_a_judgement() {
+    let value = parsed_example("categories_collection.json");
+    let census = census_of(&value);
+    for (shape, count) in census.total.shapes.iter().enumerate() {
+        assert!(
+            *count >= 1,
+            "shape {shape} carries {count} judgements in total"
+        );
+    }
+}
+
+/// The fifth shape requirement, at least one file in
+/// each set carrying two judgements of different
+/// categories, counted from the categories reading,
+/// a file standing in two sections under one set.
+#[test]
+fn categories_collection_a_file_in_each_set_stands_in_two_category_sections() {
+    let value = parsed_example("categories_collection.json");
+    let reading = categories_reading_of(&value);
+    let labels: Vec<String> = reading
+        .sections
+        .iter()
+        .flat_map(|section| {
+            section
+                .judgements
+                .iter()
+                .map(|judgement| judgement.set_label.clone())
+        })
+        .collect();
+    for label in [
+        "constructed categories set 1",
+        "constructed categories set 2",
+    ] {
+        assert!(labels.iter().any(|held| held == label));
+        let stands_twice = reading.sections.iter().enumerate().any(|(index, section)| {
+            section.judgements.iter().any(|first| {
+                first.set_label == label
+                    && reading
+                        .sections
+                        .iter()
+                        .enumerate()
+                        .any(|(other_index, other)| {
+                            other_index != index
+                                && other
+                                    .judgements
+                                    .iter()
+                                    .any(|held| held.set_label == label && held.file == first.file)
+                        })
+            })
+        });
+        assert!(
+            stands_twice,
+            "one file of the set {label} stands in two sections"
+        );
+    }
+}
+
+/// The sixth shape requirement, at least one file
+/// carrying two judgements of the same category,
+/// counted from the categories reading, one section
+/// holding two lines over one file of one set.
+#[test]
+fn categories_collection_a_file_carries_two_judgements_of_one_category() {
+    let value = parsed_example("categories_collection.json");
+    let reading = categories_reading_of(&value);
+    let stands = reading.sections.iter().any(|section| {
+        section.judgements.iter().any(|first| {
+            section
+                .judgements
+                .iter()
+                .filter(|held| held.file == first.file && held.set_label == first.set_label)
+                .count()
+                >= 2
+        })
+    });
+    assert!(stands, "one file carries two judgements of one category");
+}
+
+/// The shapes relation of the constructed categories
+/// collection, each categories section's count equal
+/// to the count of that category's judgement lines in
+/// the shapes reading over the same collection, the
+/// two readings stating the same judgements under two
+/// organizations, by shape and by category. The pin
+/// is compile absent against the tree Round 15 closed
+/// on by the absence of the categories module it
+/// names.
+#[test]
+fn categories_collection_sections_regroup_the_shapes_reading() {
+    let value = parsed_example("categories_collection.json");
+    let reading = categories_reading_of(&value);
+    let shapes = shapes_reading_of(&value);
+    for section in &reading.sections {
+        let regrouped = shapes
+            .sections
+            .iter()
+            .flat_map(|shape_section| shape_section.judgements.iter())
+            .filter(|judgement| judgement.category == section.category)
+            .count();
+        assert_eq!(
+            section.judgements.len(),
+            regrouped,
+            "section {} regroups the shapes reading",
+            section.category
+        );
+    }
+}
+
+/// The census relation of the constructed categories
+/// collection, the categories closings over the
+/// collection equal to the census set count and the
+/// census total judgements count over the same
+/// collection, and the command output standing byte
+/// identical to the library rendering.
+#[test]
+fn categories_collection_closings_bind_to_the_census() {
+    let (code, out) = run_on_example("categories", "categories_collection.json");
+    assert_eq!(code, 0);
+    let value = parsed_example("categories_collection.json");
+    let census = census_of(&value);
+    let reading = categories_reading_of(&value);
+    let closings = out.split("\n\n").last().unwrap();
+    assert_eq!(count_after(closings, "Sets read, "), census.sets.len());
+    assert_eq!(
+        count_after(closings, "Judgements read, "),
+        census.total.judgements
+    );
+    assert_eq!(out, render_categories(&reading));
+}
+
+/// The internal sums of the categories reading over
+/// the constructed categories collection, the section
+/// counts summing to the closing judgements read
+/// count, read from the rendered text, and each
+/// shape's count summed across the three category
+/// sections equal to the shapes reading's section
+/// count for that shape, the categories judgement
+/// lines carrying their shape names.
+#[test]
+fn categories_collection_internal_sums_hold() {
+    let value = parsed_example("categories_collection.json");
+    let reading = categories_reading_of(&value);
+    let rendered = render_categories(&reading);
+    let section_counts: Vec<usize> = rendered
+        .lines()
+        .filter(|line| line.starts_with("Judgements read, "))
+        .map(|line| {
+            line.strip_prefix("Judgements read, ")
+                .unwrap()
+                .parse()
+                .unwrap()
+        })
+        .collect();
+    assert_eq!(section_counts.len(), 4);
+    assert_eq!(section_counts[..3].iter().sum::<usize>(), section_counts[3]);
+    let shapes = shapes_reading_of(&value);
+    for section in &shapes.sections {
+        let across = reading
+            .sections
+            .iter()
+            .flat_map(|category_section| category_section.judgements.iter())
+            .filter(|judgement| judgement.shape == section.shape)
+            .count();
+        assert_eq!(
+            across,
+            section.judgements.len(),
+            "shape {} sums across the category sections",
+            section.shape
+        );
+    }
 }
 
 /// The dimension pins of the constructed choices

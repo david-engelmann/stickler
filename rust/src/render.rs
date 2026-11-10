@@ -2,6 +2,7 @@
 //! command.
 
 use crate::borderline::BorderlineReading;
+use crate::categories::CategoriesReading;
 use crate::census::{Census, CensusSet, Tally};
 use crate::changeset::{FileResult, Judgements};
 use crate::checker::{BORDERLINE_PATTERNS, SHAPES};
@@ -548,6 +549,11 @@ pub fn render_choices_defects(defects: &[String]) -> String {
     render_defects_headed("Choices", defects)
 }
 
+/// Render a malformed categories file with its defects named.
+pub fn render_categories_defects(defects: &[String]) -> String {
+    render_defects_headed("Categories", defects)
+}
+
 /// Render a shapes reading under CK-30.
 ///
 /// The reading states one section per shape of the
@@ -583,6 +589,54 @@ pub fn render_shapes(reading: &ShapesReading) -> String {
                     one_line_field(&judgement.file),
                     judgement.number,
                     one_line_field(&judgement.category),
+                    one_line_field(&judgement.set_label)
+                ));
+            }
+        }
+        judgements_read += section.judgements.len();
+        lines.push(format!("Judgements read, {}", section.judgements.len()));
+    }
+    lines.push(String::new());
+    lines.push(format!("Sets read, {}", reading.sets_read));
+    lines.push(format!("Judgements read, {judgements_read}"));
+    lines.join("\n") + "\n"
+}
+
+/// Render a categories reading under CK-34.
+///
+/// The reading states one section per category in the
+/// order the formats section states the vocabulary,
+/// naming every judgement of the collection standing
+/// under that category with its file, its standing
+/// number among the judgements of its file, its shape
+/// name, and the set it stands in, or the no judgements
+/// line where none stands, and closes with the counts
+/// of the collection. The closing judgements read
+/// count prints as the sum over the sections stated,
+/// in the relations CK-34 states for it, and the
+/// closing sets read count stands as the builder
+/// counts it. Every field prints under the one line
+/// rule, the category name of a section head fenced
+/// like every other field, so the rendering holds the
+/// rule for any reading it is handed, as the collection
+/// readings before it stand closed from their first
+/// writing. The same collection always renders byte
+/// identical.
+pub fn render_categories(reading: &CategoriesReading) -> String {
+    let mut lines = vec!["Categories".to_string()];
+    let mut judgements_read = 0usize;
+    for section in &reading.sections {
+        lines.push(String::new());
+        lines.push(format!("Category, {}", one_line_field(&section.category)));
+        if section.judgements.is_empty() {
+            lines.push("No judgements".to_string());
+        } else {
+            for judgement in &section.judgements {
+                lines.push(format!(
+                    "{}, judgement {}, {}, set, {}",
+                    one_line_field(&judgement.file),
+                    judgement.number,
+                    one_line_field(&judgement.shape),
                     one_line_field(&judgement.set_label)
                 ));
             }

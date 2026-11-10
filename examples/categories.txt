@@ -1,0 +1,19 @@
+Categories
+
+Category, naming
+No judgements
+Judgements read, 0
+
+Category, structure
+basket.py, judgement 1, class attribute, set, round 2 set
+basket.py, judgement 2, call default, set, round 2 set
+report.py, judgement 1, mutable default, set, round 2 set
+Judgements read, 3
+
+Category, smell
+report.py, judgement 2, bare except, set, round 2 set
+report.py, judgement 3, print call, set, round 2 set
+Judgements read, 2
+
+Sets read, 3
+Judgements read, 5

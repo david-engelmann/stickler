@@ -6,6 +6,7 @@
 //! package under src is the specification this port reproduces.
 
 pub mod borderline;
+pub mod categories;
 pub mod census;
 pub mod changeset;
 pub mod checker;
