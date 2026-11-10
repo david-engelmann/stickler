@@ -442,6 +442,58 @@ fn the_usage_text_names_the_categories_command() {
     );
 }
 
+/// The grounds command pins of CK-35. The example and
+/// malformed pins fail against the tree Round 16
+/// closed on by execution, the base command line
+/// answering a grounds invocation with the usage text
+/// and a nonzero exit and no rendering on its output
+/// stream, so the example pin fails on its exit code
+/// and output and the malformed pin on its output,
+/// and the usage pin fails by content, on the text it
+/// reads.
+#[test]
+fn grounds_on_the_example_exits_0_and_matches_its_golden() {
+    let example = root()
+        .join("examples")
+        .join("grounds.json")
+        .to_string_lossy()
+        .into_owned();
+    let (code, out, _err) = run(&["grounds", &example]);
+    assert_eq!(code, 0);
+    assert!(out.starts_with("Grounds\n"));
+    let golden = std::fs::read_to_string(root().join("examples").join("grounds.txt")).unwrap();
+    assert_eq!(out, golden);
+}
+
+#[test]
+fn grounds_on_a_malformed_file_exits_2_and_names_the_defects() {
+    let dir = temp_dir("grounds-malformed");
+    let path = write(
+        &dir,
+        "grounds.json",
+        "{\"sets\": [{\"change_set\": {\"files\": []}}]}",
+    );
+    let (code, out, _err) = run(&["grounds", &path]);
+    assert_eq!(code, 2);
+    assert_eq!(
+        out,
+        "Grounds\n\
+         Verdict, invalid\n\
+         Defects, 1\n\
+         Defect, sets[0].label is missing\n"
+    );
+}
+
+#[test]
+fn the_usage_text_names_the_grounds_command() {
+    let (code, _out, err) = run(&["grounds"]);
+    assert_eq!(code, 2);
+    assert!(
+        err.contains("Usage, stickler grounds GROUNDS_JSON\n"),
+        "{err}"
+    );
+}
+
 #[test]
 fn the_smelly_example_sends_back_and_the_clean_example_accepts() {
     let smelly = root()
@@ -797,12 +849,13 @@ fn run_units(args: &[&[u8]]) -> ByteOutcome {
     cli_main_units(&owned)
 }
 
-// Adjusted with the Round 16 slice, as the named mechanical
-// consequence of CK-33 adding the categories command to the
-// command line. The usage text gains the categories line,
+// Adjusted with the Round 17 slice, as the named mechanical
+// consequence of CK-35 adding the grounds command to the
+// command line. The usage text gains the grounds line,
 // so the pinned bytes gain it too, and the three assertions
 // standing on this constant hold the new text. The constant
-// was adjusted before with the Round 15 slice, when CK-31
+// was adjusted before with the Round 16 slice, when CK-33
+// added the categories command, with the Round 15 slice, when CK-31
 // added the choices command, with the Round 14 slice, when CK-29
 // added the shapes command, with the Round 13 slice, when CK-27
 // added the verdicts command, with the Round 11 slice, when CK-24
@@ -828,7 +881,8 @@ const USAGE_BYTES: &[u8] = b"Usage, stickler check DIFF_FILE\n\
     Usage, stickler verdicts VERDICTS_JSON\n\
     Usage, stickler shapes SHAPES_JSON\n\
     Usage, stickler choices CHOICES_JSON\n\
-    Usage, stickler categories CATEGORIES_JSON\n";
+    Usage, stickler categories CATEGORIES_JSON\n\
+    Usage, stickler grounds GROUNDS_JSON\n";
 
 #[test]
 fn check_names_a_readable_raw_byte_diff_by_its_surrogate_defect() {

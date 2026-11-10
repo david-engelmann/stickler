@@ -29,6 +29,10 @@ name = "test_categories_reading"
 path = "rust/tests/test_categories_reading.rs"
 
 [[test]]
+name = "test_grounds_reading"
+path = "rust/tests/test_grounds_reading.rs"
+
+[[test]]
 name = "test_census"
 path = "rust/tests/test_census.rs"
 

@@ -1,7 +1,7 @@
-//! The stickler command line. Fifteen commands, check,
+//! The stickler command line. Sixteen commands, check,
 //! render, review, census, rejudged, split, contested,
 //! pattern, files, borderline, outcomes, verdicts,
-//! shapes, choices, and categories.
+//! shapes, choices, categories, and grounds.
 //!
 //! The surface stands as two functions over two readings of
 //! the arguments. The binary entry, run below, collects the
@@ -26,6 +26,7 @@ use crate::checker::check_diff_text;
 use crate::choices::{choices_reading_of, load_choices};
 use crate::contested::{contested_reading_of, load_contested};
 use crate::files::{files_reading_of, load_files};
+use crate::grounds::{grounds_reading_of, load_grounds};
 use crate::json::{self, JString, JsonValue, ParseError};
 use crate::outcomes::{load_outcomes, outcomes_reading_of};
 use crate::pattern::{load_pattern, pattern_reading_of};
@@ -34,10 +35,11 @@ use crate::render::{
     render_borderline, render_borderline_defects, render_categories, render_categories_defects,
     render_census, render_census_defects, render_choices, render_choices_defects, render_contested,
     render_contested_defects, render_defects, render_defects_units, render_files,
-    render_files_defects, render_outcomes, render_outcomes_defects, render_pattern,
-    render_pattern_defects, render_rejudged, render_rejudged_defects, render_review,
-    render_set_defects, render_set_review, render_shapes, render_shapes_defects, render_split,
-    render_split_defects, render_verdicts, render_verdicts_defects,
+    render_files_defects, render_grounds, render_grounds_defects, render_outcomes,
+    render_outcomes_defects, render_pattern, render_pattern_defects, render_rejudged,
+    render_rejudged_defects, render_review, render_set_defects, render_set_review, render_shapes,
+    render_shapes_defects, render_split, render_split_defects, render_verdicts,
+    render_verdicts_defects,
 };
 use crate::review::verdict_for;
 use crate::shapes::{load_shapes, shapes_reading_of};
@@ -62,7 +64,8 @@ const USAGE: &str = "Usage, stickler check DIFF_FILE\n\
                      Usage, stickler verdicts VERDICTS_JSON\n\
                      Usage, stickler shapes SHAPES_JSON\n\
                      Usage, stickler choices CHOICES_JSON\n\
-                     Usage, stickler categories CATEGORIES_JSON\n";
+                     Usage, stickler categories CATEGORIES_JSON\n\
+                     Usage, stickler grounds GROUNDS_JSON\n";
 
 /// The outcome of one command line run, holding the exit code
 /// and the text for each of the two output streams.
@@ -612,6 +615,34 @@ fn categories_command(path: &JString) -> ByteOutcome {
     text_outcome(0, render_categories(&categories_reading_of(&value)))
 }
 
+fn grounds_command(path: &JString) -> ByteOutcome {
+    let text = match read_text(path) {
+        Err(()) => {
+            return text_outcome(
+                2,
+                render_grounds_defects(&["the grounds file could not be read".to_string()]),
+            );
+        }
+        Ok(text) => text,
+    };
+    let value = match json::parse(&text) {
+        Err(_) => {
+            return text_outcome(
+                2,
+                render_grounds_defects(&[
+                    "the file does not hold a JSON grounds collection".to_string()
+                ]),
+            );
+        }
+        Ok(value) => value,
+    };
+    let defects = load_grounds(&value);
+    if !defects.is_empty() {
+        return text_outcome(2, render_grounds_defects(&defects));
+    }
+    text_outcome(0, render_grounds(&grounds_reading_of(&value)))
+}
+
 /// Run the command line over code unit arguments and return
 /// the outcome as raw bytes.
 pub fn cli_main_units(args: &[JString]) -> ByteOutcome {
@@ -660,6 +691,9 @@ pub fn cli_main_units(args: &[JString]) -> ByteOutcome {
         }
         if args[0].equals("categories") {
             return categories_command(&args[1]);
+        }
+        if args[0].equals("grounds") {
+            return grounds_command(&args[1]);
         }
     }
     ByteOutcome {
