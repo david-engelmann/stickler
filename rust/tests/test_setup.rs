@@ -176,8 +176,13 @@ fn readme_reports_the_round_4_standing() {
     // standing in review, so the count stood at one
     // while Round 18 was built, until the Round 18
     // closure landed slice 19 and the count returned to
+    // zero. Adjusted again with the Round 19 slice, as
+    // the named mechanical consequence of slice 20
+    // standing in review, so the count stands at one
+    // while Round 19 is built, until the Round 19
+    // closure lands slice 20 and the count returns to
     // zero.
-    assert_eq!(text.matches("built and in review").count(), 0);
+    assert_eq!(text.matches("built and in review").count(), 1);
 }
 
 #[test]
@@ -376,12 +381,14 @@ fn contract_carries_the_round_13_obligations() {
     assert!(text.contains("- CK-28."));
     assert!(text.contains("the label FIX-CK-27 is not consumed"));
     let sets = read("rust/src/sets.rs");
-    // Adjusted with the Round 18 slice, as the named mechanical
-    // consequence of CK-37 joining the obligations the sets.rs
-    // sentence names. The sentence gains CK-37, so the pinned
+    // Adjusted with the Round 19 slice, as the named mechanical
+    // consequence of CK-39 joining the obligations the sets.rs
+    // sentence names. The sentence gains CK-39, so the pinned
     // substring gains it too, in the form the Round 14 pin
     // below reads as well.
-    assert!(sets.contains("CK-25, CK-27, CK-29, CK-31, CK-33, CK-35, and CK-37 in CONTRACT.md"));
+    assert!(
+        sets.contains("CK-25, CK-27, CK-29, CK-31, CK-33, CK-35, CK-37, and CK-39 in CONTRACT.md")
+    );
     let readme = read("README.md");
     assert!(readme.contains("the collection form under CK-27 that verdicts reads"));
 }
@@ -395,7 +402,9 @@ fn contract_carries_the_round_14_obligations() {
     assert!(text.contains("- CK-29."));
     assert!(text.contains("- CK-30."));
     let sets = read("rust/src/sets.rs");
-    assert!(sets.contains("CK-25, CK-27, CK-29, CK-31, CK-33, CK-35, and CK-37 in CONTRACT.md"));
+    assert!(
+        sets.contains("CK-25, CK-27, CK-29, CK-31, CK-33, CK-35, CK-37, and CK-39 in CONTRACT.md")
+    );
     let readme = read("README.md");
     assert!(readme.contains("the collection form under CK-29 that shapes reads"));
 }
@@ -409,7 +418,9 @@ fn contract_carries_the_round_15_obligations() {
     assert!(text.contains("- CK-31."));
     assert!(text.contains("- CK-32."));
     let sets = read("rust/src/sets.rs");
-    assert!(sets.contains("CK-25, CK-27, CK-29, CK-31, CK-33, CK-35, and CK-37 in CONTRACT.md"));
+    assert!(
+        sets.contains("CK-25, CK-27, CK-29, CK-31, CK-33, CK-35, CK-37, and CK-39 in CONTRACT.md")
+    );
     let readme = read("README.md");
     assert!(readme.contains("the collection form under CK-31 that choices reads"));
 }
@@ -423,7 +434,9 @@ fn contract_carries_the_round_16_obligations() {
     assert!(text.contains("- CK-33."));
     assert!(text.contains("- CK-34."));
     let sets = read("rust/src/sets.rs");
-    assert!(sets.contains("CK-25, CK-27, CK-29, CK-31, CK-33, CK-35, and CK-37 in CONTRACT.md"));
+    assert!(
+        sets.contains("CK-25, CK-27, CK-29, CK-31, CK-33, CK-35, CK-37, and CK-39 in CONTRACT.md")
+    );
     let readme = read("README.md");
     assert!(readme.contains("the collection form under CK-33 that categories reads"));
 }
@@ -437,7 +450,7 @@ fn contract_carries_the_round_17_obligations() {
     assert!(text.contains("- CK-35."));
     assert!(text.contains("- CK-36."));
     let sets = read("rust/src/sets.rs");
-    assert!(sets.contains("CK-27, CK-29, CK-31, CK-33, CK-35, and CK-37 in CONTRACT.md"));
+    assert!(sets.contains("CK-27, CK-29, CK-31, CK-33, CK-35, CK-37, and CK-39 in CONTRACT.md"));
     let readme = read("README.md");
     assert!(readme.contains("the collection form under CK-35 that grounds reads"));
 }
@@ -451,9 +464,61 @@ fn contract_carries_the_round_18_obligations() {
     assert!(text.contains("- CK-37."));
     assert!(text.contains("- CK-38."));
     let sets = read("rust/src/sets.rs");
-    assert!(sets.contains("CK-27, CK-29, CK-31, CK-33, CK-35, and CK-37 in CONTRACT.md"));
+    assert!(sets.contains("CK-27, CK-29, CK-31, CK-33, CK-35, CK-37, and CK-39 in CONTRACT.md"));
     let readme = read("README.md");
     assert!(readme.contains("the collection form under CK-37 that judgements reads"));
+}
+
+/// The Round 19 pins. The obligations pin fails against
+/// the tree Round 18 closed on by the absence of every
+/// text it reads, and the status pin fails on that
+/// tree's README by the absence of the two lines it
+/// holds, each line read whole as the standing pins
+/// read theirs.
+#[test]
+fn contract_carries_the_round_19_obligations() {
+    let text = read("CONTRACT.md");
+    assert!(text.contains("- CK-39."));
+    assert!(text.contains("- CK-40."));
+    let sets = read("rust/src/sets.rs");
+    assert!(sets.contains("CK-27, CK-29, CK-31, CK-33, CK-35, CK-37, and CK-39 in CONTRACT.md"));
+    let readme = read("README.md");
+    assert!(readme.contains("the collection form under CK-39 that standings reads"));
+}
+
+/// The formats posture pin of the Round 19 slice. The
+/// section The formats, version 1 carries no
+/// enumeration of the collection form's readers and
+/// no text of CK-39, the readers standing definitional
+/// under FIX-CK-29 and this round taking no amendment
+/// there. It passes against the tree Round 18 closed
+/// on by design, and the plan names it with its
+/// reason, because it guards a restatement no part of
+/// this round makes, and it fails on any build that
+/// amends the section or seats an enumeration in it.
+#[test]
+fn the_formats_section_carries_no_readers_enumeration_and_no_ck_39() {
+    let text = read("CONTRACT.md");
+    let formats = text.split("## The formats, version 1").nth(1).unwrap_or("");
+    assert!(
+        !formats.contains("CK-39"),
+        "the formats section names no CK-39"
+    );
+    assert!(
+        formats.contains(
+            "The readers of the collection form are the commands whose \
+             obligations state a file of this form, each named in its own \
+             obligation, and no list of them stands in this section."
+        ),
+        "the definitional readers sentence stands in the formats section"
+    );
+    assert!(
+        !formats.contains(
+            "The census, contested, pattern, files, borderline, and \
+             outcomes commands read the collection form."
+        ),
+        "the enumeration stands nowhere in the formats section"
+    );
 }
 
 /// The formats posture pin of the Round 18 slice. The
@@ -527,21 +592,21 @@ fn fix_ck_29_restates_the_collection_form_readers() {
     );
 }
 
-/// The seventeen commands pin of the Round 18 slice. The
+/// The eighteen commands pin of the Round 19 slice. The
 /// enumeration in the module head of rust/src/cli.rs
-/// names the seventeen commands ending in judgements
-/// with its count word at seventeen, the head line of
-/// the README Usage section stands at seventeen, and
-/// the README Usage section carries the judgements
+/// names the eighteen commands ending in standings
+/// with its count word at eighteen, the head line of
+/// the README Usage section stands at eighteen, and
+/// the README Usage section carries the standings
 /// paragraph in the form of the grounds paragraph.
-/// It fails against the tree Round 17 closed on by
-/// content, sixteen standing in the cli head and the
+/// It fails against the tree Round 18 closed on by
+/// content, seventeen standing in the cli head and the
 /// README head line there and the paragraph absent.
 /// The cli head is read flattened, the comment markers
 /// and line wraps removed, because the enumeration
 /// wraps across the head's lines.
 #[test]
-fn the_seventeen_commands_stand_named_in_the_cli_head_and_the_readme_usage() {
+fn the_eighteen_commands_stand_named_in_the_cli_head_and_the_readme_usage() {
     let cli = read("rust/src/cli.rs");
     let flattened = cli
         .replace("//!", " ")
@@ -550,15 +615,15 @@ fn the_seventeen_commands_stand_named_in_the_cli_head_and_the_readme_usage() {
         .join(" ");
     assert!(
         flattened.contains(
-            "The stickler command line. Seventeen commands, check, render, \
+            "The stickler command line. Eighteen commands, check, render, \
              review, census, rejudged, split, contested, pattern, files, \
              borderline, outcomes, verdicts, shapes, choices, categories, \
-             grounds, and judgements."
+             grounds, judgements, and standings."
         ),
-        "the cli head names the seventeen commands"
+        "the cli head names the eighteen commands"
     );
     let readme = read("README.md");
-    assert!(readme.contains("The seventeen commands each read one file and print one rendering."));
+    assert!(readme.contains("The eighteen commands each read one file and print one rendering."));
     let paragraph = "The categories command reads a collection in the census \
         form and prints the categories reading. The reading states one \
         section per category, in the order the contract states them, naming \
@@ -600,20 +665,30 @@ fn the_seventeen_commands_stand_named_in_the_cli_head_and_the_readme_usage() {
         readme.lines().any(|line| line == judgements_paragraph),
         "the judgements paragraph stands in the Usage section"
     );
+    let standings_paragraph = "The standings command reads one standings file and prints \
+        the standings reading, one section per file carrying recorded \
+        verdicts, in first appearance order, each section holding the \
+        file's flag groups whole with all their pairs standing in the \
+        set review form, and the reading closing with the counts it \
+        shares with the verdicts reading and the files reading.";
+    assert!(
+        readme.lines().any(|line| line == standings_paragraph),
+        "the standings paragraph stands in the Usage section"
+    );
 }
 
 /// The doc list pin of the Round 14 slice, adjusted
-/// with the Round 18 slice as the named mechanical
-/// consequence of the judgements loader standing as
-/// the thirteenth collection loader under the same
-/// guard. The module list gains judgements and the
+/// with the Round 19 slice as the named mechanical
+/// consequence of the standings loader standing as
+/// the fourteenth collection loader under the same
+/// guard. The module list gains standings and the
 /// count in the name and this comment moves from
-/// twelve to thirteen, and the pin fails against the
-/// tree Round 17 closed on by the thirteenth module's
-/// absence. Each of the thirteen loader docs carries
+/// thirteen to fourteen, and the pin fails against the
+/// tree Round 18 closed on by the fourteenth module's
+/// absence. Each of the fourteen loader docs carries
 /// the one shared sentence naming the shared set
 /// entry validation as the one home every collection
-/// loader calls, and none of the thirteen carries a
+/// loader calls, and none of the fourteen carries a
 /// caller enumeration in the loaders both call or
 /// loaders all call forms. It passes on any tree
 /// whose docs stand restated, including a tree
@@ -621,7 +696,7 @@ fn the_seventeen_commands_stand_named_in_the_cli_head_and_the_readme_usage() {
 /// which is correct, because the pin guards the docs
 /// and the reading pins guard the reading.
 #[test]
-fn the_thirteen_loader_docs_carry_the_one_shared_sentence() {
+fn the_fourteen_loader_docs_carry_the_one_shared_sentence() {
     for module in [
         "census",
         "rejudged",
@@ -636,6 +711,7 @@ fn the_thirteen_loader_docs_carry_the_one_shared_sentence() {
         "categories",
         "grounds",
         "judgements",
+        "standings",
     ] {
         let text = read(&format!("rust/src/{module}.rs"));
         assert!(
@@ -654,24 +730,24 @@ fn the_thirteen_loader_docs_carry_the_one_shared_sentence() {
 }
 
 /// The birth count pin of the Round 15 slice, adjusted
-/// with the Round 18 slice as the named mechanical
-/// consequence of the judgements module head standing
-/// as the ninth reading head under the same guard.
-/// The module list gains judgements and the count in
-/// the name and this comment moves from eight to
-/// nine. Each of the nine reading heads, in files,
+/// with the Round 19 slice as the named mechanical
+/// consequence of the standings module head standing
+/// as the tenth reading head under the same guard.
+/// The module list gains standings and the count in
+/// the name and this comment moves from nine to
+/// ten. Each of the ten reading heads, in files,
 /// borderline, outcomes, verdicts_reading, shapes,
-/// choices, categories, grounds, and judgements,
-/// carries the one shared sentence naming the census
-/// as the same recorded inputs over the same
-/// collection loading whole, and none of the nine
-/// carries the loading whole into all form or an
+/// choices, categories, grounds, judgements, and
+/// standings, carries the one shared sentence naming
+/// the census as the same recorded inputs over the
+/// same collection loading whole, and none of the
+/// ten carries the loading whole into all form or an
 /// enumeration of fellow readings in that sentence.
 /// The doc text is read flattened, the comment markers
 /// and line wraps removed, because the sentence wraps
 /// across the head's lines. It fails against the tree
-/// Round 17 closed on by the ninth module's absence
-/// alone, the eight standing heads already carrying
+/// Round 18 closed on by the tenth module's absence
+/// alone, the nine standing heads already carrying
 /// the sentence there in its drift free form, and it
 /// passes on any tree whose heads stand restated,
 /// including a tree carrying the restatement without
@@ -679,7 +755,7 @@ fn the_thirteen_loader_docs_carry_the_one_shared_sentence() {
 /// guards the heads and the reading pins guard the
 /// reading.
 #[test]
-fn the_nine_reading_heads_carry_the_one_shared_inputs_sentence() {
+fn the_ten_reading_heads_carry_the_one_shared_inputs_sentence() {
     for module in [
         "files",
         "borderline",
@@ -690,6 +766,7 @@ fn the_nine_reading_heads_carry_the_one_shared_inputs_sentence() {
         "categories",
         "grounds",
         "judgements",
+        "standings",
     ] {
         let text = read(&format!("rust/src/{module}.rs"));
         let flattened = text
@@ -887,6 +964,22 @@ fn readme_reports_the_round_18_status() {
         files, borderline, outcomes, verdicts, shapes, choices, categories, \
         and grounds, and the constructed judgements collection under \
         examples, with the suite running offline on the recorded verdicts.";
+    assert!(text.lines().any(|line| line == slice_line));
+    assert!(text.contains("Closed perfection rounds, 18 of 100"));
+}
+
+#[test]
+fn readme_reports_the_round_19_status() {
+    let text = read("README.md");
+    let standing = "- Contract, CK-39 and CK-40 now stand in full form, the \
+        standings pair, the standings file and loader and the standings \
+        reading, the eighteenth command. Round 19 has not closed.";
+    assert!(text.lines().any(|line| line == standing));
+    let slice_line = "- Slice 20 is built and in review. It carries the \
+        standings reading, the eighteenth command, its sections standing \
+        per file in first appearance order across the collection, each \
+        file's recorded pairs standing whole on their flags, over the \
+        collection form of CK-12.";
     assert!(text.lines().any(|line| line == slice_line));
     assert!(text.contains("Closed perfection rounds, 18 of 100"));
 }
