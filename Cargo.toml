@@ -117,6 +117,10 @@ name = "test_split"
 path = "rust/tests/test_split.rs"
 
 [[test]]
+name = "test_standings_reading"
+path = "rust/tests/test_standings_reading.rs"
+
+[[test]]
 name = "test_verdicts"
 path = "rust/tests/test_verdicts.rs"
 

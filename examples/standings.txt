@@ -1,0 +1,106 @@
+Standings
+
+File, harvest.py
+harvest.py, line 6, near placeholder name, set, pilot set
+Verdict, jev-1.13.0, abstained
+Reason, jev-1.13.0 chose stickler with confidence 0.32 and abstained
+harvest.py, line 7, near placeholder name, set, pilot set
+Verdict, jev-1.13.0, stickler
+Reason, jev-1.13.0 chose stickler with confidence 0.68
+harvest.py, line 12, broad handler, set, pilot set
+Verdict, jev-1.13.0, stickler
+Reason, jev-1.13.0 chose stickler with confidence 1.0
+Verdict, openai/gpt-6-luna, stickler
+Reason, openai/gpt-6-luna chose stickler with confidence 0.99
+harvest.py, line 18, broad handler, set, pilot set
+Verdict, jev-1.13.0, stickler
+Reason, jev-1.13.0 chose stickler with confidence 1.0
+Verdict, openai/gpt-6-luna, stickler
+Reason, openai/gpt-6-luna chose stickler with confidence 0.99
+Verdicts read, 6
+
+File, windows.py
+windows.py, line 6, shared member default, set, pilot set
+Verdict, jev-1.13.0, stickler
+Reason, jev-1.13.0 chose stickler with confidence 0.96
+Verdict, openai/gpt-6-luna, stickler
+Reason, openai/gpt-6-luna chose stickler with confidence 0.99
+windows.py, line 10, shared member default, set, pilot set
+Verdict, jev-1.13.0, stickler
+Reason, jev-1.13.0 chose stickler with confidence 0.76
+Verdict, openai/gpt-6-luna, stickler
+Reason, openai/gpt-6-luna chose stickler with confidence 0.99
+windows.py, line 14, shared member default, set, pilot set
+Verdict, jev-1.13.0, stickler
+Reason, jev-1.13.0 chose stickler with confidence 0.98
+Verdict, openai/gpt-6-luna, stickler
+Reason, openai/gpt-6-luna chose stickler with confidence 0.99
+windows.py, line 18, shared member default, set, pilot set
+Verdict, jev-1.13.0, stickler
+Reason, jev-1.13.0 chose stickler with confidence 0.74
+Verdict, openai/gpt-6-luna, stickler
+Reason, openai/gpt-6-luna chose stickler with confidence 0.99
+Verdicts read, 8
+
+File, sorting.py
+sorting.py, line 6, near placeholder name, set, pilot set
+Verdict, jev-1.13.0, stickler
+Reason, jev-1.13.0 chose stickler with confidence 0.78
+Verdict, openai/gpt-6-luna, stickler
+Reason, openai/gpt-6-luna chose stickler with confidence 0.97
+sorting.py, line 11, near placeholder name, set, pilot set
+Verdict, jev-1.13.0, abstained
+Reason, jev-1.13.0 chose stickler with confidence 0.2 and abstained
+Verdict, openai/gpt-6-luna, stickler
+Reason, openai/gpt-6-luna chose stickler with confidence 0.88
+sorting.py, line 12, near placeholder name, set, pilot set
+Verdict, jev-1.13.0, stickler
+Reason, jev-1.13.0 chose stickler with confidence 0.78
+Verdict, openai/gpt-6-luna, stickler
+Reason, openai/gpt-6-luna chose stickler with confidence 0.88
+sorting.py, line 15, broad handler, set, pilot set
+Verdict, jev-1.13.0, stickler
+Reason, jev-1.13.0 chose stickler with confidence 0.98
+Verdict, openai/gpt-6-luna, stickler
+Reason, openai/gpt-6-luna chose stickler with confidence 0.99
+Verdicts read, 8
+
+File, ledger.py
+ledger.py, line 6, near placeholder name, set, constructed round 4 example
+Verdict, jev-1.13.0, stickler
+Reason, jev-1.13.0 chose stickler with confidence 0.81
+Verdict, openai/gpt-6-luna, clean
+Reason, openai/gpt-6-luna chose clean with confidence 0.77
+ledger.py, line 7, near placeholder name, set, constructed round 4 example
+Verdict, jev-1.13.0, clean
+Reason, jev-1.13.0 chose clean with confidence 0.9
+Verdict, openai/gpt-6-luna, clean
+Reason, openai/gpt-6-luna chose clean with confidence 0.66
+Verdicts read, 4
+
+File, cache.py
+cache.py, line 7, shared member default, set, constructed round 4 example
+Verdict, jev-1.13.0, stickler
+Reason, jev-1.13.0 chose stickler with confidence 0.92
+Verdict, openai/gpt-6-luna, stickler
+Reason, openai/gpt-6-luna chose stickler with confidence 0.88
+cache.py, line 10, broad handler, set, constructed round 4 example
+Verdict, jev-1.13.0, abstained
+Reason, jev-1.13.0 chose stickler with confidence 0.35 and abstained
+Verdict, openai/gpt-6-luna, clean
+Reason, openai/gpt-6-luna chose clean with confidence 0.83
+cache.py, line 15, near placeholder name, set, constructed round 4 example
+Verdict, jev-1.13.0, clean
+Reason, jev-1.13.0 chose clean with confidence 0.74
+Verdict, openai/gpt-6-luna, stickler
+Reason, openai/gpt-6-luna chose stickler with confidence 0.69
+Verdicts read, 6
+
+Sets read, 3
+Files read, 5
+Flags read, 18
+Flags with verdicts, 17
+Verdicts read, 32
+Chose stickler, 24
+Chose clean, 5
+Abstained, 3

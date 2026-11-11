@@ -27,5 +27,6 @@ pub mod scan;
 pub mod sets;
 pub mod shapes;
 pub mod split;
+pub mod standings;
 pub mod verdicts;
 pub mod verdicts_reading;
