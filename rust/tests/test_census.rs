@@ -488,7 +488,7 @@ fn the_command_refuses_unreadable_and_foreign_files() {
     let (code, out, _err) = run(&["census", &deep]);
     assert_eq!(code, 2);
     assert!(
-        out.contains("Defect, the file does not hold a JSON census"),
+        out.contains("Defect, the file's JSON nesting is too deep to read"),
         "nesting past the boundary is a refusal, never a fall\n{out}"
     );
 }
