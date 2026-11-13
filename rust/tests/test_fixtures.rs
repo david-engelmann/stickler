@@ -2914,10 +2914,10 @@ fn states_collection_a_flag_carries_only_abstentions_in_a_file_standing_unjudged
     let value = parsed_example("states_collection.json");
     let reading = states_reading_of(&value);
     let stands = reading.sections[2].files.iter().any(|file_group| {
-        file_group.groups.iter().any(|group| {
-            !group.verdicts.is_empty()
-                && group.verdicts.iter().all(|verdict| is_abstention(verdict))
-        })
+        file_group
+            .groups
+            .iter()
+            .any(|group| !group.verdicts.is_empty() && group.verdicts.iter().all(is_abstention))
     });
     assert!(
         stands,
