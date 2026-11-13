@@ -191,8 +191,13 @@ fn readme_reports_the_round_4_standing() {
     // standing in review, so the count stood at one
     // while Round 21 was built, until the Round 21
     // closure landed slice 22 and the count returned to
+    // zero. Adjusted again with the Round 22 slice, as
+    // the named mechanical consequence of slice 23
+    // standing in review, so the count stands at one
+    // while Round 22 is built, until the Round 22
+    // closure lands slice 23 and the count returns to
     // zero.
-    assert_eq!(text.matches("built and in review").count(), 0);
+    assert_eq!(text.matches("built and in review").count(), 1);
 }
 
 #[test]
@@ -1240,4 +1245,29 @@ fn the_formats_section_carries_no_readers_enumeration_and_no_ck_43() {
         ),
         "the enumeration stands nowhere in the formats section"
     );
+}
+
+/// The Round 22 pins. The amendment pin fails against
+/// the tree Round 21 closed on by the absence of the
+/// amendment it reads, and the status pin fails on that
+/// tree's README by the absence of the two lines it
+/// holds, each line read whole as the standing pins
+/// read theirs.
+#[test]
+fn contract_carries_the_round_22_amendment() {
+    let text = read("CONTRACT.md");
+    assert!(text.contains("- FIX-CK-31."));
+    assert!(text.contains(
+        "the defect it draws in the rendering of that command is the one sentence, the file's JSON nesting is too deep to read"
+    ));
+}
+
+#[test]
+fn readme_reports_the_round_22_status() {
+    let text = read("README.md");
+    let standing = "- Contract, FIX-CK-31 now stands in full form, the depth message repair, the defect of a file refused for depth standing as the one sentence, the file's JSON nesting is too deep to read, at the review command and at each of the sixteen collection commands. Round 22 has not closed.";
+    assert!(text.lines().any(|line| line == standing));
+    let slice_line = "- Slice 23 is built and in review. It carries the depth message repair under FIX-CK-31, the seventeen covered commands naming the depth refusal in their defect, with the render command's nesting fall and the split command's generic defect standing as they stand, and no reading of a file that parses rendering one byte differently.";
+    assert!(text.lines().any(|line| line == slice_line));
+    assert!(text.contains("Closed perfection rounds, 21 of 100"));
 }
