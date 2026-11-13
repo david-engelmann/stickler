@@ -1,8 +1,8 @@
-//! The stickler command line. Nineteen commands,
+//! The stickler command line. Twenty commands,
 //! check, render, review, census, rejudged, split,
 //! contested, pattern, files, borderline, outcomes,
 //! verdicts, shapes, choices, categories, grounds,
-//! judgements, standings, and states.
+//! judgements, standings, states, and flags.
 //!
 //! The surface stands as two functions over two readings of
 //! the arguments. The binary entry, run below, collects the
@@ -27,6 +27,7 @@ use crate::checker::check_diff_text;
 use crate::choices::{choices_reading_of, load_choices};
 use crate::contested::{contested_reading_of, load_contested};
 use crate::files::{files_reading_of, load_files};
+use crate::flags::{flags_reading_of, load_flags};
 use crate::grounds::{grounds_reading_of, load_grounds};
 use crate::json::{self, JString, JsonValue, ParseError};
 use crate::judgements::{judgements_reading_of, load_judgements};
@@ -37,12 +38,13 @@ use crate::render::{
     render_borderline, render_borderline_defects, render_categories, render_categories_defects,
     render_census, render_census_defects, render_choices, render_choices_defects, render_contested,
     render_contested_defects, render_defects, render_defects_units, render_files,
-    render_files_defects, render_grounds, render_grounds_defects, render_judgements,
-    render_judgements_defects, render_outcomes, render_outcomes_defects, render_pattern,
-    render_pattern_defects, render_rejudged, render_rejudged_defects, render_review,
-    render_set_defects, render_set_review, render_shapes, render_shapes_defects, render_split,
-    render_split_defects, render_standings, render_standings_defects, render_states,
-    render_states_defects, render_verdicts, render_verdicts_defects,
+    render_files_defects, render_flags, render_flags_defects, render_grounds,
+    render_grounds_defects, render_judgements, render_judgements_defects, render_outcomes,
+    render_outcomes_defects, render_pattern, render_pattern_defects, render_rejudged,
+    render_rejudged_defects, render_review, render_set_defects, render_set_review, render_shapes,
+    render_shapes_defects, render_split, render_split_defects, render_standings,
+    render_standings_defects, render_states, render_states_defects, render_verdicts,
+    render_verdicts_defects,
 };
 use crate::review::verdict_for;
 use crate::shapes::{load_shapes, shapes_reading_of};
@@ -73,7 +75,8 @@ const USAGE: &str = "Usage, stickler check DIFF_FILE\n\
                      Usage, stickler grounds GROUNDS_JSON\n\
                      Usage, stickler judgements JUDGEMENTS_JSON\n\
                      Usage, stickler standings STANDINGS_JSON\n\
-                     Usage, stickler states STATES_JSON\n";
+                     Usage, stickler states STATES_JSON\n\
+                     Usage, stickler flags FLAGS_JSON\n";
 
 /// The outcome of one command line run, holding the exit code
 /// and the text for each of the two output streams.
@@ -735,6 +738,34 @@ fn states_command(path: &JString) -> ByteOutcome {
     text_outcome(0, render_states(&states_reading_of(&value)))
 }
 
+fn flags_command(path: &JString) -> ByteOutcome {
+    let text = match read_text(path) {
+        Err(()) => {
+            return text_outcome(
+                2,
+                render_flags_defects(&["the flags file could not be read".to_string()]),
+            );
+        }
+        Ok(text) => text,
+    };
+    let value = match json::parse(&text) {
+        Err(_) => {
+            return text_outcome(
+                2,
+                render_flags_defects(&[
+                    "the file does not hold a JSON flags collection".to_string()
+                ]),
+            );
+        }
+        Ok(value) => value,
+    };
+    let defects = load_flags(&value);
+    if !defects.is_empty() {
+        return text_outcome(2, render_flags_defects(&defects));
+    }
+    text_outcome(0, render_flags(&flags_reading_of(&value)))
+}
+
 /// Run the command line over code unit arguments and return
 /// the outcome as raw bytes.
 pub fn cli_main_units(args: &[JString]) -> ByteOutcome {
@@ -795,6 +826,9 @@ pub fn cli_main_units(args: &[JString]) -> ByteOutcome {
         }
         if args[0].equals("states") {
             return states_command(&args[1]);
+        }
+        if args[0].equals("flags") {
+            return flags_command(&args[1]);
         }
     }
     ByteOutcome {

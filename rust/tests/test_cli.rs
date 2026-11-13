@@ -650,6 +650,55 @@ fn the_usage_text_names_the_states_command() {
     );
 }
 
+/// The flags command pins of CK-43. The example and
+/// malformed pins fail against the tree Round 20
+/// closed on by execution, the base command line
+/// answering a flags invocation with the usage text
+/// and a nonzero exit and no rendering on its output
+/// stream, so the example pin fails on its exit code
+/// and output and the malformed pin on its output,
+/// and the usage pin fails by content, on the text it
+/// reads.
+#[test]
+fn flags_on_the_example_exits_0_and_matches_its_golden() {
+    let example = root()
+        .join("examples")
+        .join("flags.json")
+        .to_string_lossy()
+        .into_owned();
+    let (code, out, _err) = run(&["flags", &example]);
+    assert_eq!(code, 0);
+    assert!(out.starts_with("Flags\n"));
+    let golden = std::fs::read_to_string(root().join("examples").join("flags.txt")).unwrap();
+    assert_eq!(out, golden);
+}
+
+#[test]
+fn flags_on_a_malformed_file_exits_2_and_names_the_defects() {
+    let dir = temp_dir("flags-malformed");
+    let path = write(
+        &dir,
+        "flags.json",
+        "{\"sets\": [{\"change_set\": {\"files\": []}}]}",
+    );
+    let (code, out, _err) = run(&["flags", &path]);
+    assert_eq!(code, 2);
+    assert_eq!(
+        out,
+        "Flags\n\
+         Verdict, invalid\n\
+         Defects, 1\n\
+         Defect, sets[0].label is missing\n"
+    );
+}
+
+#[test]
+fn the_usage_text_names_the_flags_command() {
+    let (code, _out, err) = run(&["flags"]);
+    assert_eq!(code, 2);
+    assert!(err.contains("Usage, stickler flags FLAGS_JSON\n"), "{err}");
+}
+
 #[test]
 fn the_smelly_example_sends_back_and_the_clean_example_accepts() {
     let smelly = root()
@@ -1044,7 +1093,8 @@ const USAGE_BYTES: &[u8] = b"Usage, stickler check DIFF_FILE\n\
     Usage, stickler grounds GROUNDS_JSON\n\
     Usage, stickler judgements JUDGEMENTS_JSON\n\
     Usage, stickler standings STANDINGS_JSON\n\
-    Usage, stickler states STATES_JSON\n";
+    Usage, stickler states STATES_JSON\n\
+    Usage, stickler flags FLAGS_JSON\n";
 
 #[test]
 fn check_names_a_readable_raw_byte_diff_by_its_surrogate_defect() {

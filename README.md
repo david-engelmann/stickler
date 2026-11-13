@@ -100,9 +100,9 @@ Contested flags, 2
 
 ## Usage
 
-The nineteen commands each read one file and print one rendering. The examples below run over the files under examples, and every output block is captured from the command it follows.
+The twenty commands each read one file and print one rendering. The examples below run over the files under examples, and every output block is captured from the command it follows.
 
-The input formats are specified in CONTRACT.md, in the section The formats, version 1, which states each form completely with its literal keys, the review form of CK-1 that render reads, the unified diff as text under CK-3 and CK-5 that check reads, the change set form of CK-6 and CK-8 that review reads, the collection form of CK-12 that the collection commands read, the pair form of CK-14 that rejudged reads, the split form of CK-15 that split reads, the collection form under CK-27 that verdicts reads, the collection form under CK-29 that shapes reads, the collection form under CK-31 that choices reads, the collection form under CK-33 that categories reads, the collection form under CK-35 that grounds reads, and the collection form under CK-37 that judgements reads, and the collection form under CK-39 that standings reads, and the collection form under CK-41 that states reads.
+The input formats are specified in CONTRACT.md, in the section The formats, version 1, which states each form completely with its literal keys, the review form of CK-1 that render reads, the unified diff as text under CK-3 and CK-5 that check reads, the change set form of CK-6 and CK-8 that review reads, the collection form of CK-12 that the collection commands read, the pair form of CK-14 that rejudged reads, the split form of CK-15 that split reads, the collection form under CK-27 that verdicts reads, the collection form under CK-29 that shapes reads, the collection form under CK-31 that choices reads, the collection form under CK-33 that categories reads, the collection form under CK-35 that grounds reads, and the collection form under CK-37 that judgements reads, and the collection form under CK-39 that standings reads, and the collection form under CK-41 that states reads, and the collection form under CK-43 that flags reads.
 
 The check command reads a unified diff and builds a review with the built in checker. The checker holds a fixed set of rules over the shapes of code a diff can carry, and each objection it raises names the rule the code breaks and the change that would clear the objection. The six rules read Python shaped code, a bare except clause, a def line default, a print call and their kin, and a diff of another language's code raises nothing and reads as an empty accepted review, so the silence a stranger meets is a scope fact and not a judgement of their code.
 
@@ -1366,6 +1366,53 @@ Chose clean, 5
 Abstained, 3
 ```
 
+The flags command reads one flags file and prints the flags reading, one section per file verdict state in the order CK-8 states the judgements, each section holding the flag lines of the files standing in that state in collection order with the contested count of its lines, and the reading closing with the counts it shares with the files reading and the contested reading.
+
+```sh
+stickler flags examples/flags.json
+```
+
+```text
+Flags
+
+Judged stickler
+harvest.py, line 6, near placeholder name, set, pilot set
+harvest.py, line 7, near placeholder name, set, pilot set
+harvest.py, line 12, broad handler, set, pilot set
+harvest.py, line 18, broad handler, set, pilot set
+windows.py, line 6, shared member default, set, pilot set
+windows.py, line 10, shared member default, set, pilot set
+windows.py, line 14, shared member default, set, pilot set
+windows.py, line 18, shared member default, set, pilot set
+sorting.py, line 6, near placeholder name, set, pilot set
+sorting.py, line 11, near placeholder name, set, pilot set
+sorting.py, line 12, near placeholder name, set, pilot set
+sorting.py, line 15, broad handler, set, pilot set
+ledger.py, line 6, near placeholder name, set, constructed round 4 example
+ledger.py, line 7, near placeholder name, set, constructed round 4 example
+cache.py, line 7, shared member default, set, constructed round 4 example
+cache.py, line 10, broad handler, set, constructed round 4 example
+cache.py, line 15, near placeholder name, set, constructed round 4 example
+cache.py, line 19, near placeholder name, set, constructed round 4 example
+Flags read, 18
+Contested, 2
+
+Judged clean
+No flagged lines
+Flags read, 0
+Contested, 0
+
+Unjudged
+No flagged lines
+Flags read, 0
+Contested, 0
+
+Sets read, 3
+Files read, 5
+Flags read, 18
+Contested flags, 2
+```
+
 ## Status
 
 Seeded in October 2026. Setup has landed, and Rounds 1 to 20 have closed, with all slices merged on main. Part of the Spectacle line in the 39 repo storefront perfection programme.
@@ -1413,6 +1460,8 @@ Seeded in October 2026. Setup has landed, and Rounds 1 to 20 have closed, with a
 - Slice 20 has landed. It carries the standings reading, the eighteenth command, its sections standing per file in first appearance order across the collection, each file's recorded pairs standing whole on their flags, over the collection form of CK-12.
 - Contract, CK-41 and CK-42 met. They stand in full form in CONTRACT.md, and Round 20 closed on the merged slice 21 after three reviews, with the red team approving clean on recomputation of the states reading, and the constructed collection's handed word requirement restated in its loadable form under FIX-CK-30.
 - Slice 21 has landed. It carries the states reading, the nineteenth command, its sections standing per file verdict state in the order CK-8 states the judgements, each file's recorded pairs standing whole on their flags, over the collection form of CK-12.
+- Contract, CK-43 and CK-44 now stand in full form, the flags pair, the flags file and loader and the flag lines by file verdict state and the flags reading, the twentieth command. Round 21 has not closed.
+- Slice 22 is built and in review. It carries the flags reading, the twentieth command, its sections standing per file verdict state in the order CK-8 states the judgements, each flag of a file standing in that state standing as one flag line in the form of CK-20, over the collection form of CK-12.
 - The Rust port has landed. It carries the behavior the Python package carried, checked against the same goldens, and the Python tree stands removed under PORT-9.
 - Local gate, cargo test, cargo fmt --check, and cargo clippy --all-targets -- -D warnings. CI runs the same commands.
 
