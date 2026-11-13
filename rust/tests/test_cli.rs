@@ -598,6 +598,58 @@ fn the_usage_text_names_the_standings_command() {
     );
 }
 
+/// The states command pins of CK-41. The example and
+/// malformed pins fail against the tree Round 19
+/// closed on by execution, the base command line
+/// answering a states invocation with the usage text
+/// and a nonzero exit and no rendering on its output
+/// stream, so the example pin fails on its exit code
+/// and output and the malformed pin on its output,
+/// and the usage pin fails by content, on the text it
+/// reads.
+#[test]
+fn states_on_the_example_exits_0_and_matches_its_golden() {
+    let example = root()
+        .join("examples")
+        .join("states.json")
+        .to_string_lossy()
+        .into_owned();
+    let (code, out, _err) = run(&["states", &example]);
+    assert_eq!(code, 0);
+    assert!(out.starts_with("States\n"));
+    let golden = std::fs::read_to_string(root().join("examples").join("states.txt")).unwrap();
+    assert_eq!(out, golden);
+}
+
+#[test]
+fn states_on_a_malformed_file_exits_2_and_names_the_defects() {
+    let dir = temp_dir("states-malformed");
+    let path = write(
+        &dir,
+        "states.json",
+        "{\"sets\": [{\"change_set\": {\"files\": []}}]}",
+    );
+    let (code, out, _err) = run(&["states", &path]);
+    assert_eq!(code, 2);
+    assert_eq!(
+        out,
+        "States\n\
+         Verdict, invalid\n\
+         Defects, 1\n\
+         Defect, sets[0].label is missing\n"
+    );
+}
+
+#[test]
+fn the_usage_text_names_the_states_command() {
+    let (code, _out, err) = run(&["states"]);
+    assert_eq!(code, 2);
+    assert!(
+        err.contains("Usage, stickler states STATES_JSON\n"),
+        "{err}"
+    );
+}
+
 #[test]
 fn the_smelly_example_sends_back_and_the_clean_example_accepts() {
     let smelly = root()
@@ -953,12 +1005,13 @@ fn run_units(args: &[&[u8]]) -> ByteOutcome {
     cli_main_units(&owned)
 }
 
-// Adjusted with the Round 19 slice, as the named mechanical
-// consequence of CK-39 adding the standings command to the
-// command line. The usage text gains the standings line,
+// Adjusted with the Round 20 slice, as the named mechanical
+// consequence of CK-41 adding the states command to the
+// command line. The usage text gains the states line,
 // so the pinned bytes gain it too, and the three assertions
 // standing on this constant hold the new text. The constant
-// was adjusted before with the Round 18 slice, when CK-37
+// was adjusted before with the Round 19 slice, when CK-39
+// added the standings command, with the Round 18 slice, when CK-37
 // added the judgements command, with the Round 17 slice, when CK-35
 // added the grounds command, with the Round 16 slice, when CK-33
 // added the categories command, with the Round 15 slice, when CK-31
@@ -990,7 +1043,8 @@ const USAGE_BYTES: &[u8] = b"Usage, stickler check DIFF_FILE\n\
     Usage, stickler categories CATEGORIES_JSON\n\
     Usage, stickler grounds GROUNDS_JSON\n\
     Usage, stickler judgements JUDGEMENTS_JSON\n\
-    Usage, stickler standings STANDINGS_JSON\n";
+    Usage, stickler standings STANDINGS_JSON\n\
+    Usage, stickler states STATES_JSON\n";
 
 #[test]
 fn check_names_a_readable_raw_byte_diff_by_its_surrogate_defect() {

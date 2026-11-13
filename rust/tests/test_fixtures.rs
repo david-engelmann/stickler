@@ -100,6 +100,24 @@
 //! half, and the dimension and requirement pins are
 //! additionally able to fail against a miscounted
 //! construction on the counts they read.
+//! The constructed states collection of Round 20 is
+//! pinned by dimension pins read off the fixture
+//! itself under the parameters the preamble of the
+//! Round 20 section states, by the seven shape
+//! requirements that preamble names, counted from the
+//! states reading over the collection, and by the
+//! closing relations of the states reading against
+//! the verdicts reading, the standings reading, and
+//! the judgements reading over the same collection
+//! and against its own section counts. The fixture
+//! file stands absent against the tree Round 19
+//! closed on, so the dimension and requirement pins
+//! fail there by the fixture's absence read at run
+//! time, and the four relation pins are compile
+//! absent by the states module's absence in their
+//! states half, and the dimension and requirement
+//! pins are additionally able to fail against a
+//! miscounted construction on the counts they read.
 //! Every pin runs offline on the constructed fixtures, and no
 //! pin makes a live call.
 
@@ -120,11 +138,12 @@ use stickler::outcomes::outcomes_reading_of;
 use stickler::pattern::pattern_reading_of;
 use stickler::render::{
     render_borderline, render_categories, render_choices, render_grounds, render_judgements,
-    render_shapes, render_standings, render_verdicts,
+    render_shapes, render_standings, render_states, render_verdicts,
 };
 use stickler::shapes::{load_shapes, shapes_reading_of};
 use stickler::standings::{load_standings, standings_reading_of};
-use stickler::verdicts::{is_contested, line_outcome, verdict_outcome};
+use stickler::states::{load_states, states_reading_of};
+use stickler::verdicts::{is_abstention, is_contested, line_outcome, verdict_outcome};
 use stickler::verdicts_reading::{load_verdicts, verdicts_reading_of};
 
 fn root() -> PathBuf {
@@ -2574,4 +2593,534 @@ fn standings_collection_internal_sums_hold() {
             + count_after(closings, "Abstained, "),
         count_after(closings, "Verdicts read, ")
     );
+}
+
+/// The first dimension pin of the constructed states
+/// collection, read off the fixture itself under the
+/// parameters the preamble of the Round 20 section
+/// states. The fixture stands absent against the tree
+/// Round 19 closed on, so the pin fails there by the
+/// fixture's absence, and the pin can fail against a
+/// miscounted construction on the counts it reads.
+#[test]
+fn states_collection_holds_two_sets_named_as_constructed() {
+    let value = parsed_example("states_collection.json");
+    assert!(load_states(&value).is_empty());
+    let sets = value.get("sets").and_then(|sets| sets.as_array()).unwrap();
+    assert_eq!(sets.len(), 2);
+    for set in sets {
+        let label = set
+            .get("label")
+            .and_then(|label| label.as_jstring())
+            .unwrap()
+            .to_rust_string()
+            .unwrap();
+        assert!(
+            label.contains("constructed"),
+            "the set {label} is named as constructed"
+        );
+    }
+}
+
+/// The second dimension pin of the constructed states
+/// collection, each set holding between three and six
+/// files, read off the fixture itself.
+#[test]
+fn states_collection_files_per_set_stand_between_three_and_six() {
+    let value = parsed_example("states_collection.json");
+    let sets = value.get("sets").and_then(|sets| sets.as_array()).unwrap();
+    for set in sets {
+        let files = set
+            .get("change_set")
+            .unwrap()
+            .get("files")
+            .and_then(|files| files.as_array())
+            .unwrap();
+        assert!(
+            (3..=6).contains(&files.len()),
+            "a set holds {} files",
+            files.len()
+        );
+    }
+}
+
+/// The third dimension pin of the constructed states
+/// collection, the flagged lines across the collection
+/// standing between sixteen and twenty eight, counted
+/// from the census over the collection.
+#[test]
+fn states_collection_flagged_lines_stand_between_sixteen_and_twenty_eight() {
+    let value = parsed_example("states_collection.json");
+    let census = census_of(&value);
+    assert!(
+        (16..=28).contains(&census.total.borderline),
+        "the collection holds {} flagged lines",
+        census.total.borderline
+    );
+}
+
+/// The fourth dimension pin of the constructed states
+/// collection, the verdicts across the collection
+/// standing between twenty four and forty four, counted
+/// from the verdicts reading over the collection.
+#[test]
+fn states_collection_verdicts_stand_between_twenty_four_and_forty_four() {
+    let value = parsed_example("states_collection.json");
+    let reading = verdicts_reading_of(&value);
+    let verdicts: usize = reading
+        .sections
+        .iter()
+        .flat_map(|section| section.groups.iter())
+        .map(|group| group.verdicts.len())
+        .sum();
+    assert!(
+        (24..=44).contains(&verdicts),
+        "the collection holds {verdicts} verdicts"
+    );
+}
+
+/// The first shape requirement of the constructed
+/// states collection, at least two files standing in
+/// both sets, each carrying recorded verdicts in both
+/// of its standings, counted from the states reading,
+/// the file groups whose flag groups carry each set's
+/// label standing at least at two.
+#[test]
+fn states_collection_two_files_stand_in_both_sets_and_carry_verdicts_in_each_standing() {
+    let value = parsed_example("states_collection.json");
+    let reading = states_reading_of(&value);
+    let both = reading
+        .sections
+        .iter()
+        .flat_map(|section| section.files.iter())
+        .filter(|file_group| {
+            ["constructed states set 1", "constructed states set 2"]
+                .iter()
+                .all(|label| {
+                    file_group
+                        .groups
+                        .iter()
+                        .any(|group| group.set_label == *label)
+                })
+        })
+        .count();
+    assert!(
+        both >= 2,
+        "{both} files stand in both sets carrying verdicts in each standing"
+    );
+}
+
+/// The second shape requirement, at least one file
+/// standing judged clean over the whole collection and
+/// at least one standing unjudged while carrying
+/// verdicts, so all three sections stand populated,
+/// counted from the states reading.
+#[test]
+fn states_collection_a_file_stands_judged_clean_and_a_file_stands_unjudged_over_the_whole_collection(
+) {
+    let value = parsed_example("states_collection.json");
+    let reading = states_reading_of(&value);
+    assert!(
+        !reading.sections[0].files.is_empty(),
+        "one file stands judged stickler over the whole collection"
+    );
+    assert!(
+        !reading.sections[1].files.is_empty(),
+        "one file stands judged clean over the whole collection"
+    );
+    assert!(
+        !reading.sections[2].files.is_empty(),
+        "one file stands unjudged while carrying verdicts"
+    );
+}
+
+/// The third shape requirement, a file standing in
+/// both sets reading unjudged on the flags of its
+/// first set alone and judged clean over the pool of
+/// the whole collection, the first set's pool read
+/// from the verdicts reading over the collection and
+/// the pooled state from the states reading.
+#[test]
+fn states_collection_a_file_in_both_sets_reads_unjudged_on_its_first_set_alone_and_judged_clean_pooled(
+) {
+    let value = parsed_example("states_collection.json");
+    let verdicts = verdicts_reading_of(&value);
+    let reading = states_reading_of(&value);
+    let stands = reading.sections[1].files.iter().any(|file_group| {
+        let first_pool: Vec<_> = verdicts.sections[0]
+            .groups
+            .iter()
+            .filter(|group| group.file == file_group.file)
+            .flat_map(|group| group.verdicts.iter().cloned())
+            .collect();
+        !first_pool.is_empty()
+            && line_outcome(&first_pool) == "unjudged"
+            && file_group
+                .groups
+                .iter()
+                .any(|group| group.set_label == "constructed states set 2")
+    });
+    assert!(
+        stands,
+        "one file reads unjudged on its first set alone and judged clean pooled"
+    );
+}
+
+/// The fourth shape requirement, a file standing in
+/// both sets reading judged clean on the flags of its
+/// first set alone and judged stickler over the pool
+/// of the whole collection, read as the third
+/// requirement reads its file.
+#[test]
+fn states_collection_a_file_in_both_sets_reads_judged_clean_on_its_first_set_alone_and_judged_stickler_pooled(
+) {
+    let value = parsed_example("states_collection.json");
+    let verdicts = verdicts_reading_of(&value);
+    let reading = states_reading_of(&value);
+    let stands = reading.sections[0].files.iter().any(|file_group| {
+        let first_pool: Vec<_> = verdicts.sections[0]
+            .groups
+            .iter()
+            .filter(|group| group.file == file_group.file)
+            .flat_map(|group| group.verdicts.iter().cloned())
+            .collect();
+        !first_pool.is_empty()
+            && line_outcome(&first_pool) == "clean"
+            && file_group
+                .groups
+                .iter()
+                .any(|group| group.set_label == "constructed states set 2")
+    });
+    assert!(
+        stands,
+        "one file reads judged clean on its first set alone and judged stickler pooled"
+    );
+}
+
+/// The fifth shape requirement, every file standing a
+/// section carrying at least four pairs in total,
+/// counted from the states reading.
+#[test]
+fn states_collection_every_sectioned_files_pairs_stand_at_least_at_four() {
+    let value = parsed_example("states_collection.json");
+    let reading = states_reading_of(&value);
+    for section in &reading.sections {
+        for file_group in &section.files {
+            let pairs: usize = file_group
+                .groups
+                .iter()
+                .map(|group| group.verdicts.len())
+                .sum();
+            assert!(
+                pairs >= 4,
+                "the file {} carries {pairs} pairs in total",
+                file_group.file
+            );
+        }
+    }
+}
+
+/// The sixth shape requirement, at least one flag of
+/// each sectioned file carrying two verdicts, counted
+/// from the states reading, each file group holding a
+/// group of two or more pairs.
+#[test]
+fn states_collection_a_flag_of_each_sectioned_file_carries_two_verdicts() {
+    let value = parsed_example("states_collection.json");
+    let reading = states_reading_of(&value);
+    for section in &reading.sections {
+        for file_group in &section.files {
+            assert!(
+                file_group
+                    .groups
+                    .iter()
+                    .any(|group| group.verdicts.len() >= 2),
+                "no flag of the file {} carries two verdicts",
+                file_group.file
+            );
+        }
+    }
+}
+
+/// The seventh shape requirement, at least one flag
+/// carrying verdicts of both labels inside a sectioned
+/// file, counted from the states reading, one group
+/// holding a verdict whose outcome stands as stickler
+/// and one whose outcome stands as clean under the one
+/// outcome helper.
+#[test]
+fn states_collection_a_flag_carries_verdicts_of_both_labels() {
+    let value = parsed_example("states_collection.json");
+    let reading = states_reading_of(&value);
+    let stands = reading
+        .sections
+        .iter()
+        .flat_map(|section| section.files.iter())
+        .flat_map(|file_group| file_group.groups.iter())
+        .any(|group| {
+            group
+                .verdicts
+                .iter()
+                .any(|verdict| verdict_outcome(verdict) == "stickler")
+                && group
+                    .verdicts
+                    .iter()
+                    .any(|verdict| verdict_outcome(verdict) == "clean")
+        });
+    assert!(stands, "one flag carries verdicts of both labels");
+}
+
+/// The eighth shape requirement, at least one flag
+/// carrying only abstentions inside a sectioned file,
+/// counted from the states reading, one group standing
+/// whose every verdict's outcome stands as abstained
+/// under the one outcome helper.
+#[test]
+fn states_collection_a_flag_carries_only_abstentions() {
+    let value = parsed_example("states_collection.json");
+    let reading = states_reading_of(&value);
+    let stands = reading
+        .sections
+        .iter()
+        .flat_map(|section| section.files.iter())
+        .flat_map(|file_group| file_group.groups.iter())
+        .any(|group| {
+            !group.verdicts.is_empty()
+                && group
+                    .verdicts
+                    .iter()
+                    .all(|verdict| verdict_outcome(verdict) == "abstained")
+        });
+    assert!(stands, "one flag carries only abstentions");
+}
+
+/// The ninth shape requirement, restated in its
+/// loadable form by FIX-CK-30. As first stated it
+/// stood as one flag carrying only handed word
+/// verdicts, the word abstained standing as a choice
+/// at a confidence that is no abstention, and no
+/// loader admitted file can carry such a flag, the
+/// shared validation naming a choice outside the two
+/// labels a defect in every collection it loads. The
+/// requirement stands as one flag carrying only
+/// abstentions by confidence under CK-7, label
+/// choices standing below one half, inside a file
+/// standing unjudged on those verdicts, counted from
+/// the states reading, one group of the unjudged
+/// section standing whose every verdict is an
+/// abstention under the predicate of CK-7.
+#[test]
+fn states_collection_a_flag_carries_only_abstentions_in_a_file_standing_unjudged() {
+    let value = parsed_example("states_collection.json");
+    let reading = states_reading_of(&value);
+    let stands = reading.sections[2].files.iter().any(|file_group| {
+        file_group
+            .groups
+            .iter()
+            .any(|group| !group.verdicts.is_empty() && group.verdicts.iter().all(is_abstention))
+    });
+    assert!(
+        stands,
+        "one flag carries only abstentions in a file standing unjudged"
+    );
+}
+
+/// The tenth shape requirement, at least one flag
+/// carrying no verdicts in a file standing a section,
+/// counted against the files reading over the
+/// collection, a flag that reading names under a
+/// sectioned file standing in no states group.
+#[test]
+fn states_collection_a_flag_carries_no_verdicts_in_a_file_standing_a_section() {
+    let value = parsed_example("states_collection.json");
+    let reading = states_reading_of(&value);
+    let files = files_reading_of(&value);
+    let stands = files
+        .sections
+        .iter()
+        .filter(|files_section| {
+            reading
+                .sections
+                .iter()
+                .flat_map(|section| section.files.iter())
+                .any(|file_group| file_group.file == files_section.file)
+        })
+        .any(|files_section| {
+            files_section.flags.iter().any(|flag| {
+                !reading
+                    .sections
+                    .iter()
+                    .flat_map(|section| section.files.iter())
+                    .flat_map(|file_group| file_group.groups.iter())
+                    .any(|group| {
+                        group.file == files_section.file
+                            && group.line == flag.line
+                            && group.set_label == flag.set_label
+                    })
+            })
+        });
+    assert!(
+        stands,
+        "one flag carries no verdicts in a file standing a section"
+    );
+}
+
+/// The verdicts relation of the constructed states
+/// collection, each of the seven closing counts of the
+/// states reading standing count for count against the
+/// same named count of the verdicts reading over the
+/// same collection, both readings run here, and the
+/// command output standing byte identical to the
+/// library rendering.
+#[test]
+fn states_collection_closings_bind_to_the_verdicts_reading() {
+    let (code, out) = run_on_example("states", "states_collection.json");
+    assert_eq!(code, 0);
+    let value = parsed_example("states_collection.json");
+    let verdicts = render_verdicts(&verdicts_reading_of(&value));
+    let states_closings = out.split("\n\n").last().unwrap();
+    let verdicts_closings = verdicts.split("\n\n").last().unwrap();
+    for prefix in [
+        "Sets read, ",
+        "Flags read, ",
+        "Flags with verdicts, ",
+        "Verdicts read, ",
+        "Chose stickler, ",
+        "Chose clean, ",
+        "Abstained, ",
+    ] {
+        assert_eq!(
+            count_after(states_closings, prefix),
+            count_after(verdicts_closings, prefix),
+            "{prefix} binds to the verdicts reading"
+        );
+    }
+    assert_eq!(out, render_states(&states_reading_of(&value)));
+}
+
+/// The standings relation of the constructed states
+/// collection, the flag groups of each file group of
+/// the states reading being exactly the flag groups of
+/// that file's section in the standings reading over
+/// the same collection, in the same order, with the
+/// same pairs, both readings run here.
+#[test]
+fn states_collection_file_groups_bind_to_the_standings_reading() {
+    let value = parsed_example("states_collection.json");
+    let reading = states_reading_of(&value);
+    let standings = standings_reading_of(&value);
+    let file_groups: Vec<_> = reading
+        .sections
+        .iter()
+        .flat_map(|section| section.files.iter())
+        .collect();
+    assert_eq!(file_groups.len(), standings.sections.len());
+    for section in &standings.sections {
+        let file_group = file_groups
+            .iter()
+            .find(|file_group| file_group.file == section.file)
+            .unwrap();
+        assert_eq!(
+            file_group.groups.len(),
+            section.groups.len(),
+            "file {}",
+            section.file
+        );
+        for (states_group, standings_group) in file_group.groups.iter().zip(section.groups.iter()) {
+            assert_eq!(states_group.file, standings_group.file);
+            assert_eq!(states_group.line, standings_group.line);
+            assert_eq!(states_group.pattern, standings_group.pattern);
+            assert_eq!(states_group.set_label, standings_group.set_label);
+            assert_eq!(states_group.verdicts.len(), standings_group.verdicts.len());
+        }
+    }
+}
+
+/// The judgements relation of the constructed states
+/// collection, each file carrying verdicts standing in
+/// the states section of the precedence over the
+/// judgements of its flags exactly as the judgements
+/// reading over the same collection states those
+/// judgements, and the states sections holding exactly
+/// the files the judgements reading names, both
+/// readings run here. It catches the majority
+/// derivation over the constructed collection.
+#[test]
+fn states_collection_states_bind_to_the_judgements_reading() {
+    let value = parsed_example("states_collection.json");
+    let reading = states_reading_of(&value);
+    let judgements = judgements_reading_of(&value);
+    let mut files: Vec<String> = Vec::new();
+    for section in &judgements.sections {
+        for group in &section.groups {
+            if !files.contains(&group.file) {
+                files.push(group.file.clone());
+            }
+        }
+    }
+    let stated: Vec<_> = reading
+        .sections
+        .iter()
+        .flat_map(|section| section.files.iter())
+        .collect();
+    assert_eq!(stated.len(), files.len());
+    for file in &files {
+        let expected = if judgements.sections[0]
+            .groups
+            .iter()
+            .any(|group| &group.file == file)
+        {
+            "stickler"
+        } else if judgements.sections[1]
+            .groups
+            .iter()
+            .any(|group| &group.file == file)
+        {
+            "clean"
+        } else {
+            "unjudged"
+        };
+        let standing = reading
+            .sections
+            .iter()
+            .find(|section| section.files.iter().any(|group| &group.file == file))
+            .unwrap();
+        assert_eq!(standing.state, expected, "file {file}");
+    }
+}
+
+/// The internal sums of the states reading over the
+/// constructed states collection, each section's file
+/// group closing counts summing to its section closing
+/// count and the three section closing counts summing
+/// to the closing verdicts read count, read from the
+/// rendered text.
+#[test]
+fn states_collection_internal_sums_hold() {
+    let value = parsed_example("states_collection.json");
+    let rendered = render_states(&states_reading_of(&value));
+    let blocks: Vec<&str> = rendered.split("\n\n").collect();
+    assert_eq!(blocks.len(), 5);
+    let mut section_sum = 0usize;
+    for block in &blocks[1..4] {
+        let counts: Vec<usize> = block
+            .lines()
+            .filter(|line| line.starts_with("Verdicts read, "))
+            .map(|line| {
+                line.strip_prefix("Verdicts read, ")
+                    .unwrap()
+                    .parse()
+                    .unwrap()
+            })
+            .collect();
+        let section_closing = *counts.last().unwrap();
+        assert_eq!(
+            counts[..counts.len() - 1].iter().sum::<usize>(),
+            section_closing,
+            "section block {block}"
+        );
+        section_sum += section_closing;
+    }
+    let closings = blocks[4];
+    assert_eq!(section_sum, count_after(closings, "Verdicts read, "));
 }
