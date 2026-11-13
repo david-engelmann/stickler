@@ -81,6 +81,10 @@ name = "test_json"
 path = "rust/tests/test_json.rs"
 
 [[test]]
+name = "test_models_reading"
+path = "rust/tests/test_models_reading.rs"
+
+[[test]]
 name = "test_outcomes_reading"
 path = "rust/tests/test_outcomes_reading.rs"
 

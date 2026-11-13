@@ -13,6 +13,7 @@ use crate::flags::FlagsReading;
 use crate::grounds::GroundsReading;
 use crate::json::{JString, JsonValue};
 use crate::judgements::JudgementsReading;
+use crate::models::ModelsReading;
 use crate::outcomes::OutcomesReading;
 use crate::pattern::PatternReading;
 use crate::rejudged::Rejudged;
@@ -582,6 +583,11 @@ pub fn render_states_defects(defects: &[String]) -> String {
 /// Render a malformed flags file with its defects named.
 pub fn render_flags_defects(defects: &[String]) -> String {
     render_defects_headed("Flags", defects)
+}
+
+/// Render a malformed models file with its defects named.
+pub fn render_models_defects(defects: &[String]) -> String {
+    render_defects_headed("Models", defects)
 }
 
 /// Render a shapes reading under CK-30.
@@ -1326,6 +1332,100 @@ pub fn render_flags(reading: &FlagsReading) -> String {
     lines.push(format!("Files read, {files_read}"));
     lines.push(format!("Flags read, {}", reading.flags_read));
     lines.push(format!("Contested flags, {contested_flags}"));
+    lines.join("\n") + "\n"
+}
+
+/// Render a models reading under CK-46.
+///
+/// The reading states one section per model standing
+/// in the collection in first appearance order, naming
+/// each flag of the collection carrying a verdict of
+/// that model with its file, line, and pattern and the
+/// label of its set, the one pair of that model
+/// standing on the flag in the standing set review
+/// form, each section closing with the count of the
+/// pairs it states, and closes with the counts of the
+/// collection. The section counts print as the counts
+/// of the pairs stated, and the closing verdicts read
+/// count prints as the sum over the sections stated,
+/// in the closed form FIX-CK-20 states, and the three
+/// outcome counts and the flags with verdicts count
+/// print as the counts over the pairs and flags the
+/// sections state, the flag groups over the sections
+/// counting to the verdicts read count and not to the
+/// flags with verdicts count, one group standing per
+/// pair. The closing sets read and flags read counts
+/// stand as the builder counts them, in the carve out
+/// FIX-CK-21 states. Every field prints under the one
+/// line rule, the model name of a section head fenced
+/// like every other field, so the rendering holds the
+/// rule for any reading it is handed, as the collection
+/// readings before it stand closed from their first
+/// writing. The same collection always renders byte
+/// identical.
+pub fn render_models(reading: &ModelsReading) -> String {
+    let mut lines = vec!["Models".to_string()];
+    let mut seen: Vec<(&str, usize, &str, &str)> = Vec::new();
+    let mut flags_with_verdicts = 0usize;
+    let mut verdicts_read = 0usize;
+    let mut chose_stickler = 0usize;
+    let mut chose_clean = 0usize;
+    let mut abstained = 0usize;
+    for section in &reading.sections {
+        lines.push(String::new());
+        lines.push(format!("Model, {}", one_line_field(&section.model)));
+        let mut section_verdicts = 0usize;
+        for group in &section.groups {
+            lines.push(format!(
+                "{}, line {}, {}, set, {}",
+                one_line_field(&group.file),
+                group.line,
+                one_line_field(&group.pattern),
+                one_line_field(&group.set_label)
+            ));
+            let key = (
+                group.file.as_str(),
+                group.line,
+                group.pattern.as_str(),
+                group.set_label.as_str(),
+            );
+            if !seen.contains(&key) {
+                seen.push(key);
+                flags_with_verdicts += 1;
+            }
+            let entry = &group.verdict;
+            section_verdicts += 1;
+            if is_abstention(entry) {
+                abstained += 1;
+                lines.push(format!(
+                    "Verdict, {}, abstained",
+                    one_line_field(&entry.model)
+                ));
+            } else {
+                match verdict_outcome(entry) {
+                    "stickler" => chose_stickler += 1,
+                    "clean" => chose_clean += 1,
+                    _ => {}
+                }
+                lines.push(format!(
+                    "Verdict, {}, {}",
+                    one_line_field(&entry.model),
+                    one_line_field(&entry.choice)
+                ));
+            }
+            lines.push(format!("Reason, {}", one_line_field(&reason_for(entry))));
+        }
+        verdicts_read += section_verdicts;
+        lines.push(format!("Verdicts read, {section_verdicts}"));
+    }
+    lines.push(String::new());
+    lines.push(format!("Sets read, {}", reading.sets_read));
+    lines.push(format!("Flags read, {}", reading.flags_read));
+    lines.push(format!("Flags with verdicts, {flags_with_verdicts}"));
+    lines.push(format!("Verdicts read, {verdicts_read}"));
+    lines.push(format!("Chose stickler, {chose_stickler}"));
+    lines.push(format!("Chose clean, {chose_clean}"));
+    lines.push(format!("Abstained, {abstained}"));
     lines.join("\n") + "\n"
 }
 
