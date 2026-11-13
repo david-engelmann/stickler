@@ -19,6 +19,7 @@ use crate::review::{validate_review, verdict_for};
 use crate::shapes::ShapesReading;
 use crate::split::Split;
 use crate::standings::StandingsReading;
+use crate::states::StatesReading;
 use crate::verdicts::{is_abstention, is_contested, line_outcome, reason_for, verdict_outcome};
 use crate::verdicts_reading::VerdictsReading;
 
@@ -570,6 +571,11 @@ pub fn render_judgements_defects(defects: &[String]) -> String {
 /// Render a malformed standings file with its defects named.
 pub fn render_standings_defects(defects: &[String]) -> String {
     render_defects_headed("Standings", defects)
+}
+
+/// Render a malformed states file with its defects named.
+pub fn render_states_defects(defects: &[String]) -> String {
+    render_defects_headed("States", defects)
 }
 
 /// Render a shapes reading under CK-30.
@@ -1135,6 +1141,111 @@ pub fn render_standings(reading: &StandingsReading) -> String {
     lines.push(String::new());
     lines.push(format!("Sets read, {}", reading.sets_read));
     lines.push(format!("Files read, {}", reading.sections.len()));
+    lines.push(format!("Flags read, {}", reading.flags_read));
+    lines.push(format!("Flags with verdicts, {flags_with_verdicts}"));
+    lines.push(format!("Verdicts read, {verdicts_read}"));
+    lines.push(format!("Chose stickler, {chose_stickler}"));
+    lines.push(format!("Chose clean, {chose_clean}"));
+    lines.push(format!("Abstained, {abstained}"));
+    lines.join("\n") + "\n"
+}
+
+/// Render a states reading under CK-42.
+///
+/// The reading states one section per file verdict
+/// state in the order CK-8 states the judgements,
+/// standing whether any file of the collection stands
+/// in it or not, a section carrying no file stating the
+/// no files line, and naming each file standing in its
+/// state with its flag groups whole, every pair of the
+/// flag under it in the standing set review form, each
+/// file group closing with the count of the pairs it
+/// states and each section closing with the count of
+/// the pairs it states, and closes with the counts of
+/// the collection. The section counts print as the
+/// counts of the pairs stated, and the closing verdicts
+/// read count, the three outcome counts, and the flags
+/// with verdicts count print as the sums over the
+/// sections stated, in the relations CK-42 states for
+/// them, the outcome counts counted over the verdicts
+/// under the one outcome helper of the seat, the
+/// abstained count taken where the abstention predicate
+/// of CK-7 holds, so a handed choice outside the two
+/// labels counts in the verdicts read count and in none
+/// of the three, and the word abstained standing as a
+/// choice is no exception, under FIX-CK-28. The closing
+/// sets read and flags read counts stand as the builder
+/// counts them, in the carve out FIX-CK-21 states. Every
+/// field prints under the one line rule, and the file
+/// name of a file group prints as a field through the
+/// one helper at both of its positions, in stated
+/// contrast to CK-38, whose section key never prints as
+/// a field at all, so the rendering holds the rule for
+/// any reading it is handed, as the collection readings
+/// before it stand closed from their first writing. The
+/// same collection always renders byte identical.
+pub fn render_states(reading: &StatesReading) -> String {
+    let mut lines = vec!["States".to_string()];
+    let mut flags_with_verdicts = 0usize;
+    let mut verdicts_read = 0usize;
+    let mut chose_stickler = 0usize;
+    let mut chose_clean = 0usize;
+    let mut abstained = 0usize;
+    let mut files_read = 0usize;
+    for section in &reading.sections {
+        lines.push(String::new());
+        lines.push(judgement_head(section.state).to_string());
+        if section.files.is_empty() {
+            lines.push("No files".to_string());
+        }
+        let mut section_verdicts = 0usize;
+        for file_group in &section.files {
+            files_read += 1;
+            lines.push(format!("File, {}", one_line_field(&file_group.file)));
+            let mut file_verdicts = 0usize;
+            for group in &file_group.groups {
+                lines.push(format!(
+                    "{}, line {}, {}, set, {}",
+                    one_line_field(&group.file),
+                    group.line,
+                    one_line_field(&group.pattern),
+                    one_line_field(&group.set_label)
+                ));
+                if !group.verdicts.is_empty() {
+                    flags_with_verdicts += 1;
+                }
+                for entry in &group.verdicts {
+                    file_verdicts += 1;
+                    if is_abstention(entry) {
+                        abstained += 1;
+                        lines.push(format!(
+                            "Verdict, {}, abstained",
+                            one_line_field(&entry.model)
+                        ));
+                    } else {
+                        match verdict_outcome(entry) {
+                            "stickler" => chose_stickler += 1,
+                            "clean" => chose_clean += 1,
+                            _ => {}
+                        }
+                        lines.push(format!(
+                            "Verdict, {}, {}",
+                            one_line_field(&entry.model),
+                            one_line_field(&entry.choice)
+                        ));
+                    }
+                    lines.push(format!("Reason, {}", one_line_field(&reason_for(entry))));
+                }
+            }
+            section_verdicts += file_verdicts;
+            lines.push(format!("Verdicts read, {file_verdicts}"));
+        }
+        verdicts_read += section_verdicts;
+        lines.push(format!("Verdicts read, {section_verdicts}"));
+    }
+    lines.push(String::new());
+    lines.push(format!("Sets read, {}", reading.sets_read));
+    lines.push(format!("Files read, {files_read}"));
     lines.push(format!("Flags read, {}", reading.flags_read));
     lines.push(format!("Flags with verdicts, {flags_with_verdicts}"));
     lines.push(format!("Verdicts read, {verdicts_read}"));

@@ -1,8 +1,8 @@
-//! The stickler command line. Eighteen commands,
+//! The stickler command line. Nineteen commands,
 //! check, render, review, census, rejudged, split,
 //! contested, pattern, files, borderline, outcomes,
 //! verdicts, shapes, choices, categories, grounds,
-//! judgements, and standings.
+//! judgements, standings, and states.
 //!
 //! The surface stands as two functions over two readings of
 //! the arguments. The binary entry, run below, collects the
@@ -41,13 +41,15 @@ use crate::render::{
     render_judgements_defects, render_outcomes, render_outcomes_defects, render_pattern,
     render_pattern_defects, render_rejudged, render_rejudged_defects, render_review,
     render_set_defects, render_set_review, render_shapes, render_shapes_defects, render_split,
-    render_split_defects, render_standings, render_standings_defects, render_verdicts,
+    render_split_defects, render_standings, render_standings_defects, render_states,
+    render_states_defects, render_verdicts,
     render_verdicts_defects,
 };
 use crate::review::verdict_for;
 use crate::shapes::{load_shapes, shapes_reading_of};
 use crate::split::{load_split, split_of};
 use crate::standings::{load_standings, standings_reading_of};
+use crate::states::{load_states, states_reading_of};
 use crate::verdicts::line_outcome;
 use crate::verdicts_reading::{load_verdicts, verdicts_reading_of};
 
@@ -71,7 +73,8 @@ const USAGE: &str = "Usage, stickler check DIFF_FILE\n\
                      Usage, stickler categories CATEGORIES_JSON\n\
                      Usage, stickler grounds GROUNDS_JSON\n\
                      Usage, stickler judgements JUDGEMENTS_JSON\n\
-                     Usage, stickler standings STANDINGS_JSON\n";
+                     Usage, stickler standings STANDINGS_JSON\n\
+                     Usage, stickler states STATES_JSON\n";
 
 /// The outcome of one command line run, holding the exit code
 /// and the text for each of the two output streams.
@@ -705,6 +708,34 @@ fn standings_command(path: &JString) -> ByteOutcome {
     text_outcome(0, render_standings(&standings_reading_of(&value)))
 }
 
+fn states_command(path: &JString) -> ByteOutcome {
+    let text = match read_text(path) {
+        Err(()) => {
+            return text_outcome(
+                2,
+                render_states_defects(&["the states file could not be read".to_string()]),
+            );
+        }
+        Ok(text) => text,
+    };
+    let value = match json::parse(&text) {
+        Err(_) => {
+            return text_outcome(
+                2,
+                render_states_defects(&[
+                    "the file does not hold a JSON states collection".to_string()
+                ]),
+            );
+        }
+        Ok(value) => value,
+    };
+    let defects = load_states(&value);
+    if !defects.is_empty() {
+        return text_outcome(2, render_states_defects(&defects));
+    }
+    text_outcome(0, render_states(&states_reading_of(&value)))
+}
+
 /// Run the command line over code unit arguments and return
 /// the outcome as raw bytes.
 pub fn cli_main_units(args: &[JString]) -> ByteOutcome {
@@ -762,6 +793,9 @@ pub fn cli_main_units(args: &[JString]) -> ByteOutcome {
         }
         if args[0].equals("standings") {
             return standings_command(&args[1]);
+        }
+        if args[0].equals("states") {
+            return states_command(&args[1]);
         }
     }
     ByteOutcome {
