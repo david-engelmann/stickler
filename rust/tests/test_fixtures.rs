@@ -131,14 +131,15 @@ use stickler::checker::check_diff_detailed;
 use stickler::choices::{choices_reading_of, load_choices};
 use stickler::cli::cli_main;
 use stickler::files::files_reading_of;
+use stickler::flags::{flags_reading_of, load_flags};
 use stickler::grounds::{grounds_reading_of, load_grounds};
 use stickler::json::{parse, JsonValue};
 use stickler::judgements::{judgements_reading_of, load_judgements};
 use stickler::outcomes::outcomes_reading_of;
 use stickler::pattern::pattern_reading_of;
 use stickler::render::{
-    render_borderline, render_categories, render_choices, render_grounds, render_judgements,
-    render_shapes, render_standings, render_states, render_verdicts,
+    render_borderline, render_categories, render_choices, render_flags, render_grounds,
+    render_judgements, render_shapes, render_standings, render_states, render_verdicts,
 };
 use stickler::shapes::{load_shapes, shapes_reading_of};
 use stickler::standings::{load_standings, standings_reading_of};
@@ -3123,4 +3124,613 @@ fn states_collection_internal_sums_hold() {
     }
     let closings = blocks[4];
     assert_eq!(section_sum, count_after(closings, "Verdicts read, "));
+}
+
+/// The first dimension pin of the constructed flags
+/// collection, read off the fixture itself under the
+/// parameters the preamble of the Round 21 section
+/// states. The fixture stands absent against the tree
+/// Round 20 closed on, so the pin fails there by the
+/// fixture's absence, and the pin can fail against a
+/// miscounted construction on the counts it reads.
+#[test]
+fn flags_collection_holds_two_sets_named_as_constructed() {
+    let value = parsed_example("flags_collection.json");
+    assert!(load_flags(&value).is_empty());
+    let sets = value.get("sets").and_then(|sets| sets.as_array()).unwrap();
+    assert_eq!(sets.len(), 2);
+    for set in sets {
+        let label = set
+            .get("label")
+            .and_then(|label| label.as_jstring())
+            .unwrap()
+            .to_rust_string()
+            .unwrap();
+        assert!(
+            label.contains("constructed"),
+            "the set {label} is named as constructed"
+        );
+    }
+}
+
+/// The second dimension pin of the constructed flags
+/// collection, each set holding between three and six
+/// files, read off the fixture itself.
+#[test]
+fn flags_collection_files_per_set_stand_between_three_and_six() {
+    let value = parsed_example("flags_collection.json");
+    let sets = value.get("sets").and_then(|sets| sets.as_array()).unwrap();
+    for set in sets {
+        let files = set
+            .get("change_set")
+            .unwrap()
+            .get("files")
+            .and_then(|files| files.as_array())
+            .unwrap();
+        assert!(
+            (3..=6).contains(&files.len()),
+            "a set holds {} files",
+            files.len()
+        );
+    }
+}
+
+/// The third dimension pin of the constructed flags
+/// collection, the flagged lines across the collection
+/// standing between sixteen and twenty eight, counted
+/// from the census over the collection.
+#[test]
+fn flags_collection_flagged_lines_stand_between_sixteen_and_twenty_eight() {
+    let value = parsed_example("flags_collection.json");
+    let census = census_of(&value);
+    assert!(
+        (16..=28).contains(&census.total.borderline),
+        "the collection holds {} flagged lines",
+        census.total.borderline
+    );
+}
+
+/// The fourth dimension pin of the constructed flags
+/// collection, the verdicts across the collection
+/// standing between twenty four and forty four, counted
+/// from the verdicts reading over the collection.
+#[test]
+fn flags_collection_verdicts_stand_between_twenty_four_and_forty_four() {
+    let value = parsed_example("flags_collection.json");
+    let reading = verdicts_reading_of(&value);
+    let verdicts: usize = reading
+        .sections
+        .iter()
+        .flat_map(|section| section.groups.iter())
+        .map(|group| group.verdicts.len())
+        .sum();
+    assert!(
+        (24..=44).contains(&verdicts),
+        "the collection holds {verdicts} verdicts"
+    );
+}
+
+/// The first shape requirement of the constructed
+/// flags collection, at least two files standing in
+/// both sets, each carrying recorded verdicts in both
+/// of its standings, counted from the flags reading
+/// for the standings and from the verdicts reading
+/// for the verdicts each standing carries.
+#[test]
+fn flags_collection_two_files_stand_in_both_sets_and_carry_verdicts_in_each_standing() {
+    let value = parsed_example("flags_collection.json");
+    let reading = flags_reading_of(&value);
+    let verdicts = verdicts_reading_of(&value);
+    let files: Vec<&str> = reading
+        .sections
+        .iter()
+        .flat_map(|section| section.lines.iter())
+        .map(|line| line.file.as_str())
+        .collect();
+    let mut both = 0;
+    for file in [
+        "anchor.py",
+        "beacon.py",
+        "compass.py",
+        "dune.py",
+        "ember.py",
+        "fjord.py",
+    ] {
+        if !files.contains(&file) {
+            continue;
+        }
+        let in_both = ["constructed flags set 1", "constructed flags set 2"]
+            .iter()
+            .all(|label| {
+                reading
+                    .sections
+                    .iter()
+                    .flat_map(|section| section.lines.iter())
+                    .any(|line| line.file == file && line.set_label == *label)
+            });
+        let verdicts_in_both = [0usize, 1usize].iter().all(|index| {
+            verdicts.sections[*index]
+                .groups
+                .iter()
+                .any(|group| group.file == file)
+        });
+        if in_both && verdicts_in_both {
+            both += 1;
+        }
+    }
+    assert!(
+        both >= 2,
+        "{both} files stand in both sets carrying verdicts in each standing"
+    );
+}
+
+/// The second shape requirement, at least one file
+/// standing judged clean over the whole collection and
+/// at least one standing unjudged while carrying
+/// verdicts, so all three sections stand populated,
+/// counted from the flags reading.
+#[test]
+fn flags_collection_a_file_stands_judged_clean_and_a_file_stands_unjudged_over_the_whole_collection(
+) {
+    let value = parsed_example("flags_collection.json");
+    let reading = flags_reading_of(&value);
+    assert!(
+        !reading.sections[0].lines.is_empty(),
+        "one file stands judged stickler over the whole collection"
+    );
+    assert!(
+        !reading.sections[1].lines.is_empty(),
+        "one file stands judged clean over the whole collection"
+    );
+    assert!(
+        !reading.sections[2].lines.is_empty(),
+        "one file stands unjudged while carrying verdicts"
+    );
+}
+
+/// The third shape requirement, a file standing in
+/// both sets reading unjudged on the flags of its
+/// first set alone and judged clean over the pool of
+/// the whole collection, the first set's pool read
+/// from the verdicts reading over the collection and
+/// the pooled seating from the flags reading.
+#[test]
+fn flags_collection_a_file_in_both_sets_reads_unjudged_on_its_first_set_alone_and_judged_clean_pooled(
+) {
+    let value = parsed_example("flags_collection.json");
+    let verdicts = verdicts_reading_of(&value);
+    let reading = flags_reading_of(&value);
+    let stands = reading.sections[1].lines.iter().any(|line| {
+        let first_pool: Vec<_> = verdicts.sections[0]
+            .groups
+            .iter()
+            .filter(|group| group.file == line.file)
+            .flat_map(|group| group.verdicts.iter().cloned())
+            .collect();
+        !first_pool.is_empty()
+            && line_outcome(&first_pool) == "unjudged"
+            && reading
+                .sections
+                .iter()
+                .flat_map(|section| section.lines.iter())
+                .any(|held| held.file == line.file && held.set_label == "constructed flags set 2")
+    });
+    assert!(
+        stands,
+        "one file reads unjudged on its first set alone and judged clean pooled"
+    );
+}
+
+/// The fourth shape requirement, a file standing in
+/// both sets reading judged clean on the flags of its
+/// first set alone and judged stickler over the pool
+/// of the whole collection, read as the third
+/// requirement reads its file.
+#[test]
+fn flags_collection_a_file_in_both_sets_reads_judged_clean_on_its_first_set_alone_and_judged_stickler_pooled(
+) {
+    let value = parsed_example("flags_collection.json");
+    let verdicts = verdicts_reading_of(&value);
+    let reading = flags_reading_of(&value);
+    let stands = reading.sections[0].lines.iter().any(|line| {
+        let first_pool: Vec<_> = verdicts.sections[0]
+            .groups
+            .iter()
+            .filter(|group| group.file == line.file)
+            .flat_map(|group| group.verdicts.iter().cloned())
+            .collect();
+        !first_pool.is_empty()
+            && line_outcome(&first_pool) == "clean"
+            && reading
+                .sections
+                .iter()
+                .flat_map(|section| section.lines.iter())
+                .any(|held| held.file == line.file && held.set_label == "constructed flags set 2")
+    });
+    assert!(
+        stands,
+        "one file reads judged clean on its first set alone and judged stickler pooled"
+    );
+}
+
+/// The fifth shape requirement, every file standing a
+/// section carrying at least four flag lines in total,
+/// counted from the flags reading.
+#[test]
+fn flags_collection_every_sectioned_file_carries_at_least_four_flag_lines() {
+    let value = parsed_example("flags_collection.json");
+    let reading = flags_reading_of(&value);
+    let mut files: Vec<&str> = Vec::new();
+    for section in &reading.sections {
+        for line in &section.lines {
+            if !files.contains(&line.file.as_str()) {
+                files.push(line.file.as_str());
+            }
+        }
+    }
+    assert!(!files.is_empty());
+    for file in files {
+        let lines = reading
+            .sections
+            .iter()
+            .flat_map(|section| section.lines.iter())
+            .filter(|line| line.file == file)
+            .count();
+        assert!(
+            lines >= 4,
+            "the file {file} carries {lines} flag lines in total"
+        );
+    }
+}
+
+/// The sixth shape requirement, a flag of every
+/// sectioned file carrying two recorded verdicts,
+/// counted from the verdicts reading against the
+/// sectioned files of the flags reading.
+#[test]
+fn flags_collection_a_flag_of_each_sectioned_file_carries_two_verdicts() {
+    let value = parsed_example("flags_collection.json");
+    let reading = flags_reading_of(&value);
+    let verdicts = verdicts_reading_of(&value);
+    let mut files: Vec<&str> = Vec::new();
+    for section in &reading.sections {
+        for line in &section.lines {
+            if !files.contains(&line.file.as_str()) {
+                files.push(line.file.as_str());
+            }
+        }
+    }
+    assert!(!files.is_empty());
+    for file in files {
+        assert!(
+            verdicts
+                .sections
+                .iter()
+                .flat_map(|section| section.groups.iter())
+                .any(|group| group.file == file && group.verdicts.len() >= 2),
+            "no flag of the file {file} carries two verdicts"
+        );
+    }
+}
+
+/// The seventh shape requirement, at least one flag
+/// carrying no verdicts in a file standing a section,
+/// counted against the verdicts reading over the
+/// collection, a flag standing as a line in the flags
+/// reading standing in no verdicts group.
+#[test]
+fn flags_collection_a_flag_carries_no_verdicts_in_a_file_standing_a_section() {
+    let value = parsed_example("flags_collection.json");
+    let reading = flags_reading_of(&value);
+    let verdicts = verdicts_reading_of(&value);
+    let stands = reading
+        .sections
+        .iter()
+        .flat_map(|section| section.lines.iter())
+        .any(|line| {
+            !verdicts
+                .sections
+                .iter()
+                .filter(|section| section.label == line.set_label)
+                .flat_map(|section| section.groups.iter())
+                .any(|group| group.file == line.file && group.line == line.line)
+        });
+    assert!(
+        stands,
+        "one flag carries no verdicts in a file standing a section"
+    );
+}
+
+/// The eighth shape requirement's companion, at least
+/// one file carrying flags and no recorded verdicts
+/// anywhere, standing in no section while the closing
+/// flags read count counts its flags, counted from
+/// the files reading against the flags reading.
+#[test]
+fn flags_collection_a_file_carries_flags_and_no_verdicts_and_stands_in_no_section() {
+    let value = parsed_example("flags_collection.json");
+    let reading = flags_reading_of(&value);
+    let files = files_reading_of(&value);
+    let verdicts = verdicts_reading_of(&value);
+    let sectioned: Vec<&str> = reading
+        .sections
+        .iter()
+        .flat_map(|section| section.lines.iter())
+        .map(|line| line.file.as_str())
+        .collect();
+    let stands = files.sections.iter().any(|files_section| {
+        !files_section.flags.is_empty()
+            && !sectioned.contains(&files_section.file.as_str())
+            && !verdicts
+                .sections
+                .iter()
+                .flat_map(|section| section.groups.iter())
+                .any(|group| group.file == files_section.file)
+    });
+    assert!(
+        stands,
+        "one file carries flags and no verdicts and stands in no section"
+    );
+    let section_lines: usize = reading
+        .sections
+        .iter()
+        .map(|section| section.lines.len())
+        .sum();
+    assert!(
+        reading.flags_read > section_lines,
+        "the closing flags read count counts the unsectioned file's flags"
+    );
+}
+
+/// The eighth shape requirement, at least two flags
+/// standing contested, counted from the flags reading,
+/// each contested flag standing in the judged stickler
+/// section by the consequence the preamble records.
+#[test]
+fn flags_collection_two_flags_stand_contested() {
+    let value = parsed_example("flags_collection.json");
+    let reading = flags_reading_of(&value);
+    let contested: Vec<_> = reading
+        .sections
+        .iter()
+        .flat_map(|section| section.lines.iter())
+        .filter(|line| line.contested)
+        .collect();
+    assert!(
+        contested.len() >= 2,
+        "{} flags stand contested",
+        contested.len()
+    );
+    assert!(
+        reading.sections[0]
+            .lines
+            .iter()
+            .filter(|line| line.contested)
+            .count()
+            == contested.len(),
+        "every contested flag stands in the judged stickler section"
+    );
+}
+
+/// The eighth shape requirement's second half, at
+/// least one flag carrying recorded verdicts of both
+/// labels with an abstaining side and standing not
+/// contested in a file standing a section, counted
+/// from the verdicts reading against the flags
+/// reading.
+#[test]
+fn flags_collection_a_flag_carries_both_labels_with_an_abstaining_side_and_stands_not_contested() {
+    let value = parsed_example("flags_collection.json");
+    let reading = flags_reading_of(&value);
+    let verdicts = verdicts_reading_of(&value);
+    let sectioned: Vec<&str> = reading
+        .sections
+        .iter()
+        .flat_map(|section| section.lines.iter())
+        .map(|line| line.file.as_str())
+        .collect();
+    let stands = verdicts
+        .sections
+        .iter()
+        .flat_map(|section| section.groups.iter())
+        .filter(|group| sectioned.contains(&group.file.as_str()))
+        .any(|group| {
+            group
+                .verdicts
+                .iter()
+                .any(|verdict| verdict.choice == "stickler")
+                && group
+                    .verdicts
+                    .iter()
+                    .any(|verdict| verdict.choice == "clean")
+                && group.verdicts.iter().any(is_abstention)
+                && !is_contested(&group.verdicts)
+        });
+    assert!(
+        stands,
+        "one flag carries both labels with an abstaining side and stands not contested"
+    );
+}
+
+/// The census relation of the constructed flags
+/// collection, each of the closing counts of the flags
+/// reading standing against the same named count of
+/// the census over the same collection, the sets read
+/// count the count of the sets the census reads and
+/// the flags read count its total block's flagged
+/// lines, and the command output standing byte
+/// identical to the library rendering.
+#[test]
+fn flags_collection_closings_bind_to_the_census() {
+    let (code, out) = run_on_example("flags", "flags_collection.json");
+    assert_eq!(code, 0);
+    let value = parsed_example("flags_collection.json");
+    let census = census_of(&value);
+    let closings = out.split("\n\n").last().unwrap();
+    assert_eq!(count_after(closings, "Sets read, "), census.sets.len());
+    assert_eq!(
+        count_after(closings, "Flags read, "),
+        census.total.borderline
+    );
+    assert_eq!(out, render_flags(&flags_reading_of(&value)));
+}
+
+/// The files relation of the constructed flags
+/// collection, the flag lines of each section being
+/// exactly the flags the files reading names under
+/// the files standing in that state, in the same
+/// collection order within each file, both readings
+/// run here. It catches the per set seating mutation
+/// over the constructed collection, a file's lines
+/// splitting across sections by gathering.
+#[test]
+fn flags_collection_flag_lines_bind_to_the_files_reading() {
+    let value = parsed_example("flags_collection.json");
+    let reading = flags_reading_of(&value);
+    let files = files_reading_of(&value);
+    let states = states_reading_of(&value);
+    for (flags_section, states_section) in reading.sections.iter().zip(states.sections.iter()) {
+        let stated_files: Vec<&str> = states_section
+            .files
+            .iter()
+            .map(|group| group.file.as_str())
+            .collect();
+        let mut expected: Vec<(String, usize, String, String)> = Vec::new();
+        for files_section in &files.sections {
+            if stated_files.contains(&files_section.file.as_str()) {
+                for flag in &files_section.flags {
+                    expected.push((
+                        files_section.file.clone(),
+                        flag.line,
+                        flag.pattern.clone(),
+                        flag.set_label.clone(),
+                    ));
+                }
+            }
+        }
+        let mut seated: Vec<(String, usize, String, String)> = flags_section
+            .lines
+            .iter()
+            .map(|line| {
+                (
+                    line.file.clone(),
+                    line.line,
+                    line.pattern.clone(),
+                    line.set_label.clone(),
+                )
+            })
+            .collect();
+        expected.sort();
+        seated.sort();
+        assert_eq!(seated, expected, "state {}", flags_section.state);
+        for files_section in &files.sections {
+            if stated_files.contains(&files_section.file.as_str()) {
+                let held: Vec<_> = flags_section
+                    .lines
+                    .iter()
+                    .filter(|line| line.file == files_section.file)
+                    .collect();
+                assert_eq!(
+                    held.len(),
+                    files_section.flags.len(),
+                    "file {}",
+                    files_section.file
+                );
+                for (line, flag) in held.iter().zip(files_section.flags.iter()) {
+                    assert_eq!(line.line, flag.line);
+                    assert_eq!(line.pattern, flag.pattern);
+                    assert_eq!(line.set_label, flag.set_label);
+                    assert_eq!(line.contested, flag.contested);
+                }
+            }
+        }
+    }
+}
+
+/// The states relation of the constructed flags
+/// collection, each section standing exactly the files
+/// the states reading seats in its state and its line
+/// count standing as the sum over those files of the
+/// section flags read counts of the files reading,
+/// all three readings run here. It catches the first
+/// set pooling mutation and the seating guard mutation
+/// over the constructed collection, the guard through
+/// the file carrying flags and no verdicts that the
+/// states reading seats nowhere.
+#[test]
+fn flags_collection_sections_bind_to_the_states_reading() {
+    let value = parsed_example("flags_collection.json");
+    let reading = flags_reading_of(&value);
+    let files = files_reading_of(&value);
+    let states = states_reading_of(&value);
+    for (flags_section, states_section) in reading.sections.iter().zip(states.sections.iter()) {
+        assert_eq!(flags_section.state, states_section.state);
+        let mut seated: Vec<&str> = Vec::new();
+        for line in &flags_section.lines {
+            if !seated.contains(&line.file.as_str()) {
+                seated.push(line.file.as_str());
+            }
+        }
+        let mut stated: Vec<&str> = states_section
+            .files
+            .iter()
+            .map(|group| group.file.as_str())
+            .collect();
+        seated.sort();
+        stated.sort();
+        assert_eq!(seated, stated, "state {}", flags_section.state);
+        let expected_lines: usize = stated
+            .iter()
+            .map(|file| {
+                files
+                    .sections
+                    .iter()
+                    .find(|section| &section.file == file)
+                    .map(|section| section.flags.len())
+                    .unwrap_or(0)
+            })
+            .sum();
+        assert_eq!(flags_section.lines.len(), expected_lines);
+    }
+}
+
+/// The internal sums of the flags reading over the
+/// constructed flags collection, the section contested
+/// counts summing to the closing contested flags count
+/// and the section flags read counts summing to the
+/// closing flags read count less the flags of the
+/// files standing in no section, read from the
+/// rendered text against the files reading.
+#[test]
+fn flags_collection_internal_sums_hold() {
+    let value = parsed_example("flags_collection.json");
+    let rendered = render_flags(&flags_reading_of(&value));
+    let blocks: Vec<&str> = rendered.split("\n\n").collect();
+    assert_eq!(blocks.len(), 5);
+    let mut flags_sum = 0usize;
+    let mut contested_sum = 0usize;
+    for block in &blocks[1..4] {
+        flags_sum += count_after(block, "Flags read, ");
+        contested_sum += count_after(block, "Contested, ");
+    }
+    let closings = blocks[4];
+    assert_eq!(contested_sum, count_after(closings, "Contested flags, "));
+    let reading = flags_reading_of(&value);
+    let files = files_reading_of(&value);
+    let sectioned: Vec<&str> = reading
+        .sections
+        .iter()
+        .flat_map(|section| section.lines.iter())
+        .map(|line| line.file.as_str())
+        .collect();
+    let unsectioned_flags: usize = files
+        .sections
+        .iter()
+        .filter(|section| !sectioned.contains(&section.file.as_str()))
+        .map(|section| section.flags.len())
+        .sum();
+    assert_eq!(
+        flags_sum + unsectioned_flags,
+        count_after(closings, "Flags read, ")
+    );
 }
