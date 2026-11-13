@@ -75,8 +75,11 @@
 //! only pin fail on a build that seats a flag's pairs
 //! by outcome or drops a group standing under no
 //! outcome. The section order pin catches MA in its
-//! pure form. The precedence pins catch MH in pure
-//! form, and the judgements binding pin catches MH over
+//! pure form. The precedence pin catches MH in pure
+//! form, pin 14 passing under it on a pool holding
+//! one non-abstaining clean outcome and abstentions
+//! only, judged clean by majority as by precedence,
+//! and the judgements binding pin catches MH over
 //! the shipped collection, ledger.py standing judged
 //! stickler there on its line 6 stickler choice. The
 //! handed word abstained pin does not catch any builder
@@ -858,7 +861,7 @@ fn a_file_pools_its_verdicts_across_sets_for_its_state() {
             "[{\"line\":4,\"pattern\":\"near placeholder name\",\"model\":\"jev-1.13.0\",\"choice\":\"clean\",\"confidence\":0.8}]",
         )]),
     );
-    let alone = parse(&collection_json(&[first.clone()])).unwrap();
+    let alone = parse(&collection_json(std::slice::from_ref(&first))).unwrap();
     let alone_reading = states_reading_of(&alone);
     assert_eq!(alone_reading.sections[1].files.len(), 1);
     assert_eq!(alone_reading.sections[1].files[0].file, "app.py");
