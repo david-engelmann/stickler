@@ -1,0 +1,38 @@
+Flags
+
+Judged stickler
+harvest.py, line 6, near placeholder name, set, pilot set
+harvest.py, line 7, near placeholder name, set, pilot set
+harvest.py, line 12, broad handler, set, pilot set
+harvest.py, line 18, broad handler, set, pilot set
+windows.py, line 6, shared member default, set, pilot set
+windows.py, line 10, shared member default, set, pilot set
+windows.py, line 14, shared member default, set, pilot set
+windows.py, line 18, shared member default, set, pilot set
+sorting.py, line 6, near placeholder name, set, pilot set
+sorting.py, line 11, near placeholder name, set, pilot set
+sorting.py, line 12, near placeholder name, set, pilot set
+sorting.py, line 15, broad handler, set, pilot set
+ledger.py, line 6, near placeholder name, set, constructed round 4 example
+ledger.py, line 7, near placeholder name, set, constructed round 4 example
+cache.py, line 7, shared member default, set, constructed round 4 example
+cache.py, line 10, broad handler, set, constructed round 4 example
+cache.py, line 15, near placeholder name, set, constructed round 4 example
+cache.py, line 19, near placeholder name, set, constructed round 4 example
+Flags read, 18
+Contested, 2
+
+Judged clean
+No flagged lines
+Flags read, 0
+Contested, 0
+
+Unjudged
+No flagged lines
+Flags read, 0
+Contested, 0
+
+Sets read, 3
+Files read, 5
+Flags read, 18
+Contested flags, 2

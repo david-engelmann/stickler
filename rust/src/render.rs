@@ -9,6 +9,7 @@ use crate::checker::{BORDERLINE_PATTERNS, SHAPES};
 use crate::choices::ChoicesReading;
 use crate::contested::Contested;
 use crate::files::FilesReading;
+use crate::flags::FlagsReading;
 use crate::grounds::GroundsReading;
 use crate::json::{JString, JsonValue};
 use crate::judgements::JudgementsReading;
@@ -576,6 +577,11 @@ pub fn render_standings_defects(defects: &[String]) -> String {
 /// Render a malformed states file with its defects named.
 pub fn render_states_defects(defects: &[String]) -> String {
     render_defects_headed("States", defects)
+}
+
+/// Render a malformed flags file with its defects named.
+pub fn render_flags_defects(defects: &[String]) -> String {
+    render_defects_headed("Flags", defects)
 }
 
 /// Render a shapes reading under CK-30.
@@ -1252,6 +1258,74 @@ pub fn render_states(reading: &StatesReading) -> String {
     lines.push(format!("Chose stickler, {chose_stickler}"));
     lines.push(format!("Chose clean, {chose_clean}"));
     lines.push(format!("Abstained, {abstained}"));
+    lines.join("\n") + "\n"
+}
+
+/// Render a flags reading under CK-44.
+///
+/// The reading states one section per file verdict
+/// state in the order CK-8 states the judgements,
+/// standing whether any file of the collection stands
+/// in it or not, a section carrying no flag line
+/// stating the no flagged lines line, and naming each
+/// flag standing on a file standing in its state as
+/// one flag line in collection order, each section
+/// closing with the count of its lines and the count
+/// of those lines that stand contested, and closes
+/// with the counts of the collection. The section
+/// counts print as the counts of the lines stated, and
+/// the closing contested flags count prints as the sum
+/// over the sections stated, and the closing files
+/// read count prints as the count of the files
+/// standing in the sections, in the relations CK-44
+/// states for them. The closing sets read and flags
+/// read counts stand as the builder counts them, in
+/// the carve out FIX-CK-21 states. Every field prints
+/// under the one line rule, and the state word of a
+/// section never prints as a field at all, the section
+/// head printing the three fixed literals through the
+/// one helper of the outcomes rendering, so the
+/// rendering holds the rule for any reading it is
+/// handed, as the collection readings before it stand
+/// closed from their first writing. The same
+/// collection always renders byte identical.
+pub fn render_flags(reading: &FlagsReading) -> String {
+    let mut lines = vec!["Flags".to_string()];
+    let mut files_read = 0usize;
+    let mut contested_flags = 0usize;
+    for section in &reading.sections {
+        lines.push(String::new());
+        lines.push(judgement_head(section.state).to_string());
+        if section.lines.is_empty() {
+            lines.push("No flagged lines".to_string());
+        } else {
+            for line in &section.lines {
+                lines.push(format!(
+                    "{}, line {}, {}, set, {}",
+                    one_line_field(&line.file),
+                    line.line,
+                    one_line_field(&line.pattern),
+                    one_line_field(&line.set_label)
+                ));
+            }
+        }
+        let mut section_files: Vec<&str> = Vec::new();
+        for line in &section.lines {
+            if !section_files.contains(&line.file.as_str()) {
+                section_files.push(line.file.as_str());
+            }
+        }
+        files_read += section_files.len();
+        let contested = section.lines.iter().filter(|line| line.contested).count();
+        contested_flags += contested;
+        lines.push(format!("Flags read, {}", section.lines.len()));
+        lines.push(format!("Contested, {contested}"));
+    }
+    lines.push(String::new());
+    lines.push(format!("Sets read, {}", reading.sets_read));
+    lines.push(format!("Files read, {files_read}"));
+    lines.push(format!("Flags read, {}", reading.flags_read));
+    lines.push(format!("Contested flags, {contested_flags}"));
     lines.join("\n") + "\n"
 }
 
