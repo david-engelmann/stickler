@@ -42,8 +42,7 @@ use crate::render::{
     render_pattern_defects, render_rejudged, render_rejudged_defects, render_review,
     render_set_defects, render_set_review, render_shapes, render_shapes_defects, render_split,
     render_split_defects, render_standings, render_standings_defects, render_states,
-    render_states_defects, render_verdicts,
-    render_verdicts_defects,
+    render_states_defects, render_verdicts, render_verdicts_defects,
 };
 use crate::review::verdict_for;
 use crate::shapes::{load_shapes, shapes_reading_of};

@@ -2716,7 +2716,8 @@ fn states_collection_two_files_stand_in_both_sets_and_carry_verdicts_in_each_sta
 /// verdicts, so all three sections stand populated,
 /// counted from the states reading.
 #[test]
-fn states_collection_a_file_stands_judged_clean_and_a_file_stands_unjudged_over_the_whole_collection() {
+fn states_collection_a_file_stands_judged_clean_and_a_file_stands_unjudged_over_the_whole_collection(
+) {
     let value = parsed_example("states_collection.json");
     let reading = states_reading_of(&value);
     assert!(
@@ -2740,7 +2741,8 @@ fn states_collection_a_file_stands_judged_clean_and_a_file_stands_unjudged_over_
 /// from the verdicts reading over the collection and
 /// the pooled state from the states reading.
 #[test]
-fn states_collection_a_file_in_both_sets_reads_unjudged_on_its_first_set_alone_and_judged_clean_pooled() {
+fn states_collection_a_file_in_both_sets_reads_unjudged_on_its_first_set_alone_and_judged_clean_pooled(
+) {
     let value = parsed_example("states_collection.json");
     let verdicts = verdicts_reading_of(&value);
     let reading = states_reading_of(&value);
@@ -2770,7 +2772,8 @@ fn states_collection_a_file_in_both_sets_reads_unjudged_on_its_first_set_alone_a
 /// of the whole collection, read as the third
 /// requirement reads its file.
 #[test]
-fn states_collection_a_file_in_both_sets_reads_judged_clean_on_its_first_set_alone_and_judged_stickler_pooled() {
+fn states_collection_a_file_in_both_sets_reads_judged_clean_on_its_first_set_alone_and_judged_stickler_pooled(
+) {
     let value = parsed_example("states_collection.json");
     let verdicts = verdicts_reading_of(&value);
     let reading = states_reading_of(&value);
@@ -2828,7 +2831,10 @@ fn states_collection_a_flag_of_each_sectioned_file_carries_two_verdicts() {
     for section in &reading.sections {
         for file_group in &section.files {
             assert!(
-                file_group.groups.iter().any(|group| group.verdicts.len() >= 2),
+                file_group
+                    .groups
+                    .iter()
+                    .any(|group| group.verdicts.len() >= 2),
                 "no flag of the file {} carries two verdicts",
                 file_group.file
             );
@@ -2908,7 +2914,10 @@ fn states_collection_a_flag_carries_only_handed_word_verdicts() {
         .flat_map(|file_group| file_group.groups.iter())
         .any(|group| {
             !group.verdicts.is_empty()
-                && group.verdicts.iter().all(|verdict| verdict.choice == "abstained")
+                && group
+                    .verdicts
+                    .iter()
+                    .all(|verdict| verdict.choice == "abstained")
         });
     assert!(stands, "one flag carries only handed word verdicts");
 }
@@ -3014,9 +3023,7 @@ fn states_collection_file_groups_bind_to_the_standings_reading() {
             "file {}",
             section.file
         );
-        for (states_group, standings_group) in
-            file_group.groups.iter().zip(section.groups.iter())
-        {
+        for (states_group, standings_group) in file_group.groups.iter().zip(section.groups.iter()) {
             assert_eq!(states_group.file, standings_group.file);
             assert_eq!(states_group.line, standings_group.line);
             assert_eq!(states_group.pattern, standings_group.pattern);

@@ -136,10 +136,7 @@ pub fn states_reading_of(value: &JsonValue) -> StatesReading {
                 for result in review_changeset(member) {
                     for block in &result.blocks {
                         flags_read += 1;
-                        let index = match files
-                            .iter()
-                            .position(|group| group.file == result.name)
-                        {
+                        let index = match files.iter().position(|group| group.file == result.name) {
                             Some(index) => index,
                             None => {
                                 files.push(StatesFileGroup {
@@ -172,9 +169,7 @@ pub fn states_reading_of(value: &JsonValue) -> StatesReading {
         let section_files = files
             .iter()
             .zip(pools.iter())
-            .filter(|(group, pool)| {
-                !group.groups.is_empty() && line_outcome(pool) == state
-            })
+            .filter(|(group, pool)| !group.groups.is_empty() && line_outcome(pool) == state)
             .map(|(group, _)| group.clone())
             .collect();
         sections.push(StatesSection {

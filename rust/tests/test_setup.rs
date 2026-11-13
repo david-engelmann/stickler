@@ -396,9 +396,9 @@ fn contract_carries_the_round_13_obligations() {
     // the sets.rs sentence names. The sentence gains CK-41,
     // so the pinned substring gains it too, in the form the
     // Round 14 pin below reads as well.
-    assert!(
-        sets.contains("CK-25, CK-27, CK-29, CK-31, CK-33, CK-35, CK-37, CK-39, and CK-41 in CONTRACT.md")
-    );
+    assert!(sets.contains(
+        "CK-25, CK-27, CK-29, CK-31, CK-33, CK-35, CK-37, CK-39, and CK-41 in CONTRACT.md"
+    ));
     let readme = read("README.md");
     assert!(readme.contains("the collection form under CK-27 that verdicts reads"));
 }
@@ -412,9 +412,9 @@ fn contract_carries_the_round_14_obligations() {
     assert!(text.contains("- CK-29."));
     assert!(text.contains("- CK-30."));
     let sets = read("rust/src/sets.rs");
-    assert!(
-        sets.contains("CK-25, CK-27, CK-29, CK-31, CK-33, CK-35, CK-37, CK-39, and CK-41 in CONTRACT.md")
-    );
+    assert!(sets.contains(
+        "CK-25, CK-27, CK-29, CK-31, CK-33, CK-35, CK-37, CK-39, and CK-41 in CONTRACT.md"
+    ));
     let readme = read("README.md");
     assert!(readme.contains("the collection form under CK-29 that shapes reads"));
 }
@@ -428,9 +428,9 @@ fn contract_carries_the_round_15_obligations() {
     assert!(text.contains("- CK-31."));
     assert!(text.contains("- CK-32."));
     let sets = read("rust/src/sets.rs");
-    assert!(
-        sets.contains("CK-25, CK-27, CK-29, CK-31, CK-33, CK-35, CK-37, CK-39, and CK-41 in CONTRACT.md")
-    );
+    assert!(sets.contains(
+        "CK-25, CK-27, CK-29, CK-31, CK-33, CK-35, CK-37, CK-39, and CK-41 in CONTRACT.md"
+    ));
     let readme = read("README.md");
     assert!(readme.contains("the collection form under CK-31 that choices reads"));
 }
@@ -444,9 +444,9 @@ fn contract_carries_the_round_16_obligations() {
     assert!(text.contains("- CK-33."));
     assert!(text.contains("- CK-34."));
     let sets = read("rust/src/sets.rs");
-    assert!(
-        sets.contains("CK-25, CK-27, CK-29, CK-31, CK-33, CK-35, CK-37, CK-39, and CK-41 in CONTRACT.md")
-    );
+    assert!(sets.contains(
+        "CK-25, CK-27, CK-29, CK-31, CK-33, CK-35, CK-37, CK-39, and CK-41 in CONTRACT.md"
+    ));
     let readme = read("README.md");
     assert!(readme.contains("the collection form under CK-33 that categories reads"));
 }
@@ -460,7 +460,9 @@ fn contract_carries_the_round_17_obligations() {
     assert!(text.contains("- CK-35."));
     assert!(text.contains("- CK-36."));
     let sets = read("rust/src/sets.rs");
-    assert!(sets.contains("CK-27, CK-29, CK-31, CK-33, CK-35, CK-37, CK-39, and CK-41 in CONTRACT.md"));
+    assert!(
+        sets.contains("CK-27, CK-29, CK-31, CK-33, CK-35, CK-37, CK-39, and CK-41 in CONTRACT.md")
+    );
     let readme = read("README.md");
     assert!(readme.contains("the collection form under CK-35 that grounds reads"));
 }
@@ -474,7 +476,9 @@ fn contract_carries_the_round_18_obligations() {
     assert!(text.contains("- CK-37."));
     assert!(text.contains("- CK-38."));
     let sets = read("rust/src/sets.rs");
-    assert!(sets.contains("CK-27, CK-29, CK-31, CK-33, CK-35, CK-37, CK-39, and CK-41 in CONTRACT.md"));
+    assert!(
+        sets.contains("CK-27, CK-29, CK-31, CK-33, CK-35, CK-37, CK-39, and CK-41 in CONTRACT.md")
+    );
     let readme = read("README.md");
     assert!(readme.contains("the collection form under CK-37 that judgements reads"));
 }
@@ -491,7 +495,9 @@ fn contract_carries_the_round_19_obligations() {
     assert!(text.contains("- CK-39."));
     assert!(text.contains("- CK-40."));
     let sets = read("rust/src/sets.rs");
-    assert!(sets.contains("CK-27, CK-29, CK-31, CK-33, CK-35, CK-37, CK-39, and CK-41 in CONTRACT.md"));
+    assert!(
+        sets.contains("CK-27, CK-29, CK-31, CK-33, CK-35, CK-37, CK-39, and CK-41 in CONTRACT.md")
+    );
     let readme = read("README.md");
     assert!(readme.contains("the collection form under CK-39 that standings reads"));
 }
@@ -1084,7 +1090,9 @@ fn contract_carries_the_round_20_obligations() {
     assert!(text.contains("- CK-41."));
     assert!(text.contains("- CK-42."));
     let sets = read("rust/src/sets.rs");
-    assert!(sets.contains("CK-27, CK-29, CK-31, CK-33, CK-35, CK-37, CK-39, and CK-41 in CONTRACT.md"));
+    assert!(
+        sets.contains("CK-27, CK-29, CK-31, CK-33, CK-35, CK-37, CK-39, and CK-41 in CONTRACT.md")
+    );
     let readme = read("README.md");
     assert!(readme.contains("the collection form under CK-41 that states reads"));
 }

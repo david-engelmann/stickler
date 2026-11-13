@@ -280,11 +280,7 @@ fn the_closings_bind_to_the_verdicts_reading_over_the_same_collection() {
         ("Chose clean, ", 5),
         ("Abstained, ", 3),
     ] {
-        assert_eq!(
-            count_after(states_closings, prefix),
-            expected,
-            "{prefix}"
-        );
+        assert_eq!(count_after(states_closings, prefix), expected, "{prefix}");
         assert_eq!(
             count_after(states_closings, prefix),
             count_after(verdicts_closings, prefix),
@@ -480,7 +476,8 @@ fn an_empty_collection_renders_three_sections_each_stating_no_files_and_closes_a
 /// second set's, in collection order. It catches the
 /// per set file group mutation MC in its pure form.
 #[test]
-fn a_file_standing_in_two_sets_stands_once_in_its_states_section_with_its_groups_in_collection_order() {
+fn a_file_standing_in_two_sets_stands_once_in_its_states_section_with_its_groups_in_collection_order(
+) {
     let verdicts =
         "[{\"line\":4,\"pattern\":\"near placeholder name\",\"model\":\"jev-1.13.0\",\"choice\":\"stickler\",\"confidence\":0.9}]";
     let text = collection_json(&[
@@ -668,10 +665,7 @@ fn the_sections_stand_in_the_ck_8_order_not_in_first_appearance_order() {
     let harvest = position("File, harvest.py");
     let windows = position("File, windows.py");
     let cache = position("File, cache.py");
-    assert!(
-        stickler < harvest && harvest < clean,
-        "{rendered}"
-    );
+    assert!(stickler < harvest && harvest < clean, "{rendered}");
     assert!(clean < windows && windows < unjudged, "{rendered}");
     assert!(unjudged < cache, "{rendered}");
 }
@@ -802,7 +796,8 @@ fn a_handed_word_abstained_verdict_stands_in_its_flags_group() {
 /// form, majority reading the file judged clean at one
 /// stickler outcome against two clean.
 #[test]
-fn a_file_carrying_one_stickler_choice_stands_judged_stickler_though_another_of_its_flags_stands_judged_clean() {
+fn a_file_carrying_one_stickler_choice_stands_judged_stickler_though_another_of_its_flags_stands_judged_clean(
+) {
     let text = collection_json(&[(
         "one set",
         change_set_json(&[entry_json(
@@ -826,7 +821,8 @@ fn a_file_carrying_one_stickler_choice_stands_judged_stickler_though_another_of_
 /// carries only abstentions and so stands unjudged
 /// under CK-8.
 #[test]
-fn a_file_carrying_no_stickler_choice_and_one_clean_choice_stands_judged_clean_though_another_of_its_flags_carries_only_abstentions() {
+fn a_file_carrying_no_stickler_choice_and_one_clean_choice_stands_judged_clean_though_another_of_its_flags_carries_only_abstentions(
+) {
     let text = collection_json(&[(
         "one set",
         change_set_json(&[entry_json(
@@ -957,10 +953,7 @@ fn a_missing_sets_field_is_refused() {
 #[test]
 fn a_sets_field_that_is_not_a_list_is_refused() {
     let value = parse("{\"sets\": {}}").unwrap();
-    assert_eq!(
-        load_states(&value),
-        vec!["sets must be a list".to_string()]
-    );
+    assert_eq!(load_states(&value), vec!["sets must be a list".to_string()]);
 }
 
 #[test]
@@ -1145,10 +1138,7 @@ fn a_line_break_in_a_flag_group_pattern_forges_no_closing_line() {
     group.pattern = "near placeholder name\nVerdicts read, 99".to_string();
     let reading = StatesReading {
         sections: vec![
-            handed_section(
-                "stickler",
-                vec![handed_file_group("app.py", vec![group])],
-            ),
+            handed_section("stickler", vec![handed_file_group("app.py", vec![group])]),
             handed_section("clean", vec![]),
             handed_section("unjudged", vec![]),
         ],
