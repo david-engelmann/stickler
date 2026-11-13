@@ -1535,11 +1535,11 @@ Abstained, 3
 
 ## Status
 
-Seeded in October 2026. Setup has landed, and Rounds 1 to 22 have closed, with all slices merged on main. Part of the Spectacle line in the 39 repo storefront perfection programme.
+Seeded in October 2026. Setup has landed, and Rounds 1 to 23 have closed, with all slices merged on main. Part of the Spectacle line in the 39 repo storefront perfection programme.
 
 ## Programme status
 
-- Closed perfection rounds, 22 of 100. A round counts only when a full cycle of work, audit, review, red team, and approval has closed. Seeding and setup are not rounds.
+- Closed perfection rounds, 23 of 100. A round counts only when a full cycle of work, audit, review, red team, and approval has closed. Seeding and setup are not rounds.
 - Contract, SETUP-1 to SETUP-4 and CK-1 to CK-6 met. CK-1 to CK-4 stand in full form in CONTRACT.md with the Round 1 repair amendments, and Round 1 closed on the merged slice 2 after three reviews, a repair pass, and an approving re-review.
 - Contract, CK-5 and CK-6 met. They stand in full form in CONTRACT.md with the Round 2 repair amendments, and Round 2 closed on the merged slice 3 after three reviews, a repair pass, and an approving re-review.
 - Slice 2 has landed. It carries the review core, the built in checker with its four named shapes, the shared rendering, and the check and render commands, all running offline on recorded or local input. The first slice is a strict review of one diff against named standards, objections named with the rewrite each one would accept.
@@ -1584,8 +1584,8 @@ Seeded in October 2026. Setup has landed, and Rounds 1 to 22 have closed, with a
 - Slice 22 has landed. It carries the flags reading, the twentieth command, its sections standing per file verdict state in the order CK-8 states the judgements, each flag of a file standing in that state standing as one flag line in the form of CK-20, over the collection form of CK-12.
 - Contract, FIX-CK-31 met. It stands in full form in CONTRACT.md, and Round 22 closed on the merged slice 23 after three reviews, with the standards review approving, the spec review approving with findings at one Observation standing against the design record's wording, the red team approving clean on executed attack, and CodeRabbit returning no comments.
 - Slice 23 has landed. It carries the depth message repair under FIX-CK-31, the seventeen covered commands naming the depth refusal in their defect, with the render command's nesting fall and the split command's generic defect standing as they stand, and no reading of a file that parses rendering one byte differently.
-- Contract, CK-45 and CK-46 now stand in full form, the models pair, the models file and loader and the verdict pairs by model and the models reading, the twenty-first command. Round 23 has not closed.
-- Slice 24 is built and in review. It carries the models reading, the twenty-first command, its sections standing per model in first appearance order, each section holding one flag group per flag carrying a verdict of that model with the one pair of that model the flag carries, over the collection form of CK-12.
+- Contract, CK-45 and CK-46 met. They stand in full form in CONTRACT.md, and Round 23 closed on the merged slice 24 after three reviews, with the standards review approving with findings at four Observations, the spec review approving clean, the red team approving with findings at three Minors standing against the design record, and CodeRabbit returning one Minor.
+- Slice 24 has landed. It carries the models reading, the twenty-first command, its sections standing per model in first appearance order, each section holding one flag group per flag carrying a verdict of that model with the one pair of that model the flag carries, over the collection form of CK-12.
 - The Rust port has landed. It carries the behavior the Python package carried, checked against the same goldens, and the Python tree stands removed under PORT-9.
 - Local gate, cargo test, cargo fmt --check, and cargo clippy --all-targets -- -D warnings. CI runs the same commands.
 

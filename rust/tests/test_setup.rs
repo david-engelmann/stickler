@@ -24,7 +24,7 @@ fn agents_carries_the_canonical_marker() {
 #[test]
 fn readme_states_the_closed_round_count() {
     let text = read("README.md");
-    assert!(text.contains("Closed perfection rounds, 22 of 100"));
+    assert!(text.contains("Closed perfection rounds, 23 of 100"));
 }
 
 #[test]
@@ -198,11 +198,11 @@ fn readme_reports_the_round_4_standing() {
     // closure landed slice 23 and the count returned to
     // zero. Adjusted again with the Round 23 slice, as
     // the named mechanical consequence of slice 24
-    // standing in review, so the count stands at one
-    // while Round 23 stands built, until the Round 23
-    // closure lands slice 24 and the count returns to
+    // standing in review, so the count stood at one
+    // while Round 23 stood built, until the Round 23
+    // closure landed slice 24 and the count returned to
     // zero.
-    assert_eq!(text.matches("built and in review").count(), 1);
+    assert_eq!(text.matches("built and in review").count(), 0);
 }
 
 #[test]
@@ -220,7 +220,7 @@ fn readme_reports_the_round_5_standing() {
         example named as constructed, with the suite running offline \
         on the recorded and constructed sets.";
     assert!(text.lines().any(|line| line == slice_line));
-    assert!(text.contains("Closed perfection rounds, 22 of 100"));
+    assert!(text.contains("Closed perfection rounds, 23 of 100"));
 }
 
 #[test]
@@ -239,7 +239,7 @@ fn readme_reports_the_round_6_standing() {
         and census, with the suite running offline on the recorded \
         envelopes and sets.";
     assert!(text.lines().any(|line| line == slice_line));
-    assert!(text.contains("Closed perfection rounds, 22 of 100"));
+    assert!(text.contains("Closed perfection rounds, 23 of 100"));
 }
 
 #[test]
@@ -257,7 +257,7 @@ fn readme_reports_the_round_7_standing() {
         beside check, render, review, census, and rejudged, with the \
         suite running offline on the recorded verdicts.";
     assert!(text.lines().any(|line| line == slice_line));
-    assert!(text.contains("Closed perfection rounds, 22 of 100"));
+    assert!(text.contains("Closed perfection rounds, 23 of 100"));
 }
 
 #[test]
@@ -279,7 +279,7 @@ fn readme_reports_the_round_8_standing() {
         review, census, rejudged, and split, with the suite running \
         offline on the recorded verdicts.";
     assert!(text.lines().any(|line| line == slice_line));
-    assert!(text.contains("Closed perfection rounds, 22 of 100"));
+    assert!(text.contains("Closed perfection rounds, 23 of 100"));
 }
 
 #[test]
@@ -305,7 +305,7 @@ fn readme_reports_the_round_9_standing() {
         rejudged, split, and set review renderings, with the suite \
         running offline on the recorded verdicts.";
     assert!(text.lines().any(|line| line == slice_line));
-    assert!(text.contains("Closed perfection rounds, 22 of 100"));
+    assert!(text.contains("Closed perfection rounds, 23 of 100"));
 }
 
 #[test]
@@ -331,7 +331,7 @@ fn readme_reports_the_round_10_standing() {
         README brought to the fleet README standard, with the suite \
         running offline on the recorded verdicts.";
     assert!(text.lines().any(|line| line == slice_line));
-    assert!(text.contains("Closed perfection rounds, 22 of 100"));
+    assert!(text.contains("Closed perfection rounds, 23 of 100"));
 }
 
 #[test]
@@ -357,7 +357,7 @@ fn readme_reports_the_round_11_standing() {
         the set review rendering, with the suite running offline on the \
         recorded verdicts.";
     assert!(text.lines().any(|line| line == slice_line));
-    assert!(text.contains("Closed perfection rounds, 22 of 100"));
+    assert!(text.contains("Closed perfection rounds, 23 of 100"));
 }
 
 #[test]
@@ -385,7 +385,7 @@ fn readme_reports_the_round_12_status() {
         large change set and large diff under examples, with the suite \
         running offline on the recorded verdicts.";
     assert!(text.lines().any(|line| line == slice_line));
-    assert!(text.contains("Closed perfection rounds, 22 of 100"));
+    assert!(text.contains("Closed perfection rounds, 23 of 100"));
 }
 
 /// The Round 13 pins. The obligations pin fails against
@@ -905,7 +905,7 @@ fn readme_reports_the_round_13_status() {
         examples, with the suite running offline on the recorded \
         verdicts.";
     assert!(text.lines().any(|line| line == slice_line));
-    assert!(text.contains("Closed perfection rounds, 22 of 100"));
+    assert!(text.contains("Closed perfection rounds, 23 of 100"));
 }
 
 /// The Round 14 status pin, in the standing form. It
@@ -935,7 +935,7 @@ fn readme_reports_the_round_14_status() {
         the constructed shapes collection under examples, with the \
         suite running offline on the recorded verdicts.";
     assert!(text.lines().any(|line| line == slice_line));
-    assert!(text.contains("Closed perfection rounds, 22 of 100"));
+    assert!(text.contains("Closed perfection rounds, 23 of 100"));
 }
 
 /// The Round 15 status pin, in the standing form. It
@@ -967,7 +967,7 @@ fn readme_reports_the_round_15_status() {
         heads, and the constructed choices collection under examples, \
         with the suite running offline on the recorded verdicts.";
     assert!(text.lines().any(|line| line == slice_line));
-    assert!(text.contains("Closed perfection rounds, 22 of 100"));
+    assert!(text.contains("Closed perfection rounds, 23 of 100"));
 }
 
 /// The Round 16 status pin in slice form. It fails
@@ -995,7 +995,7 @@ fn readme_reports_the_round_16_status() {
         and choices, and the constructed categories collection under \
         examples, with the suite running offline on the recorded verdicts.";
     assert!(text.lines().any(|line| line == slice_line));
-    assert!(text.contains("Closed perfection rounds, 22 of 100"));
+    assert!(text.contains("Closed perfection rounds, 23 of 100"));
 }
 
 /// The Round 17 status pin in slice form. It fails
@@ -1026,7 +1026,7 @@ fn readme_reports_the_round_17_status() {
         constructed grounds collection under examples, with the suite \
         running offline on the recorded verdicts.";
     assert!(text.lines().any(|line| line == slice_line));
-    assert!(text.contains("Closed perfection rounds, 22 of 100"));
+    assert!(text.contains("Closed perfection rounds, 23 of 100"));
 }
 
 /// The Round 18 status pin in slice form. It fails
@@ -1058,7 +1058,7 @@ fn readme_reports_the_round_18_status() {
         and grounds, and the constructed judgements collection under \
         examples, with the suite running offline on the recorded verdicts.";
     assert!(text.lines().any(|line| line == slice_line));
-    assert!(text.contains("Closed perfection rounds, 22 of 100"));
+    assert!(text.contains("Closed perfection rounds, 23 of 100"));
 }
 
 #[test]
@@ -1076,7 +1076,7 @@ fn readme_reports_the_round_19_status() {
         file's recorded pairs standing whole on their flags, over the \
         collection form of CK-12.";
     assert!(text.lines().any(|line| line == slice_line));
-    assert!(text.contains("Closed perfection rounds, 22 of 100"));
+    assert!(text.contains("Closed perfection rounds, 23 of 100"));
 }
 
 #[test]
@@ -1171,7 +1171,7 @@ fn readme_reports_the_round_20_status() {
         state in the order CK-8 states the judgements, each file's recorded pairs \
         standing whole on their flags, over the collection form of CK-12.";
     assert!(text.lines().any(|line| line == slice_line));
-    assert!(text.contains("Closed perfection rounds, 22 of 100"));
+    assert!(text.contains("Closed perfection rounds, 23 of 100"));
 }
 
 /// The formats posture pin of the Round 20 slice. The
@@ -1239,7 +1239,7 @@ fn readme_reports_the_round_21_status() {
         that state standing as one flag line in the form of CK-20, over the \
         collection form of CK-12.";
     assert!(text.lines().any(|line| line == slice_line));
-    assert!(text.contains("Closed perfection rounds, 22 of 100"));
+    assert!(text.contains("Closed perfection rounds, 23 of 100"));
 }
 
 /// The formats posture pin of the Round 21 slice. The
@@ -1299,7 +1299,7 @@ fn readme_reports_the_round_22_status() {
     assert!(text.lines().any(|line| line == standing));
     let slice_line = "- Slice 23 has landed. It carries the depth message repair under FIX-CK-31, the seventeen covered commands naming the depth refusal in their defect, with the render command's nesting fall and the split command's generic defect standing as they stand, and no reading of a file that parses rendering one byte differently.";
     assert!(text.lines().any(|line| line == slice_line));
-    assert!(text.contains("Closed perfection rounds, 22 of 100"));
+    assert!(text.contains("Closed perfection rounds, 23 of 100"));
 }
 /// The Round 23 pins. The obligations pin fails
 /// against the tree Round 22 closed on by the
@@ -1322,11 +1322,11 @@ fn contract_carries_the_round_23_obligations() {
 #[test]
 fn readme_reports_the_round_23_status() {
     let text = read("README.md");
-    let standing = "- Contract, CK-45 and CK-46 now stand in full form, the models pair, the models file and loader and the verdict pairs by model and the models reading, the twenty-first command. Round 23 has not closed.";
+    let standing = "- Contract, CK-45 and CK-46 met. They stand in full form in CONTRACT.md, and Round 23 closed on the merged slice 24 after three reviews, with the standards review approving with findings at four Observations, the spec review approving clean, the red team approving with findings at three Minors standing against the design record, and CodeRabbit returning one Minor.";
     assert!(text.lines().any(|line| line == standing));
-    let slice_line = "- Slice 24 is built and in review. It carries the models reading, the twenty-first command, its sections standing per model in first appearance order, each section holding one flag group per flag carrying a verdict of that model with the one pair of that model the flag carries, over the collection form of CK-12.";
+    let slice_line = "- Slice 24 has landed. It carries the models reading, the twenty-first command, its sections standing per model in first appearance order, each section holding one flag group per flag carrying a verdict of that model with the one pair of that model the flag carries, over the collection form of CK-12.";
     assert!(text.lines().any(|line| line == slice_line));
-    assert!(text.contains("Closed perfection rounds, 22 of 100"));
+    assert!(text.contains("Closed perfection rounds, 23 of 100"));
 }
 
 /// The formats posture pin of the Round 23 slice.
