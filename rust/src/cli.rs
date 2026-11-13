@@ -267,6 +267,12 @@ fn review_command(path: &JString) -> ByteOutcome {
         Ok(text) => text,
     };
     let value = match json::parse(&text) {
+        Err(ParseError::TooDeep) => {
+            return text_outcome(
+                2,
+                render_set_defects(&["the file's JSON nesting is too deep to read".to_string()]),
+            );
+        }
         Err(_) => {
             return text_outcome(
                 2,
@@ -305,6 +311,12 @@ fn census_command(path: &JString) -> ByteOutcome {
         Ok(text) => text,
     };
     let value = match json::parse(&text) {
+        Err(ParseError::TooDeep) => {
+            return text_outcome(
+                2,
+                render_census_defects(&["the file's JSON nesting is too deep to read".to_string()]),
+            );
+        }
         Err(_) => {
             return text_outcome(
                 2,
@@ -331,6 +343,14 @@ fn rejudged_command(path: &JString) -> ByteOutcome {
         Ok(text) => text,
     };
     let value = match json::parse(&text) {
+        Err(ParseError::TooDeep) => {
+            return text_outcome(
+                2,
+                render_rejudged_defects(&[
+                    "the file's JSON nesting is too deep to read".to_string()
+                ]),
+            );
+        }
         Err(_) => {
             return text_outcome(
                 2,
@@ -385,6 +405,14 @@ fn contested_command(path: &JString) -> ByteOutcome {
         Ok(text) => text,
     };
     let value = match json::parse(&text) {
+        Err(ParseError::TooDeep) => {
+            return text_outcome(
+                2,
+                render_contested_defects(&[
+                    "the file's JSON nesting is too deep to read".to_string()
+                ]),
+            );
+        }
         Err(_) => {
             return text_outcome(
                 2,
@@ -413,6 +441,14 @@ fn pattern_command(path: &JString) -> ByteOutcome {
         Ok(text) => text,
     };
     let value = match json::parse(&text) {
+        Err(ParseError::TooDeep) => {
+            return text_outcome(
+                2,
+                render_pattern_defects(
+                    &["the file's JSON nesting is too deep to read".to_string()],
+                ),
+            );
+        }
         Err(_) => {
             return text_outcome(
                 2,
@@ -441,6 +477,12 @@ fn files_command(path: &JString) -> ByteOutcome {
         Ok(text) => text,
     };
     let value = match json::parse(&text) {
+        Err(ParseError::TooDeep) => {
+            return text_outcome(
+                2,
+                render_files_defects(&["the file's JSON nesting is too deep to read".to_string()]),
+            );
+        }
         Err(_) => {
             return text_outcome(
                 2,
@@ -469,6 +511,14 @@ fn borderline_command(path: &JString) -> ByteOutcome {
         Ok(text) => text,
     };
     let value = match json::parse(&text) {
+        Err(ParseError::TooDeep) => {
+            return text_outcome(
+                2,
+                render_borderline_defects(&[
+                    "the file's JSON nesting is too deep to read".to_string()
+                ]),
+            );
+        }
         Err(_) => {
             return text_outcome(
                 2,
@@ -497,6 +547,14 @@ fn outcomes_command(path: &JString) -> ByteOutcome {
         Ok(text) => text,
     };
     let value = match json::parse(&text) {
+        Err(ParseError::TooDeep) => {
+            return text_outcome(
+                2,
+                render_outcomes_defects(&[
+                    "the file's JSON nesting is too deep to read".to_string()
+                ]),
+            );
+        }
         Err(_) => {
             return text_outcome(
                 2,
@@ -525,6 +583,14 @@ fn verdicts_command(path: &JString) -> ByteOutcome {
         Ok(text) => text,
     };
     let value = match json::parse(&text) {
+        Err(ParseError::TooDeep) => {
+            return text_outcome(
+                2,
+                render_verdicts_defects(&[
+                    "the file's JSON nesting is too deep to read".to_string()
+                ]),
+            );
+        }
         Err(_) => {
             return text_outcome(
                 2,
@@ -553,6 +619,12 @@ fn shapes_command(path: &JString) -> ByteOutcome {
         Ok(text) => text,
     };
     let value = match json::parse(&text) {
+        Err(ParseError::TooDeep) => {
+            return text_outcome(
+                2,
+                render_shapes_defects(&["the file's JSON nesting is too deep to read".to_string()]),
+            );
+        }
         Err(_) => {
             return text_outcome(
                 2,
@@ -581,6 +653,14 @@ fn choices_command(path: &JString) -> ByteOutcome {
         Ok(text) => text,
     };
     let value = match json::parse(&text) {
+        Err(ParseError::TooDeep) => {
+            return text_outcome(
+                2,
+                render_choices_defects(
+                    &["the file's JSON nesting is too deep to read".to_string()],
+                ),
+            );
+        }
         Err(_) => {
             return text_outcome(
                 2,
@@ -609,6 +689,14 @@ fn categories_command(path: &JString) -> ByteOutcome {
         Ok(text) => text,
     };
     let value = match json::parse(&text) {
+        Err(ParseError::TooDeep) => {
+            return text_outcome(
+                2,
+                render_categories_defects(&[
+                    "the file's JSON nesting is too deep to read".to_string()
+                ]),
+            );
+        }
         Err(_) => {
             return text_outcome(
                 2,
@@ -637,6 +725,14 @@ fn grounds_command(path: &JString) -> ByteOutcome {
         Ok(text) => text,
     };
     let value = match json::parse(&text) {
+        Err(ParseError::TooDeep) => {
+            return text_outcome(
+                2,
+                render_grounds_defects(
+                    &["the file's JSON nesting is too deep to read".to_string()],
+                ),
+            );
+        }
         Err(_) => {
             return text_outcome(
                 2,
@@ -665,6 +761,14 @@ fn judgements_command(path: &JString) -> ByteOutcome {
         Ok(text) => text,
     };
     let value = match json::parse(&text) {
+        Err(ParseError::TooDeep) => {
+            return text_outcome(
+                2,
+                render_judgements_defects(&[
+                    "the file's JSON nesting is too deep to read".to_string()
+                ]),
+            );
+        }
         Err(_) => {
             return text_outcome(
                 2,
@@ -693,6 +797,14 @@ fn standings_command(path: &JString) -> ByteOutcome {
         Ok(text) => text,
     };
     let value = match json::parse(&text) {
+        Err(ParseError::TooDeep) => {
+            return text_outcome(
+                2,
+                render_standings_defects(&[
+                    "the file's JSON nesting is too deep to read".to_string()
+                ]),
+            );
+        }
         Err(_) => {
             return text_outcome(
                 2,
@@ -721,6 +833,12 @@ fn states_command(path: &JString) -> ByteOutcome {
         Ok(text) => text,
     };
     let value = match json::parse(&text) {
+        Err(ParseError::TooDeep) => {
+            return text_outcome(
+                2,
+                render_states_defects(&["the file's JSON nesting is too deep to read".to_string()]),
+            );
+        }
         Err(_) => {
             return text_outcome(
                 2,
@@ -749,6 +867,12 @@ fn flags_command(path: &JString) -> ByteOutcome {
         Ok(text) => text,
     };
     let value = match json::parse(&text) {
+        Err(ParseError::TooDeep) => {
+            return text_outcome(
+                2,
+                render_flags_defects(&["the file's JSON nesting is too deep to read".to_string()]),
+            );
+        }
         Err(_) => {
             return text_outcome(
                 2,

@@ -816,7 +816,49 @@ fn review_on_a_deeply_nested_file_is_malformed_with_exit_2() {
     let path = write_bytes(&dir, "set.json", data.as_bytes());
     let (code, out, _err) = run(&["review", &path]);
     assert_eq!(code, 2);
-    assert!(out.contains("Defect, the file does not hold a JSON change set\n"));
+    assert!(out.contains("Defect, the file's JSON nesting is too deep to read\n"));
+}
+#[test]
+fn every_covered_command_names_the_depth_refusal() {
+    let dir = temp_dir("depth-family");
+    let deep = write(&dir, "deep.json", &"[".repeat(10050));
+    let commands = [
+        "review",
+        "census",
+        "rejudged",
+        "contested",
+        "pattern",
+        "files",
+        "borderline",
+        "outcomes",
+        "verdicts",
+        "shapes",
+        "choices",
+        "categories",
+        "grounds",
+        "judgements",
+        "standings",
+        "states",
+        "flags",
+    ];
+    for command in commands {
+        let (code, out, _err) = run(&[command, &deep]);
+        assert_eq!(code, 2, "{command} over a depth refusal\n{out}");
+        assert!(
+            out.contains("Defect, the file's JSON nesting is too deep to read\n"),
+            "{command} names the depth refusal\n{out}"
+        );
+        assert!(
+            !out.contains("the file does not hold a JSON"),
+            "{command} names no generic defect over a depth refusal\n{out}"
+        );
+    }
+    let (code, out, _err) = run(&["census", &deep]);
+    assert_eq!(code, 2);
+    assert_eq!(
+        out,
+        "Census\nVerdict, invalid\nDefects, 1\nDefect, the file's JSON nesting is too deep to read\n"
+    );
 }
 
 #[test]
@@ -1309,7 +1351,7 @@ fn the_binary_holds_the_nesting_boundary_on_the_object_shape() {
     assert_eq!(
         out,
         b"Change set review\nVerdict, invalid\nDefects, 1\n\
-          Defect, the file does not hold a JSON change set\n"
+          Defect, the file's JSON nesting is too deep to read\n"
             .to_vec()
     );
 }

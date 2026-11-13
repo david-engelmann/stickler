@@ -21,7 +21,8 @@
 //! refuse it. Nesting past the depth the Python reader reaches is
 //! refused as its own error kind, because the Python surfaces
 //! part on it. The render command lets the failure propagate and
-//! the review command names the file as holding no change set.
+//! the commands that read a change set or a collection name the
+//! depth in their defect.
 
 use num_bigint::BigInt;
 use num_rational::BigRational;
