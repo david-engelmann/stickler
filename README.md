@@ -1415,11 +1415,11 @@ Contested flags, 2
 
 ## Status
 
-Seeded in October 2026. Setup has landed, and Rounds 1 to 20 have closed, with all slices merged on main. Part of the Spectacle line in the 39 repo storefront perfection programme.
+Seeded in October 2026. Setup has landed, and Rounds 1 to 21 have closed, with all slices merged on main. Part of the Spectacle line in the 39 repo storefront perfection programme.
 
 ## Programme status
 
-- Closed perfection rounds, 20 of 100. A round counts only when a full cycle of work, audit, review, red team, and approval has closed. Seeding and setup are not rounds.
+- Closed perfection rounds, 21 of 100. A round counts only when a full cycle of work, audit, review, red team, and approval has closed. Seeding and setup are not rounds.
 - Contract, SETUP-1 to SETUP-4 and CK-1 to CK-6 met. CK-1 to CK-4 stand in full form in CONTRACT.md with the Round 1 repair amendments, and Round 1 closed on the merged slice 2 after three reviews, a repair pass, and an approving re-review.
 - Contract, CK-5 and CK-6 met. They stand in full form in CONTRACT.md with the Round 2 repair amendments, and Round 2 closed on the merged slice 3 after three reviews, a repair pass, and an approving re-review.
 - Slice 2 has landed. It carries the review core, the built in checker with its four named shapes, the shared rendering, and the check and render commands, all running offline on recorded or local input. The first slice is a strict review of one diff against named standards, objections named with the rewrite each one would accept.
@@ -1460,8 +1460,8 @@ Seeded in October 2026. Setup has landed, and Rounds 1 to 20 have closed, with a
 - Slice 20 has landed. It carries the standings reading, the eighteenth command, its sections standing per file in first appearance order across the collection, each file's recorded pairs standing whole on their flags, over the collection form of CK-12.
 - Contract, CK-41 and CK-42 met. They stand in full form in CONTRACT.md, and Round 20 closed on the merged slice 21 after three reviews, with the red team approving clean on recomputation of the states reading, and the constructed collection's handed word requirement restated in its loadable form under FIX-CK-30.
 - Slice 21 has landed. It carries the states reading, the nineteenth command, its sections standing per file verdict state in the order CK-8 states the judgements, each file's recorded pairs standing whole on their flags, over the collection form of CK-12.
-- Contract, CK-43 and CK-44 now stand in full form, the flags pair, the flags file and loader and the flag lines by file verdict state and the flags reading, the twentieth command. Round 21 has not closed.
-- Slice 22 is built and in review. It carries the flags reading, the twentieth command, its sections standing per file verdict state in the order CK-8 states the judgements, each flag of a file standing in that state standing as one flag line in the form of CK-20, over the collection form of CK-12.
+- Contract, CK-43 and CK-44 met. They stand in full form in CONTRACT.md, and Round 21 closed on the merged slice 22 after three reviews, with the red team approving on recomputation of the flags golden and the collection figures, the design's MD posture stated in its corrected form from birth, and its one Minor, a header's base posture clause, restated to its true split.
+- Slice 22 has landed. It carries the flags reading, the twentieth command, its sections standing per file verdict state in the order CK-8 states the judgements, each flag of a file standing in that state standing as one flag line in the form of CK-20, over the collection form of CK-12.
 - The Rust port has landed. It carries the behavior the Python package carried, checked against the same goldens, and the Python tree stands removed under PORT-9.
 - Local gate, cargo test, cargo fmt --check, and cargo clippy --all-targets -- -D warnings. CI runs the same commands.
 
