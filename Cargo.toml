@@ -121,6 +121,10 @@ name = "test_standings_reading"
 path = "rust/tests/test_standings_reading.rs"
 
 [[test]]
+name = "test_states_reading"
+path = "rust/tests/test_states_reading.rs"
+
+[[test]]
 name = "test_verdicts"
 path = "rust/tests/test_verdicts.rs"
 
