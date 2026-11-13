@@ -1368,11 +1368,11 @@ Abstained, 3
 
 ## Status
 
-Seeded in October 2026. Setup has landed, and Rounds 1 to 19 have closed, with all slices merged on main. Part of the Spectacle line in the 39 repo storefront perfection programme.
+Seeded in October 2026. Setup has landed, and Rounds 1 to 20 have closed, with all slices merged on main. Part of the Spectacle line in the 39 repo storefront perfection programme.
 
 ## Programme status
 
-- Closed perfection rounds, 19 of 100. A round counts only when a full cycle of work, audit, review, red team, and approval has closed. Seeding and setup are not rounds.
+- Closed perfection rounds, 20 of 100. A round counts only when a full cycle of work, audit, review, red team, and approval has closed. Seeding and setup are not rounds.
 - Contract, SETUP-1 to SETUP-4 and CK-1 to CK-6 met. CK-1 to CK-4 stand in full form in CONTRACT.md with the Round 1 repair amendments, and Round 1 closed on the merged slice 2 after three reviews, a repair pass, and an approving re-review.
 - Contract, CK-5 and CK-6 met. They stand in full form in CONTRACT.md with the Round 2 repair amendments, and Round 2 closed on the merged slice 3 after three reviews, a repair pass, and an approving re-review.
 - Slice 2 has landed. It carries the review core, the built in checker with its four named shapes, the shared rendering, and the check and render commands, all running offline on recorded or local input. The first slice is a strict review of one diff against named standards, objections named with the rewrite each one would accept.
@@ -1411,8 +1411,8 @@ Seeded in October 2026. Setup has landed, and Rounds 1 to 19 have closed, with a
 - Slice 19 has landed. It carries the judgements reading over a recorded collection of change sets, one section per judgement in the order CK-8 states them, naming each flag of the collection standing under that judgement and carrying at least one recorded verdict with file, line, pattern, and the set it stands in, the verdict pairs of the flag in the standing set review form, and a closing count of the pairs stated per section, with closing counts over the whole collection, with the judgements example under examples standing over the same collection as the census example, and the judgements command beside check, render, review, census, rejudged, split, contested, pattern, files, borderline, outcomes, verdicts, shapes, choices, categories, and grounds, and the constructed judgements collection under examples, with the suite running offline on the recorded verdicts.
 - Contract, CK-39 and CK-40 met. They stand in full form in CONTRACT.md, and Round 19 closed on the merged slice 20 after three reviews, no Major on any axis, with the design record's catcher enumerations corrected in the programme records and the standings header restated to its executed postures in the slice.
 - Slice 20 has landed. It carries the standings reading, the eighteenth command, its sections standing per file in first appearance order across the collection, each file's recorded pairs standing whole on their flags, over the collection form of CK-12.
-- Contract, CK-41 and CK-42 now stand in full form, the states pair, the states file and loader and the file verdict state and the states reading, the nineteenth command. Round 20 has not closed.
-- Slice 21 is built and in review. It carries the states reading, the nineteenth command, its sections standing per file verdict state in the order CK-8 states the judgements, each file's recorded pairs standing whole on their flags, over the collection form of CK-12.
+- Contract, CK-41 and CK-42 met. They stand in full form in CONTRACT.md, and Round 20 closed on the merged slice 21 after three reviews, with the red team approving clean on recomputation of the states reading, and the constructed collection's handed word requirement restated in its loadable form under FIX-CK-30.
+- Slice 21 has landed. It carries the states reading, the nineteenth command, its sections standing per file verdict state in the order CK-8 states the judgements, each file's recorded pairs standing whole on their flags, over the collection form of CK-12.
 - The Rust port has landed. It carries the behavior the Python package carried, checked against the same goldens, and the Python tree stands removed under PORT-9.
 - Local gate, cargo test, cargo fmt --check, and cargo clippy --all-targets -- -D warnings. CI runs the same commands.
 
