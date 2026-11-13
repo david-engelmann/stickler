@@ -18,6 +18,7 @@ pub mod flags;
 pub mod grounds;
 pub mod json;
 pub mod judgements;
+pub mod models;
 pub mod outcomes;
 pub mod pattern;
 pub mod pycompat;

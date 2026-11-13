@@ -699,6 +699,59 @@ fn the_usage_text_names_the_flags_command() {
     assert!(err.contains("Usage, stickler flags FLAGS_JSON\n"), "{err}");
 }
 
+/// The models pins of the Round 23 slice. The three
+/// pins stand in the form of the flags pins, the
+/// example pin failing against the tree Round 22
+/// closed on by execution, the base command line
+/// answering a models invocation with the usage text
+/// and a nonzero exit and no rendering on its output
+/// stream, so the example pin fails on its exit code
+/// and output and the malformed pin on its output,
+/// and the usage pin fails by content, on the text it
+/// reads.
+#[test]
+fn models_on_the_example_exits_0_and_matches_its_golden() {
+    let example = root()
+        .join("examples")
+        .join("models.json")
+        .to_string_lossy()
+        .into_owned();
+    let (code, out, _err) = run(&["models", &example]);
+    assert_eq!(code, 0);
+    assert!(out.starts_with("Models\n"));
+    let golden = std::fs::read_to_string(root().join("examples").join("models.txt")).unwrap();
+    assert_eq!(out, golden);
+}
+
+#[test]
+fn models_on_a_malformed_file_exits_2_and_names_the_defects() {
+    let dir = temp_dir("models-malformed");
+    let path = write(
+        &dir,
+        "models.json",
+        "{\"sets\": [{\"change_set\": {\"files\": []}}]}",
+    );
+    let (code, out, _err) = run(&["models", &path]);
+    assert_eq!(code, 2);
+    assert_eq!(
+        out,
+        "Models\n\
+         Verdict, invalid\n\
+         Defects, 1\n\
+         Defect, sets[0].label is missing\n"
+    );
+}
+
+#[test]
+fn the_usage_text_names_the_models_command() {
+    let (code, _out, err) = run(&["models"]);
+    assert_eq!(code, 2);
+    assert!(
+        err.contains("Usage, stickler models MODELS_JSON\n"),
+        "{err}"
+    );
+}
+
 #[test]
 fn the_smelly_example_sends_back_and_the_clean_example_accepts() {
     let smelly = root()
@@ -840,6 +893,7 @@ fn every_covered_command_names_the_depth_refusal() {
         "standings",
         "states",
         "flags",
+        "models",
     ];
     for command in commands {
         let (code, out, _err) = run(&[command, &deep]);
@@ -1136,7 +1190,8 @@ const USAGE_BYTES: &[u8] = b"Usage, stickler check DIFF_FILE\n\
     Usage, stickler judgements JUDGEMENTS_JSON\n\
     Usage, stickler standings STANDINGS_JSON\n\
     Usage, stickler states STATES_JSON\n\
-    Usage, stickler flags FLAGS_JSON\n";
+    Usage, stickler flags FLAGS_JSON\n\
+    Usage, stickler models MODELS_JSON\n";
 
 #[test]
 fn check_names_a_readable_raw_byte_diff_by_its_surrogate_defect() {

@@ -100,9 +100,9 @@ Contested flags, 2
 
 ## Usage
 
-The twenty commands each read one file and print one rendering. The examples below run over the files under examples, and every output block is captured from the command it follows.
+The twenty one commands each read one file and print one rendering. The examples below run over the files under examples, and every output block is captured from the command it follows.
 
-The input formats are specified in CONTRACT.md, in the section The formats, version 1, which states each form completely with its literal keys, the review form of CK-1 that render reads, the unified diff as text under CK-3 and CK-5 that check reads, the change set form of CK-6 and CK-8 that review reads, the collection form of CK-12 that the collection commands read, the pair form of CK-14 that rejudged reads, the split form of CK-15 that split reads, the collection form under CK-27 that verdicts reads, the collection form under CK-29 that shapes reads, the collection form under CK-31 that choices reads, the collection form under CK-33 that categories reads, the collection form under CK-35 that grounds reads, and the collection form under CK-37 that judgements reads, and the collection form under CK-39 that standings reads, and the collection form under CK-41 that states reads, and the collection form under CK-43 that flags reads.
+The input formats are specified in CONTRACT.md, in the section The formats, version 1, which states each form completely with its literal keys, the review form of CK-1 that render reads, the unified diff as text under CK-3 and CK-5 that check reads, the change set form of CK-6 and CK-8 that review reads, the collection form of CK-12 that the collection commands read, the pair form of CK-14 that rejudged reads, the split form of CK-15 that split reads, the collection form under CK-27 that verdicts reads, the collection form under CK-29 that shapes reads, the collection form under CK-31 that choices reads, the collection form under CK-33 that categories reads, the collection form under CK-35 that grounds reads, and the collection form under CK-37 that judgements reads, and the collection form under CK-39 that standings reads, and the collection form under CK-41 that states reads, and the collection form under CK-43 that flags reads, and the collection form under CK-45 that models reads.
 
 The check command reads a unified diff and builds a review with the built in checker. The checker holds a fixed set of rules over the shapes of code a diff can carry, and each objection it raises names the rule the code breaks and the change that would clear the objection. The six rules read Python shaped code, a bare except clause, a def line default, a print call and their kin, and a diff of another language's code raises nothing and reads as an empty accepted review, so the silence a stranger meets is a scope fact and not a judgement of their code.
 
@@ -1413,6 +1413,126 @@ Flags read, 18
 Contested flags, 2
 ```
 
+The models command reads one models file and prints the models reading, one section per model standing in the collection in first appearance order, each section holding the flag groups of that model in collection order with the one pair each flag carries of that model, and the reading closing with the counts it shares with the verdicts reading and the census.
+
+```sh
+stickler models examples/models.json
+```
+
+```text
+Models
+
+Model, jev-1.13.0
+harvest.py, line 6, near placeholder name, set, pilot set
+Verdict, jev-1.13.0, abstained
+Reason, jev-1.13.0 chose stickler with confidence 0.32 and abstained
+harvest.py, line 7, near placeholder name, set, pilot set
+Verdict, jev-1.13.0, stickler
+Reason, jev-1.13.0 chose stickler with confidence 0.68
+harvest.py, line 12, broad handler, set, pilot set
+Verdict, jev-1.13.0, stickler
+Reason, jev-1.13.0 chose stickler with confidence 1.0
+harvest.py, line 18, broad handler, set, pilot set
+Verdict, jev-1.13.0, stickler
+Reason, jev-1.13.0 chose stickler with confidence 1.0
+windows.py, line 6, shared member default, set, pilot set
+Verdict, jev-1.13.0, stickler
+Reason, jev-1.13.0 chose stickler with confidence 0.96
+windows.py, line 10, shared member default, set, pilot set
+Verdict, jev-1.13.0, stickler
+Reason, jev-1.13.0 chose stickler with confidence 0.76
+windows.py, line 14, shared member default, set, pilot set
+Verdict, jev-1.13.0, stickler
+Reason, jev-1.13.0 chose stickler with confidence 0.98
+windows.py, line 18, shared member default, set, pilot set
+Verdict, jev-1.13.0, stickler
+Reason, jev-1.13.0 chose stickler with confidence 0.74
+sorting.py, line 6, near placeholder name, set, pilot set
+Verdict, jev-1.13.0, stickler
+Reason, jev-1.13.0 chose stickler with confidence 0.78
+sorting.py, line 11, near placeholder name, set, pilot set
+Verdict, jev-1.13.0, abstained
+Reason, jev-1.13.0 chose stickler with confidence 0.2 and abstained
+sorting.py, line 12, near placeholder name, set, pilot set
+Verdict, jev-1.13.0, stickler
+Reason, jev-1.13.0 chose stickler with confidence 0.78
+sorting.py, line 15, broad handler, set, pilot set
+Verdict, jev-1.13.0, stickler
+Reason, jev-1.13.0 chose stickler with confidence 0.98
+ledger.py, line 6, near placeholder name, set, constructed round 4 example
+Verdict, jev-1.13.0, stickler
+Reason, jev-1.13.0 chose stickler with confidence 0.81
+ledger.py, line 7, near placeholder name, set, constructed round 4 example
+Verdict, jev-1.13.0, clean
+Reason, jev-1.13.0 chose clean with confidence 0.9
+cache.py, line 7, shared member default, set, constructed round 4 example
+Verdict, jev-1.13.0, stickler
+Reason, jev-1.13.0 chose stickler with confidence 0.92
+cache.py, line 10, broad handler, set, constructed round 4 example
+Verdict, jev-1.13.0, abstained
+Reason, jev-1.13.0 chose stickler with confidence 0.35 and abstained
+cache.py, line 15, near placeholder name, set, constructed round 4 example
+Verdict, jev-1.13.0, clean
+Reason, jev-1.13.0 chose clean with confidence 0.74
+Verdicts read, 17
+
+Model, openai/gpt-6-luna
+harvest.py, line 12, broad handler, set, pilot set
+Verdict, openai/gpt-6-luna, stickler
+Reason, openai/gpt-6-luna chose stickler with confidence 0.99
+harvest.py, line 18, broad handler, set, pilot set
+Verdict, openai/gpt-6-luna, stickler
+Reason, openai/gpt-6-luna chose stickler with confidence 0.99
+windows.py, line 6, shared member default, set, pilot set
+Verdict, openai/gpt-6-luna, stickler
+Reason, openai/gpt-6-luna chose stickler with confidence 0.99
+windows.py, line 10, shared member default, set, pilot set
+Verdict, openai/gpt-6-luna, stickler
+Reason, openai/gpt-6-luna chose stickler with confidence 0.99
+windows.py, line 14, shared member default, set, pilot set
+Verdict, openai/gpt-6-luna, stickler
+Reason, openai/gpt-6-luna chose stickler with confidence 0.99
+windows.py, line 18, shared member default, set, pilot set
+Verdict, openai/gpt-6-luna, stickler
+Reason, openai/gpt-6-luna chose stickler with confidence 0.99
+sorting.py, line 6, near placeholder name, set, pilot set
+Verdict, openai/gpt-6-luna, stickler
+Reason, openai/gpt-6-luna chose stickler with confidence 0.97
+sorting.py, line 11, near placeholder name, set, pilot set
+Verdict, openai/gpt-6-luna, stickler
+Reason, openai/gpt-6-luna chose stickler with confidence 0.88
+sorting.py, line 12, near placeholder name, set, pilot set
+Verdict, openai/gpt-6-luna, stickler
+Reason, openai/gpt-6-luna chose stickler with confidence 0.88
+sorting.py, line 15, broad handler, set, pilot set
+Verdict, openai/gpt-6-luna, stickler
+Reason, openai/gpt-6-luna chose stickler with confidence 0.99
+ledger.py, line 6, near placeholder name, set, constructed round 4 example
+Verdict, openai/gpt-6-luna, clean
+Reason, openai/gpt-6-luna chose clean with confidence 0.77
+ledger.py, line 7, near placeholder name, set, constructed round 4 example
+Verdict, openai/gpt-6-luna, clean
+Reason, openai/gpt-6-luna chose clean with confidence 0.66
+cache.py, line 7, shared member default, set, constructed round 4 example
+Verdict, openai/gpt-6-luna, stickler
+Reason, openai/gpt-6-luna chose stickler with confidence 0.88
+cache.py, line 10, broad handler, set, constructed round 4 example
+Verdict, openai/gpt-6-luna, clean
+Reason, openai/gpt-6-luna chose clean with confidence 0.83
+cache.py, line 15, near placeholder name, set, constructed round 4 example
+Verdict, openai/gpt-6-luna, stickler
+Reason, openai/gpt-6-luna chose stickler with confidence 0.69
+Verdicts read, 15
+
+Sets read, 3
+Flags read, 18
+Flags with verdicts, 17
+Verdicts read, 32
+Chose stickler, 24
+Chose clean, 5
+Abstained, 3
+```
+
 ## Status
 
 Seeded in October 2026. Setup has landed, and Rounds 1 to 22 have closed, with all slices merged on main. Part of the Spectacle line in the 39 repo storefront perfection programme.
@@ -1464,6 +1584,8 @@ Seeded in October 2026. Setup has landed, and Rounds 1 to 22 have closed, with a
 - Slice 22 has landed. It carries the flags reading, the twentieth command, its sections standing per file verdict state in the order CK-8 states the judgements, each flag of a file standing in that state standing as one flag line in the form of CK-20, over the collection form of CK-12.
 - Contract, FIX-CK-31 met. It stands in full form in CONTRACT.md, and Round 22 closed on the merged slice 23 after three reviews, with the standards review approving, the spec review approving with findings at one Observation standing against the design record's wording, the red team approving clean on executed attack, and CodeRabbit returning no comments.
 - Slice 23 has landed. It carries the depth message repair under FIX-CK-31, the seventeen covered commands naming the depth refusal in their defect, with the render command's nesting fall and the split command's generic defect standing as they stand, and no reading of a file that parses rendering one byte differently.
+- Contract, CK-45 and CK-46 now stand in full form, the models pair, the models file and loader and the verdict pairs by model and the models reading, the twenty-first command. Round 23 has not closed.
+- Slice 24 is built and in review. It carries the models reading, the twenty-first command, its sections standing per model in first appearance order, each section holding one flag group per flag carrying a verdict of that model with the one pair of that model the flag carries, over the collection form of CK-12.
 - The Rust port has landed. It carries the behavior the Python package carried, checked against the same goldens, and the Python tree stands removed under PORT-9.
 - Local gate, cargo test, cargo fmt --check, and cargo clippy --all-targets -- -D warnings. CI runs the same commands.
 

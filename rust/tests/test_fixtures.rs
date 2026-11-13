@@ -141,6 +141,25 @@
 //! additionally able to fail against a
 //! miscounted construction on the counts they
 //! read.
+//! The constructed models collection of Round 23 is
+//! pinned by dimension pins read off the fixture
+//! itself under the parameters the preamble of the
+//! Round 23 section states, by the eight shape
+//! requirements that preamble names, counted from
+//! the models reading and the verdicts reading over
+//! the collection, and by the closing relations of
+//! the models reading against the verdicts reading
+//! and the census over the same collection and
+//! against its own section counts. The fixture
+//! file stands absent against the tree Round 22
+//! closed on, so the dimension and requirement
+//! pins fail there by the fixture's absence read
+//! at run time, and the relation pins are compile
+//! absent by the models module's absence in their
+//! models half, and the dimension and requirement
+//! pins are additionally able to fail against a
+//! miscounted construction on the counts they
+//! read.
 //! Every pin runs offline on the constructed fixtures, and no
 //! pin makes a live call.
 
@@ -158,11 +177,13 @@ use stickler::flags::{flags_reading_of, load_flags};
 use stickler::grounds::{grounds_reading_of, load_grounds};
 use stickler::json::{parse, JsonValue};
 use stickler::judgements::{judgements_reading_of, load_judgements};
+use stickler::models::{load_models, models_reading_of};
 use stickler::outcomes::outcomes_reading_of;
 use stickler::pattern::pattern_reading_of;
 use stickler::render::{
     render_borderline, render_categories, render_choices, render_flags, render_grounds,
-    render_judgements, render_shapes, render_standings, render_states, render_verdicts,
+    render_judgements, render_models, render_shapes, render_standings, render_states,
+    render_verdicts,
 };
 use stickler::shapes::{load_shapes, shapes_reading_of};
 use stickler::standings::{load_standings, standings_reading_of};
@@ -3756,4 +3777,459 @@ fn flags_collection_internal_sums_hold() {
         flags_sum + unsectioned_flags,
         count_after(closings, "Flags read, ")
     );
+}
+/// The first dimension pin of the constructed models
+/// collection, two sets standing in it, each named
+/// as constructed, read off the fixture itself.
+#[test]
+fn models_collection_holds_two_sets_named_as_constructed() {
+    let value = parsed_example("models_collection.json");
+    assert!(load_models(&value).is_empty());
+    let sets = value.get("sets").and_then(|sets| sets.as_array()).unwrap();
+    assert_eq!(sets.len(), 2);
+    for set in sets {
+        let label = set
+            .get("label")
+            .and_then(|label| label.as_jstring())
+            .unwrap()
+            .to_rust_string()
+            .unwrap();
+        assert!(
+            label.contains("constructed"),
+            "the set {label} is named as constructed"
+        );
+    }
+}
+
+/// The second dimension pin of the constructed models
+/// collection, each set holding between three and six
+/// files, read off the fixture itself.
+#[test]
+fn models_collection_files_per_set_stand_between_three_and_six() {
+    let value = parsed_example("models_collection.json");
+    let sets = value.get("sets").and_then(|sets| sets.as_array()).unwrap();
+    for set in sets {
+        let files = set
+            .get("change_set")
+            .unwrap()
+            .get("files")
+            .and_then(|files| files.as_array())
+            .unwrap();
+        assert!(
+            (3..=6).contains(&files.len()),
+            "a set holds {} files",
+            files.len()
+        );
+    }
+}
+
+/// The third dimension pin of the constructed models
+/// collection, the flagged lines across the collection
+/// standing between sixteen and twenty eight, counted
+/// from the census over the collection.
+#[test]
+fn models_collection_flagged_lines_stand_between_sixteen_and_twenty_eight() {
+    let value = parsed_example("models_collection.json");
+    let census = census_of(&value);
+    assert!(
+        (16..=28).contains(&census.total.borderline),
+        "the collection holds {} flagged lines",
+        census.total.borderline
+    );
+}
+
+/// The fourth dimension pin of the constructed models
+/// collection, the verdicts across the collection
+/// standing between twenty four and forty four, counted
+/// from the verdicts reading over the collection.
+#[test]
+fn models_collection_verdicts_stand_between_twenty_four_and_forty_four() {
+    let value = parsed_example("models_collection.json");
+    let reading = verdicts_reading_of(&value);
+    let verdicts: usize = reading
+        .sections
+        .iter()
+        .flat_map(|section| section.groups.iter())
+        .map(|group| group.verdicts.len())
+        .sum();
+    assert!(
+        (24..=44).contains(&verdicts),
+        "the collection holds {verdicts} verdicts"
+    );
+}
+
+/// The first shape requirement of the constructed
+/// models collection, at least two models standing in
+/// the collection, each carrying recorded verdicts in
+/// both of its sets, counted from the models reading.
+#[test]
+fn models_collection_two_models_stand_and_each_carries_verdicts_in_both_sets() {
+    let value = parsed_example("models_collection.json");
+    let reading = models_reading_of(&value);
+    assert!(reading.sections.len() >= 2, "two models stand");
+    for section in &reading.sections {
+        for label in ["constructed models set 1", "constructed models set 2"] {
+            assert!(
+                section.groups.iter().any(|group| group.set_label == label),
+                "the model {} carries verdicts in {label}",
+                section.model
+            );
+        }
+    }
+}
+
+/// The second shape requirement, every model's
+/// collection total of pairs standing at least at
+/// eight, counted from the models reading.
+#[test]
+fn models_collection_every_models_pairs_stand_at_least_at_eight() {
+    let value = parsed_example("models_collection.json");
+    let reading = models_reading_of(&value);
+    assert!(!reading.sections.is_empty());
+    for section in &reading.sections {
+        assert!(
+            section.groups.len() >= 8,
+            "the model {} carries {} pairs",
+            section.model,
+            section.groups.len()
+        );
+    }
+}
+
+/// The third shape requirement, at least one flag
+/// carrying recorded verdicts of both models, so the
+/// flag stands as a flag group in two sections, each
+/// group holding the one pair of its section's model,
+/// counted from the models reading.
+#[test]
+fn models_collection_a_flag_carries_verdicts_of_both_models_and_stands_in_two_sections() {
+    let value = parsed_example("models_collection.json");
+    let reading = models_reading_of(&value);
+    assert_eq!(reading.sections.len(), 2);
+    let stands = reading.sections[0].groups.iter().any(|group| {
+        reading.sections[1].groups.iter().any(|other| {
+            other.file == group.file
+                && other.line == group.line
+                && other.pattern == group.pattern
+                && other.set_label == group.set_label
+        })
+    });
+    assert!(
+        stands,
+        "one flag carries verdicts of both models and stands in two sections"
+    );
+    for section in &reading.sections {
+        for group in &section.groups {
+            assert_eq!(group.verdict.model, section.model);
+        }
+    }
+}
+
+/// The fourth shape requirement, at least one flag
+/// carrying a recorded verdict of exactly one model,
+/// the other model standing on other flags of the
+/// same file, so a file's pairs split across the
+/// sections while the flag itself stands in one,
+/// counted from the models reading.
+#[test]
+fn models_collection_a_flag_carries_a_verdict_of_one_model_alone_in_a_file_the_other_model_stands_in(
+) {
+    let value = parsed_example("models_collection.json");
+    let reading = models_reading_of(&value);
+    assert_eq!(reading.sections.len(), 2);
+    let stands = reading.sections.iter().enumerate().any(|(index, section)| {
+        let other = &reading.sections[1 - index];
+        section.groups.iter().any(|group| {
+            !other.groups.iter().any(|held| {
+                held.file == group.file
+                    && held.line == group.line
+                    && held.pattern == group.pattern
+                    && held.set_label == group.set_label
+            }) && other.groups.iter().any(|held| held.file == group.file)
+        })
+    });
+    assert!(
+        stands,
+        "one flag carries a verdict of one model alone in a file the other model stands in"
+    );
+}
+
+/// The fifth shape requirement, at least one flag
+/// carrying recorded verdicts of both labels, counted
+/// from the verdicts reading.
+#[test]
+fn models_collection_a_flag_carries_verdicts_of_both_labels() {
+    let value = parsed_example("models_collection.json");
+    let verdicts = verdicts_reading_of(&value);
+    let stands = verdicts
+        .sections
+        .iter()
+        .flat_map(|section| section.groups.iter())
+        .any(|group| {
+            group
+                .verdicts
+                .iter()
+                .any(|verdict| verdict.choice == "stickler")
+                && group
+                    .verdicts
+                    .iter()
+                    .any(|verdict| verdict.choice == "clean")
+        });
+    assert!(stands, "one flag carries verdicts of both labels");
+}
+
+/// The sixth shape requirement, at least one flag
+/// carrying only abstentions, label choices standing
+/// at confidences below one half under CK-7, counted
+/// from the verdicts reading.
+#[test]
+fn models_collection_a_flag_carries_only_abstentions() {
+    let value = parsed_example("models_collection.json");
+    let verdicts = verdicts_reading_of(&value);
+    let stands = verdicts
+        .sections
+        .iter()
+        .flat_map(|section| section.groups.iter())
+        .any(|group| !group.verdicts.is_empty() && group.verdicts.iter().all(is_abstention));
+    assert!(stands, "one flag carries only abstentions");
+}
+
+/// The seventh shape requirement, at least one flag
+/// carrying no recorded verdicts at all, so it stands
+/// in no section and in no flag group, while the
+/// closing flags read count counts it, counted from
+/// the files reading against the models reading.
+#[test]
+fn models_collection_a_flag_carries_no_verdicts_and_stands_in_no_section() {
+    let value = parsed_example("models_collection.json");
+    let reading = models_reading_of(&value);
+    let files = files_reading_of(&value);
+    let verdicts = verdicts_reading_of(&value);
+    let stands = files.sections.iter().any(|files_section| {
+        files_section.flags.iter().any(|flag| {
+            !verdicts
+                .sections
+                .iter()
+                .filter(|section| section.label == flag.set_label)
+                .flat_map(|section| section.groups.iter())
+                .any(|group| group.file == files_section.file && group.line == flag.line)
+                && !reading
+                    .sections
+                    .iter()
+                    .flat_map(|section| section.groups.iter())
+                    .any(|group| {
+                        group.file == files_section.file
+                            && group.line == flag.line
+                            && group.set_label == flag.set_label
+                    })
+        })
+    });
+    assert!(
+        stands,
+        "one flag carries no verdicts and stands in no section"
+    );
+    assert_eq!(
+        reading.flags_read, 20,
+        "the closing flags read count counts the verdictless flags"
+    );
+}
+
+/// The eighth shape requirement's first half, at
+/// least one model carrying pairs of all three
+/// outcomes, a chose stickler pair, a chose clean
+/// pair, and an abstained pair standing in its one
+/// section, counted from the models reading.
+#[test]
+fn models_collection_a_model_carries_pairs_of_all_three_outcomes() {
+    let value = parsed_example("models_collection.json");
+    let reading = models_reading_of(&value);
+    let stands = reading.sections.iter().any(|section| {
+        let outcomes: Vec<&str> = section
+            .groups
+            .iter()
+            .map(|group| verdict_outcome(&group.verdict))
+            .collect();
+        outcomes.contains(&"stickler")
+            && outcomes.contains(&"clean")
+            && outcomes.contains(&"abstained")
+    });
+    assert!(stands, "one model carries pairs of all three outcomes");
+}
+
+/// The eighth shape requirement's second half, every
+/// section carrying pairs standing on at least three
+/// files, counted from the models reading.
+#[test]
+fn models_collection_every_section_carries_pairs_on_at_least_three_files() {
+    let value = parsed_example("models_collection.json");
+    let reading = models_reading_of(&value);
+    assert!(!reading.sections.is_empty());
+    for section in &reading.sections {
+        let mut files: Vec<&str> = Vec::new();
+        for group in &section.groups {
+            if !files.contains(&group.file.as_str()) {
+                files.push(group.file.as_str());
+            }
+        }
+        assert!(
+            files.len() >= 3,
+            "the section {} carries pairs on {} files",
+            section.model,
+            files.len()
+        );
+    }
+}
+
+/// The standing routes pin of the constructed models
+/// collection, the two models of the collection being
+/// the two standing routes as the pilot record names
+/// them, counted from the models reading.
+#[test]
+fn models_collection_the_two_models_of_the_collection_are_the_two_standing_routes() {
+    let value = parsed_example("models_collection.json");
+    let reading = models_reading_of(&value);
+    let models: Vec<&str> = reading
+        .sections
+        .iter()
+        .map(|section| section.model.as_str())
+        .collect();
+    assert_eq!(models, vec!["jev-1.13.0", "openai/gpt-6-luna"]);
+}
+
+/// The census relation of the constructed models
+/// collection, each of the closing counts of the
+/// models reading standing against the same named
+/// count of the census over the same collection, the
+/// sets read count the count of the sets the census
+/// reads and the flags read count its total block's
+/// flagged lines, and the command output standing
+/// byte identical to the library rendering.
+#[test]
+fn models_collection_closings_bind_to_the_census() {
+    let (code, out) = run_on_example("models", "models_collection.json");
+    assert_eq!(code, 0);
+    let value = parsed_example("models_collection.json");
+    let census = census_of(&value);
+    let closings = out.split("\n\n").last().unwrap();
+    assert_eq!(count_after(closings, "Sets read, "), census.sets.len());
+    assert_eq!(
+        count_after(closings, "Flags read, "),
+        census.total.borderline
+    );
+    assert_eq!(out, render_models(&models_reading_of(&value)));
+}
+
+/// The verdicts relation of the constructed models
+/// collection, each of the seven closing counts of
+/// the models reading standing against the same
+/// named count of the verdicts reading over the same
+/// collection, both readings run here.
+#[test]
+fn models_collection_closings_bind_to_the_verdicts_reading() {
+    let value = parsed_example("models_collection.json");
+    let models = render_models(&models_reading_of(&value));
+    let verdicts = render_verdicts(&verdicts_reading_of(&value));
+    let models_closings = models.split("\n\n").last().unwrap();
+    let verdicts_closings = verdicts.split("\n\n").last().unwrap();
+    for prefix in [
+        "Sets read, ",
+        "Flags read, ",
+        "Flags with verdicts, ",
+        "Verdicts read, ",
+        "Chose stickler, ",
+        "Chose clean, ",
+        "Abstained, ",
+    ] {
+        assert_eq!(
+            count_after(models_closings, prefix),
+            count_after(verdicts_closings, prefix),
+            "{prefix} binds to the verdicts reading"
+        );
+    }
+}
+
+/// The sections relation of the constructed models
+/// collection, the flag groups of each section being
+/// exactly the pairs the verdicts reading states for
+/// the flags carrying a verdict of that section's
+/// model, in the same collection order, each group
+/// holding the one pair of that model, both readings
+/// run here. It catches the per set gathering
+/// mutation and the whole group seating mutation
+/// over the constructed collection.
+#[test]
+fn models_collection_sections_bind_to_the_verdicts_reading() {
+    let value = parsed_example("models_collection.json");
+    let reading = models_reading_of(&value);
+    let verdicts = verdicts_reading_of(&value);
+    for section in &reading.sections {
+        let mut expected: Vec<(String, usize, String, String)> = Vec::new();
+        for verdicts_section in &verdicts.sections {
+            for group in &verdicts_section.groups {
+                if group
+                    .verdicts
+                    .iter()
+                    .any(|entry| entry.model == section.model)
+                {
+                    expected.push((
+                        group.file.clone(),
+                        group.line,
+                        group.pattern.clone(),
+                        verdicts_section.label.clone(),
+                    ));
+                }
+            }
+        }
+        let stated: Vec<(String, usize, String, String)> = section
+            .groups
+            .iter()
+            .map(|group| {
+                (
+                    group.file.clone(),
+                    group.line,
+                    group.pattern.clone(),
+                    group.set_label.clone(),
+                )
+            })
+            .collect();
+        assert_eq!(stated, expected, "section {}", section.model);
+        for group in &section.groups {
+            assert_eq!(group.verdict.model, section.model);
+        }
+    }
+}
+
+/// The internal sums of the models reading over the
+/// constructed models collection, the section
+/// verdicts read counts summing to the closing
+/// verdicts read count, the three outcome counts
+/// summing to the same, and the flag groups over the
+/// sections counting to it and not to the flags with
+/// verdicts count, read from the rendered text.
+#[test]
+fn models_collection_internal_sums_hold() {
+    let value = parsed_example("models_collection.json");
+    let rendered = render_models(&models_reading_of(&value));
+    let blocks: Vec<&str> = rendered.split("\n\n").collect();
+    assert_eq!(blocks.len(), 4);
+    let mut verdicts_sum = 0usize;
+    for block in &blocks[1..3] {
+        verdicts_sum += count_after(block, "Verdicts read, ");
+    }
+    let closings = blocks[3];
+    assert_eq!(verdicts_sum, count_after(closings, "Verdicts read, "));
+    assert_eq!(
+        count_after(closings, "Chose stickler, ")
+            + count_after(closings, "Chose clean, ")
+            + count_after(closings, "Abstained, "),
+        count_after(closings, "Verdicts read, ")
+    );
+    let reading = models_reading_of(&value);
+    let groups: usize = reading
+        .sections
+        .iter()
+        .map(|section| section.groups.len())
+        .sum();
+    assert_eq!(groups, count_after(closings, "Verdicts read, "));
+    assert!(groups > count_after(closings, "Flags with verdicts, "));
 }
