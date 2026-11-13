@@ -143,7 +143,7 @@ use stickler::render::{
 use stickler::shapes::{load_shapes, shapes_reading_of};
 use stickler::standings::{load_standings, standings_reading_of};
 use stickler::states::{load_states, states_reading_of};
-use stickler::verdicts::{is_contested, line_outcome, verdict_outcome};
+use stickler::verdicts::{is_abstention, is_contested, line_outcome, verdict_outcome};
 use stickler::verdicts_reading::{load_verdicts, verdicts_reading_of};
 
 fn root() -> PathBuf {
@@ -2894,32 +2894,35 @@ fn states_collection_a_flag_carries_only_abstentions() {
     assert!(stands, "one flag carries only abstentions");
 }
 
-/// The ninth shape requirement, at least one flag
-/// carrying only handed word verdicts inside a
-/// sectioned file, counted from the states reading,
-/// one group standing whose every verdict's choice
-/// stands as written as the word abstained, at
-/// confidences that are no abstentions, so the group
-/// counts in the verdicts read count and in no outcome
-/// count under the one outcome helper's reading of a
-/// true abstention.
+/// The ninth shape requirement, restated in its
+/// loadable form by FIX-CK-30. As first stated it
+/// stood as one flag carrying only handed word
+/// verdicts, the word abstained standing as a choice
+/// at a confidence that is no abstention, and no
+/// loader admitted file can carry such a flag, the
+/// shared validation naming a choice outside the two
+/// labels a defect in every collection it loads. The
+/// requirement stands as one flag carrying only
+/// abstentions by confidence under CK-7, label
+/// choices standing below one half, inside a file
+/// standing unjudged on those verdicts, counted from
+/// the states reading, one group of the unjudged
+/// section standing whose every verdict is an
+/// abstention under the predicate of CK-7.
 #[test]
-fn states_collection_a_flag_carries_only_handed_word_verdicts() {
+fn states_collection_a_flag_carries_only_abstentions_in_a_file_standing_unjudged() {
     let value = parsed_example("states_collection.json");
     let reading = states_reading_of(&value);
-    let stands = reading
-        .sections
-        .iter()
-        .flat_map(|section| section.files.iter())
-        .flat_map(|file_group| file_group.groups.iter())
-        .any(|group| {
+    let stands = reading.sections[2].files.iter().any(|file_group| {
+        file_group.groups.iter().any(|group| {
             !group.verdicts.is_empty()
-                && group
-                    .verdicts
-                    .iter()
-                    .all(|verdict| verdict.choice == "abstained")
-        });
-    assert!(stands, "one flag carries only handed word verdicts");
+                && group.verdicts.iter().all(|verdict| is_abstention(verdict))
+        })
+    });
+    assert!(
+        stands,
+        "one flag carries only abstentions in a file standing unjudged"
+    );
 }
 
 /// The tenth shape requirement, at least one flag
