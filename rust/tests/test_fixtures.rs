@@ -118,6 +118,26 @@
 //! states half, and the dimension and requirement
 //! pins are additionally able to fail against a
 //! miscounted construction on the counts they read.
+//! The constructed flags collection of Round 21 is
+//! pinned by dimension pins read off the fixture
+//! itself under the parameters the preamble of the
+//! Round 21 section states, by the eight shape
+//! requirements that preamble names, counted from
+//! the flags reading, the verdicts reading, and
+//! the files reading over the collection, and by
+//! the closing relations of the flags reading
+//! against the census, the files reading, and the
+//! states reading over the same collection and
+//! against its own section counts. The fixture
+//! file stands absent against the tree Round 20
+//! closed on, so the dimension and requirement
+//! pins fail there by the fixture's absence read
+//! at run time, and the four relation pins are
+//! compile absent by the flags module's absence
+//! in their flags half, and the dimension and
+//! requirement pins are additionally able to fail
+//! against a miscounted construction on the
+//! counts they read.
 //! Every pin runs offline on the constructed fixtures, and no
 //! pin makes a live call.
 
