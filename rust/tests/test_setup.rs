@@ -1271,3 +1271,66 @@ fn readme_reports_the_round_22_status() {
     assert!(text.lines().any(|line| line == slice_line));
     assert!(text.contains("Closed perfection rounds, 22 of 100"));
 }
+/// The Round 23 pins. The obligations pin fails
+/// against the tree Round 22 closed on by the
+/// absence of the obligations it reads, the status
+/// pin fails on that tree's README by the absence of
+/// the two lines it holds, each line read whole as
+/// the standing pins read theirs, and the formats
+/// pin passes against that tree by design, in the
+/// family's standing posture for that pin kind.
+#[test]
+fn contract_carries_the_round_23_obligations() {
+    let text = read("CONTRACT.md");
+    assert!(text.contains("## Round 23 obligations, full form"));
+    assert!(text.contains("- CK-45."));
+    assert!(text.contains("- CK-46."));
+    assert!(text.contains("The command line gains a twenty-first command"));
+    assert!(text.contains("this loader is its seventeenth caller"));
+}
+
+#[test]
+fn readme_reports_the_round_23_status() {
+    let text = read("README.md");
+    let standing = "- Contract, CK-45 and CK-46 now stand in full form, the models pair, the models file and loader and the verdict pairs by model and the models reading, the twenty-first command. Round 23 has not closed.";
+    assert!(text.lines().any(|line| line == standing));
+    let slice_line = "- Slice 24 is built and in review. It carries the models reading, the twenty-first command, its sections standing per model in first appearance order, each section holding one flag group per flag carrying a verdict of that model with the one pair of that model the flag carries, over the collection form of CK-12.";
+    assert!(text.lines().any(|line| line == slice_line));
+    assert!(text.contains("Closed perfection rounds, 22 of 100"));
+}
+
+/// The formats posture pin of the Round 23 slice.
+/// The section The formats, version 1 carries no
+/// enumeration of the collection form's readers and
+/// no text of CK-45, the readers standing
+/// definitional under FIX-CK-29 and this round
+/// taking no amendment there. It passes against the
+/// tree Round 22 closed on by design, and the plan
+/// names it with its reason, because it guards a
+/// restatement no part of this round makes, and it
+/// fails on any build that amends the section or
+/// seats an enumeration in it.
+#[test]
+fn the_formats_section_carries_no_readers_enumeration_and_no_ck_45() {
+    let text = read("CONTRACT.md");
+    let formats = text.split("## The formats, version 1").nth(1).unwrap_or("");
+    assert!(
+        !formats.contains("CK-45"),
+        "the formats section names no CK-45"
+    );
+    assert!(
+        formats.contains(
+            "The readers of the collection form are the commands whose \
+             obligations state a file of this form, each named in its own \
+             obligation, and no list of them stands in this section."
+        ),
+        "the definitional readers sentence stands in the formats section"
+    );
+    assert!(
+        !formats.contains(
+            "The census, contested, pattern, files, borderline, and \
+             outcomes commands read the collection form."
+        ),
+        "the enumeration stands nowhere in the formats section"
+    );
+}
