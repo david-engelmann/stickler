@@ -130,14 +130,17 @@
 //! states reading over the same collection and
 //! against its own section counts. The fixture
 //! file stands absent against the tree Round 20
-//! closed on, so the dimension and requirement
-//! pins fail there by the fixture's absence read
-//! at run time, and the four relation pins are
-//! compile absent by the flags module's absence
-//! in their flags half, and the dimension and
-//! requirement pins are additionally able to fail
-//! against a miscounted construction on the
-//! counts they read.
+//! closed on, so the dimension pins after the
+//! first fail there by the fixture's absence read
+//! at run time, and the first dimension pin and
+//! the requirement pins are compile absent by
+//! the flags module's absence, and the four
+//! relation pins are compile absent by the flags
+//! module's absence in their flags half, and the
+//! dimension and requirement pins are
+//! additionally able to fail against a
+//! miscounted construction on the counts they
+//! read.
 //! Every pin runs offline on the constructed fixtures, and no
 //! pin makes a live call.
 
