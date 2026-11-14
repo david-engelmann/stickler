@@ -54,7 +54,8 @@ pub struct ModelsSection {
 /// A whole models reading, holding its sections in
 /// first appearance order across the collection and the
 /// counts of the collection the builder counts, the
-/// sets read, the flagged lines, and the verdicts read,
+/// sets read, the flagged lines, the flags carrying at
+/// least one recorded verdict, and the verdicts read,
 /// a verdict standing in its flag's group under its own
 /// model whatever its choice, so the verdicts read
 /// count counts every verdict the review's blocks
@@ -65,6 +66,7 @@ pub struct ModelsReading {
     pub sections: Vec<ModelsSection>,
     pub sets_read: usize,
     pub flags_read: usize,
+    pub flags_with_verdicts: usize,
     pub verdicts_read: usize,
 }
 
@@ -100,8 +102,11 @@ pub fn load_models(value: &JsonValue) -> Vec<String> {
 /// pair stands in exactly one section and a flag
 /// carrying no recorded verdict stands in no section.
 /// The counts stand over the whole collection, the
-/// verdicts read count counting every verdict the
-/// review's blocks carry. A set the loader refused
+/// flags with verdicts count counting each block
+/// carrying at least one verdict once at each standing
+/// of its entry, however many models its verdicts
+/// name, and the verdicts read count counting every
+/// verdict the review's blocks carry. A set the loader refused
 /// reads as the groups its members still yield, in the
 /// posture the set readings hold, and the command line
 /// never renders one.
@@ -109,6 +114,7 @@ pub fn models_reading_of(value: &JsonValue) -> ModelsReading {
     let mut sections: Vec<ModelsSection> = Vec::new();
     let mut sets_read = 0usize;
     let mut flags_read = 0usize;
+    let mut flags_with_verdicts = 0usize;
     let mut verdicts_read = 0usize;
     if let Some(entries) = value.get("sets").and_then(|sets| sets.as_array()) {
         for entry in entries {
@@ -122,6 +128,9 @@ pub fn models_reading_of(value: &JsonValue) -> ModelsReading {
                 for result in review_changeset(member) {
                     for block in &result.blocks {
                         flags_read += 1;
+                        if !block.verdicts.is_empty() {
+                            flags_with_verdicts += 1;
+                        }
                         for verdict in &block.verdicts {
                             verdicts_read += 1;
                             let index = match sections
@@ -154,6 +163,7 @@ pub fn models_reading_of(value: &JsonValue) -> ModelsReading {
         sections,
         sets_read,
         flags_read,
+        flags_with_verdicts,
         verdicts_read,
     }
 }
