@@ -1351,9 +1351,11 @@ fn contract_carries_the_round_24_obligations() {
     assert!(text.contains("labels need not be unique"));
     assert!(text.contains("## Round 24 repair amendment"));
     assert!(text.contains("- FIX-CK-32."));
-    assert!(
-        text.contains("naming a handed model name, file name, pattern, label, choice, or reason")
-    );
+    let ck46 = text
+        .lines()
+        .find(|line| line.starts_with("- CK-46."))
+        .unwrap_or("");
+    assert!(ck46.contains("no handed model name, file name, pattern, label, choice, or reason"));
 }
 
 #[test]

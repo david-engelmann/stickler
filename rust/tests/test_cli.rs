@@ -1555,7 +1555,15 @@ fn closing_block(out: &str) -> &str {
 /// seat it touches, and the grain stands witnessed
 /// whole at the verdicts seat, whose four section
 /// closings over the pilot fixture stand asserted
-/// beside its closing counts.
+/// beside its closing counts. The outcomes closing
+/// stands asserted whole in the same form, its
+/// three judged lines standing in the block over
+/// both fixtures, where an earlier form of this
+/// pin asserted that seat by its first two lines
+/// alone, so a build that gathers the outcomes
+/// reading's groups through a deduplication of
+/// its own fails at that seat as the shared
+/// forms fail at theirs.
 #[test]
 fn every_collection_command_counts_a_repeated_entry_at_each_standing() {
     let dir = temp_dir("repeated-entry");
@@ -1657,14 +1665,16 @@ fn every_collection_command_counts_a_repeated_entry_at_each_standing() {
     }
     let (code, out, _err) = run(&["outcomes", &pilot_path]);
     assert_eq!(code, 0, "outcomes over the pilot fixture\n{out}");
-    assert!(
-        closing_block(&out).starts_with("Sets read, 4\nFlags read, 30\n"),
+    assert_eq!(
+        closing_block(&out),
+        "Sets read, 4\nFlags read, 30\nJudged stickler, 25\nJudged clean, 2\nUnjudged, 3",
         "outcomes closing over the pilot fixture\n{out}"
     );
     let (code, out, _err) = run(&["outcomes", &constructed_path]);
     assert_eq!(code, 0, "outcomes over the constructed fixture\n{out}");
-    assert!(
-        closing_block(&out).starts_with("Sets read, 4\nFlags read, 24\n"),
+    assert_eq!(
+        closing_block(&out),
+        "Sets read, 4\nFlags read, 24\nJudged stickler, 17\nJudged clean, 4\nUnjudged, 3",
         "outcomes closing over the constructed fixture\n{out}"
     );
     let (code, out, _err) = run(&["census", &pilot_path]);
