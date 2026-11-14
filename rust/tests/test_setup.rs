@@ -206,8 +206,13 @@ fn readme_reports_the_round_4_standing() {
     // standing in review, so the count stood at one
     // while Round 24 stood built, until the Round 24
     // closure landed slice 25 and the count returned to
+    // zero. Adjusted again with the Round 25 slice, as
+    // the named mechanical consequence of slice 26
+    // standing in review, so the count stood at one
+    // while Round 25 stood built, until the Round 25
+    // closure landed slice 26 and the count returned to
     // zero.
-    assert_eq!(text.matches("built and in review").count(), 0);
+    assert_eq!(text.matches("built and in review").count(), 1);
 }
 
 #[test]
@@ -1364,6 +1369,31 @@ fn readme_reports_the_round_24_status() {
     let standing = "- Contract, CK-47 met, with FIX-CK-32 spent. They stand in full form in CONTRACT.md, and Round 24 closed on the merged slice 25 after three reviews, with the standards review approving with findings at two Observations, the spec review approving with findings at two Observations, the red team approving with findings at two Minors and one Observation, both Minors standing as CodeRabbit's two inline Minors on the slice, adjudicated valid on the code and cured in the slice by the repair at e3ffc300, and CodeRabbit returning two Minors. The wider executed mutation sets stand against the design record's split statements as the spec review adjudicated them, PA at the verdicts seat felling the fix forward pin beside the family pin, through the binding of its models figure to the verdicts reading over the same fixture, PC felling the six standings pins over the standings collection beside the family pin, the once rule's witnesses at the distinct entries grain, and PE in both its forms felling the fix forward pin, whose collection stands as one entry standing twice under a collection loader, and the three duplicate labels and unread fields pins of CK-12, which a loader refusing or skipping repeated labels fells by definition, each set the charged defect acting on a standing witness of the same rule, with the family pin's own discrimination executed exact at every seat. The contested count of the PD leg stands computed at two homes, the builder's field and the closing recompute in render_contested, and the executed leg stands seated at both, where the design record's PD wording names the builder alone. The family pin's outcomes seat stood asserted by its first two lines alone at the slice head, and the repair cured that grain by asserting the closing whole. The build record's PE passed total stands at 1031 against the red team's executed 1033 passed on the final head, the build figure summing to the tests commit census of 1036, with the failing set identical under both counts.";
     assert!(text.lines().any(|line| line == standing));
     let slice_line = "- Slice 25 has landed. It carries the repeated entry standing of CK-47, pinned at the command surface over the sixteen collection commands and the rejudged pair of one entry standing twice, and the fencing enumeration of CK-46 completed under FIX-CK-32, with no rendering over any collection moving.";
+    assert!(text.lines().any(|line| line == slice_line));
+    assert!(text.contains("Closed perfection rounds, 24 of 100"));
+}
+
+/// The Round 25 pins. The obligations pin fails
+/// against the tree Round 24 closed on by the
+/// absence of the obligations it reads, and the
+/// status pin fails on that tree's README by the
+/// absence of the two lines it holds, each line
+/// read whole as the standing pins read theirs.
+#[test]
+fn contract_carries_the_round_25_obligations() {
+    let text = read("CONTRACT.md");
+    assert!(text.contains("## Round 25 obligations, full form"));
+    assert!(text.contains("- CK-48."));
+    assert!(text.contains("The checker judgements of CK-30 and CK-34 stand at each standing"));
+    assert!(text.contains("No judgement gathering and no judgement count deduplicates a standing"));
+}
+
+#[test]
+fn readme_reports_the_round_25_status() {
+    let text = read("README.md");
+    let standing = "- Contract, CK-48 now stands in full form, the checker judgement standing of a repeated set entry across the shapes, categories, and census readings. Round 25 has not closed.";
+    assert!(text.lines().any(|line| line == standing));
+    let slice_line = "- Slice 26 is built and in review. It carries the checker judgement standing of a repeated entry under CK-48, pinned at the command surface over the sixteen collection commands, with no rendering over any collection moving.";
     assert!(text.lines().any(|line| line == slice_line));
     assert!(text.contains("Closed perfection rounds, 24 of 100"));
 }

@@ -1733,3 +1733,216 @@ fn a_rejudged_pair_of_one_entry_standing_twice_holds_at_every_flag() {
         "the pair's closing stands in full\n{out}"
     );
 }
+
+/// The pin of CK-48. One collection carrying the
+/// round 2 set entry of the standing census
+/// collection at two standings beside the pilot
+/// set entry and the constructed round 4 example
+/// stands driven over the sixteen collection
+/// commands, the round 2 entry standing as the
+/// one entry of the fixture whose files carry
+/// checker judgements, and at each command the
+/// closing figures stand asserted whole, the
+/// judgement figures standing at each standing
+/// at the shapes, categories, and census seats.
+/// A build that gathers a set's judgements only
+/// at the first standing of its label, that
+/// tallies them once per distinct label in the
+/// census, that keys its gathering on the fields
+/// a judgement line prints, or whose loader
+/// skips a repeated entry fails here at the seat
+/// it touches, where the family pin of CK-47
+/// cannot see the failure, its fixtures carrying
+/// no checker judgements for a defect to drop.
+#[test]
+fn every_collection_command_counts_the_checker_judgements_of_a_repeated_entry_at_each_standing() {
+    let dir = temp_dir("repeated-entry-judgements");
+    let text = std::fs::read_to_string(root().join("examples/census.json")).unwrap();
+    let entries = set_entries(&text);
+    let round2 = entry_named(&entries, "round 2 set");
+    let pilot = entry_named(&entries, "pilot set");
+    let constructed = entry_named(&entries, "constructed round 4 example");
+    let path = write(
+        &dir,
+        "round2_twice.json",
+        &collection_text(&[round2, pilot, round2, constructed]),
+    );
+    let seven = "Sets read, 4\nFlags read, 18\nFlags with verdicts, 17\n\
+        Verdicts read, 32\nChose stickler, 24\nChose clean, 5\nAbstained, 3";
+    for command in ["verdicts", "models", "judgements", "grounds", "choices"] {
+        let (code, out, _err) = run(&[command, &path]);
+        assert_eq!(code, 0, "{command} over the judgement fixture\n{out}");
+        assert_eq!(
+            closing_block(&out),
+            seven,
+            "{command} closing over the judgement fixture\n{out}"
+        );
+    }
+    let per_file = "Sets read, 4\nFiles read, 5\nFlags read, 18\n\
+        Flags with verdicts, 17\nVerdicts read, 32\nChose stickler, 24\n\
+        Chose clean, 5\nAbstained, 3";
+    for command in ["standings", "states"] {
+        let (code, out, _err) = run(&[command, &path]);
+        assert_eq!(code, 0, "{command} over the judgement fixture\n{out}");
+        assert_eq!(
+            closing_block(&out),
+            per_file,
+            "{command} closing over the judgement fixture\n{out}"
+        );
+    }
+    let seats: [(&str, &str); 5] = [
+        (
+            "flags",
+            "Sets read, 4\nFiles read, 5\nFlags read, 18\nContested flags, 2",
+        ),
+        (
+            "files",
+            "Sets read, 4\nFiles read, 5\nFlags read, 18\nContested flags, 2",
+        ),
+        (
+            "pattern",
+            "Sets read, 4\nFlags read, 18\nContested flags, 2",
+        ),
+        (
+            "contested",
+            "Sets read, 4\nFlags read, 18\nContested flags, 2\nSets with contested flags, 1",
+        ),
+        (
+            "borderline",
+            "Sets standing, 2\nBorderline flags, 18\nSets read, 4",
+        ),
+    ];
+    for (command, block) in seats {
+        let (code, out, _err) = run(&[command, &path]);
+        assert_eq!(code, 0, "{command} over the judgement fixture\n{out}");
+        assert_eq!(
+            closing_block(&out),
+            block,
+            "{command} closing over the judgement fixture\n{out}"
+        );
+    }
+    let (code, out, _err) = run(&["outcomes", &path]);
+    assert_eq!(code, 0, "outcomes over the judgement fixture\n{out}");
+    assert_eq!(
+        closing_block(&out),
+        "Sets read, 4\nFlags read, 18\nJudged stickler, 14\nJudged clean, 2\nUnjudged, 2",
+        "outcomes closing over the judgement fixture\n{out}"
+    );
+    let (code, out, _err) = run(&["shapes", &path]);
+    assert_eq!(code, 0, "shapes over the judgement fixture\n{out}");
+    assert_eq!(
+        closing_block(&out),
+        "Sets read, 4\nJudgements read, 10",
+        "shapes closing over the judgement fixture\n{out}"
+    );
+    for line in [
+        "report.py, judgement 2, smell, set, round 2 set",
+        "report.py, judgement 3, smell, set, round 2 set",
+        "report.py, judgement 1, structure, set, round 2 set",
+        "basket.py, judgement 2, structure, set, round 2 set",
+        "basket.py, judgement 1, structure, set, round 2 set",
+    ] {
+        assert_eq!(
+            out.matches(line).count(),
+            2,
+            "the judgement line {line} stands at each standing\n{out}"
+        );
+    }
+    assert_eq!(
+        out.matches("Judgements read, 2\n").count(),
+        5,
+        "each carrying shape section reads its judgements at each standing\n{out}"
+    );
+    assert!(
+        out.contains("Shape, placeholder name\nNo judgements\nJudgements read, 0\n"),
+        "the placeholder name section stands empty\n{out}"
+    );
+    let order = [
+        "Shape, bare except",
+        "Shape, print call",
+        "Shape, mutable default",
+        "Shape, placeholder name",
+        "Shape, call default",
+        "Shape, class attribute",
+    ];
+    let positions: Vec<usize> = order
+        .iter()
+        .map(|head| out.find(head).expect("a shape section stands"))
+        .collect();
+    assert!(
+        positions.windows(2).all(|pair| pair[0] < pair[1]),
+        "the shape sections stand in their stated order\n{out}"
+    );
+    let (code, out, _err) = run(&["categories", &path]);
+    assert_eq!(code, 0, "categories over the judgement fixture\n{out}");
+    assert_eq!(
+        closing_block(&out),
+        "Sets read, 4\nJudgements read, 10",
+        "categories closing over the judgement fixture\n{out}"
+    );
+    for line in [
+        "basket.py, judgement 1, class attribute, set, round 2 set",
+        "basket.py, judgement 2, call default, set, round 2 set",
+        "report.py, judgement 1, mutable default, set, round 2 set",
+        "report.py, judgement 2, bare except, set, round 2 set",
+        "report.py, judgement 3, print call, set, round 2 set",
+    ] {
+        assert_eq!(
+            out.matches(line).count(),
+            2,
+            "the judgement line {line} stands at each standing\n{out}"
+        );
+    }
+    assert!(
+        out.contains("Category, naming\nNo judgements\nJudgements read, 0\n"),
+        "the naming section stands empty\n{out}"
+    );
+    assert_eq!(
+        out.matches("Judgements read, 6\n").count(),
+        1,
+        "the structure section reads its judgements at each standing\n{out}"
+    );
+    assert_eq!(
+        out.matches("Judgements read, 4\n").count(),
+        1,
+        "the smell section reads its judgements at each standing\n{out}"
+    );
+    let (code, out, _err) = run(&["census", &path]);
+    assert_eq!(code, 0, "census over the judgement fixture\n{out}");
+    let round2_block = "Set, round 2 set\nFiles, 3\nJudgements, 5\n\
+        Shape, bare except, 1\nShape, print call, 1\nShape, mutable default, 1\n\
+        Shape, placeholder name, 0\nShape, call default, 1\nShape, class attribute, 1\n\
+        Borderline, 0\nPattern, near placeholder name, 0\nPattern, broad handler, 0\n\
+        Pattern, shared member default, 0\nVerdicts, none recorded";
+    assert_eq!(
+        out.matches(round2_block).count(),
+        2,
+        "the round 2 set's census block stands at each standing\n{out}"
+    );
+    assert_eq!(
+        closing_block(&out),
+        "Total\nSets, 4\nFiles, 11\nJudgements, 10\n\
+            Shape, bare except, 2\nShape, print call, 2\nShape, mutable default, 2\n\
+            Shape, placeholder name, 0\nShape, call default, 2\nShape, class attribute, 2\n\
+            Borderline, 18\nPattern, near placeholder name, 9\nPattern, broad handler, 4\n\
+            Pattern, shared member default, 5\nVerdict lines, stickler 14, clean 2\n\
+            Unjudged, 2\nContested, 2",
+        "census total over the judgement fixture\n{out}"
+    );
+    let (code, out, _err) = run(&["verdicts", &path]);
+    assert_eq!(code, 0, "verdicts over the judgement fixture\n{out}");
+    assert_eq!(
+        out.matches("Verdicts, none recorded\nVerdicts read, 0\n")
+            .count(),
+        2,
+        "the round 2 set's section closing stands at each of its standings\n{out}"
+    );
+    assert!(
+        out.contains("Verdicts read, 22\n"),
+        "the pilot set's section closing stands\n{out}"
+    );
+    assert!(
+        out.contains("\nVerdicts read, 10\n"),
+        "the constructed entry's section closing stands\n{out}"
+    );
+}
