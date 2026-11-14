@@ -1349,14 +1349,17 @@ pub fn render_flags(reading: &FlagsReading) -> String {
 /// of the pairs stated, and the closing verdicts read
 /// count prints as the sum over the sections stated,
 /// in the closed form FIX-CK-20 states, and the three
-/// outcome counts and the flags with verdicts count
-/// print as the counts over the pairs and flags the
-/// sections state, the flag groups over the sections
-/// counting to the verdicts read count and not to the
-/// flags with verdicts count, one group standing per
-/// pair. The closing sets read and flags read counts
-/// stand as the builder counts them, in the carve out
-/// FIX-CK-21 states. Every field prints under the one
+/// outcome counts print as the counts over the pairs
+/// the sections state, the flag groups over the
+/// sections counting to the verdicts read count and
+/// not to the flags with verdicts count, one group
+/// standing per pair. The closing sets read, flags
+/// read, and flags with verdicts counts stand as the
+/// builder counts them, in the carve out FIX-CK-21
+/// states, the flags with verdicts count counting a
+/// flag once at each standing of its block, however
+/// many sections its pairs stand in. Every field
+/// prints under the one
 /// line rule, the model name of a section head fenced
 /// like every other field, so the rendering holds the
 /// rule for any reading it is handed, as the collection
@@ -1365,8 +1368,6 @@ pub fn render_flags(reading: &FlagsReading) -> String {
 /// identical.
 pub fn render_models(reading: &ModelsReading) -> String {
     let mut lines = vec!["Models".to_string()];
-    let mut seen: Vec<(&str, usize, &str, &str)> = Vec::new();
-    let mut flags_with_verdicts = 0usize;
     let mut verdicts_read = 0usize;
     let mut chose_stickler = 0usize;
     let mut chose_clean = 0usize;
@@ -1383,16 +1384,6 @@ pub fn render_models(reading: &ModelsReading) -> String {
                 one_line_field(&group.pattern),
                 one_line_field(&group.set_label)
             ));
-            let key = (
-                group.file.as_str(),
-                group.line,
-                group.pattern.as_str(),
-                group.set_label.as_str(),
-            );
-            if !seen.contains(&key) {
-                seen.push(key);
-                flags_with_verdicts += 1;
-            }
             let entry = &group.verdict;
             section_verdicts += 1;
             if is_abstention(entry) {
@@ -1421,7 +1412,10 @@ pub fn render_models(reading: &ModelsReading) -> String {
     lines.push(String::new());
     lines.push(format!("Sets read, {}", reading.sets_read));
     lines.push(format!("Flags read, {}", reading.flags_read));
-    lines.push(format!("Flags with verdicts, {flags_with_verdicts}"));
+    lines.push(format!(
+        "Flags with verdicts, {}",
+        reading.flags_with_verdicts
+    ));
     lines.push(format!("Verdicts read, {verdicts_read}"));
     lines.push(format!("Chose stickler, {chose_stickler}"));
     lines.push(format!("Chose clean, {chose_clean}"));

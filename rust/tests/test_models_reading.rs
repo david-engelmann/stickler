@@ -95,7 +95,16 @@
 //! helper. The closing counts pin catches MF,
 //! under which the closing verdicts read count
 //! prints from a stored count rather than the sum
-//! over the sections the rendering states.
+//! over the sections the rendering states. The
+//! repeated entry pin fails on a build that counts
+//! the flags with verdicts over the groups the
+//! rendering states under a deduplication by their
+//! displayed fields, the two standings of its one
+//! flag collapsing to one against the verdicts
+//! reading's two over the same collection, and
+//! holds where the count stands in the builder over
+//! the blocks, counted once at each standing of a
+//! block carrying a verdict.
 
 use std::path::{Path, PathBuf};
 
@@ -277,6 +286,48 @@ fn the_closings_bind_to_the_verdicts_reading_over_the_same_collection() {
             "{prefix} binds to the verdicts reading"
         );
     }
+}
+
+/// A constructed collection holding the same valid
+/// set entry twice, each standing holding one flag
+/// carrying one verdict of one model, counts that
+/// flag with verdicts at each standing, so the
+/// models closing stands at two and binds to the
+/// verdicts reading over the same collection, which
+/// states two. It answers the renderer side
+/// deduplication by the displayed fields that
+/// collapsed the two standings of a repeated entry
+/// into one, counting one where the verdicts
+/// reading counted two, against the third relation
+/// of CK-46, and it holds on a build that counts
+/// the flags with verdicts in the builder over the
+/// blocks themselves, a flag carrying verdicts of
+/// both models still counting once there, its block
+/// counted once however many sections its pairs
+/// stand in.
+#[test]
+fn a_repeated_set_entry_counts_its_flag_with_verdicts_at_each_standing() {
+    let change_set = change_set_json(&[entry_json(
+        "app.py",
+        ONE_FLAG_DIFF,
+        "[{\"line\":4,\"pattern\":\"near placeholder name\",\"model\":\"jev-1.13.0\",\"choice\":\"stickler\",\"confidence\":0.9}]",
+    )]);
+    let text = collection_json(&[("one set", change_set.clone()), ("one set", change_set)]);
+    let value = parse(&text).unwrap();
+    assert_eq!(load_models(&value), Vec::<String>::new());
+    let models = render_models(&models_reading_of(&value));
+    let verdicts = render_verdicts(&verdicts_reading_of(&value));
+    let models_closings = models.split("\n\n").last().unwrap();
+    let verdicts_closings = verdicts.split("\n\n").last().unwrap();
+    assert_eq!(count_after(models_closings, "Sets read, "), 2);
+    assert_eq!(count_after(models_closings, "Flags read, "), 2);
+    assert_eq!(count_after(models_closings, "Verdicts read, "), 2);
+    assert_eq!(count_after(models_closings, "Flags with verdicts, "), 2);
+    assert_eq!(
+        count_after(models_closings, "Flags with verdicts, "),
+        count_after(verdicts_closings, "Flags with verdicts, "),
+        "flags with verdicts binds to the verdicts reading"
+    );
 }
 
 /// The shipped collection, read whole. The flag
@@ -702,6 +753,7 @@ fn a_handed_word_abstained_verdict_stands_in_its_models_section() {
         }],
         sets_read: 1,
         flags_read: 1,
+        flags_with_verdicts: 1,
         verdicts_read: 1,
     };
     let rendered = render_models(&reading);
@@ -928,6 +980,7 @@ fn a_line_break_in_a_section_head_model_forges_no_closing_line() {
         }],
         sets_read: 1,
         flags_read: 1,
+        flags_with_verdicts: 1,
         verdicts_read: 1,
     };
     let rendered = render_models(&reading);
@@ -956,6 +1009,7 @@ fn a_line_break_in_a_flag_group_file_forges_no_closing_line() {
         }],
         sets_read: 1,
         flags_read: 1,
+        flags_with_verdicts: 1,
         verdicts_read: 1,
     };
     let rendered = render_models(&reading);
@@ -994,6 +1048,7 @@ fn a_line_break_in_a_flag_group_pattern_forges_no_closing_line() {
         }],
         sets_read: 1,
         flags_read: 1,
+        flags_with_verdicts: 1,
         verdicts_read: 1,
     };
     let rendered = render_models(&reading);
@@ -1026,6 +1081,7 @@ fn a_line_break_in_a_flag_group_set_label_forges_no_closing_line() {
         }],
         sets_read: 1,
         flags_read: 1,
+        flags_with_verdicts: 1,
         verdicts_read: 1,
     };
     let rendered = render_models(&reading);
@@ -1063,6 +1119,7 @@ fn a_line_break_in_a_model_is_fenced_in_its_pairs_first_line() {
         }],
         sets_read: 1,
         flags_read: 1,
+        flags_with_verdicts: 1,
         verdicts_read: 1,
     };
     let rendered = render_models(&reading);
@@ -1098,6 +1155,7 @@ fn a_line_break_in_a_constructed_reason_is_fenced_whole_in_its_pairs_second_line
         }],
         sets_read: 1,
         flags_read: 1,
+        flags_with_verdicts: 1,
         verdicts_read: 1,
     };
     let rendered = render_models(&reading);
@@ -1161,6 +1219,7 @@ fn the_closing_verdicts_count_prints_as_the_sum_over_the_sections() {
         ],
         sets_read: 1,
         flags_read: 2,
+        flags_with_verdicts: 2,
         verdicts_read: 99,
     };
     let rendered = render_models(&reading);
