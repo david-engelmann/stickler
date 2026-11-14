@@ -1432,3 +1432,304 @@ fn a_closed_stderr_pipe_with_nothing_to_write_keeps_the_code() {
     let code = run_binary_with_closed_stream(&["check", &path], "stderr");
     assert_eq!(code, 0);
 }
+
+/// The set entries of a collection file's text, each
+/// entry's JSON text standing whole, read by a balanced
+/// scan that steps over string contents, so a brace
+/// standing inside a diff's text opens and closes
+/// nothing.
+fn set_entries(text: &str) -> Vec<String> {
+    let bytes = text.as_bytes();
+    let mut entries = Vec::new();
+    let mut i = text.find("\"sets\"").unwrap();
+    while bytes[i] != b'[' {
+        i += 1;
+    }
+    i += 1;
+    loop {
+        while i < bytes.len() && matches!(bytes[i], b' ' | b'\n' | b'\r' | b'\t' | b',') {
+            i += 1;
+        }
+        if i >= bytes.len() || bytes[i] == b']' {
+            break;
+        }
+        assert_eq!(bytes[i], b'{');
+        let start = i;
+        let mut depth = 0usize;
+        let mut in_string = false;
+        let mut escaped = false;
+        while i < bytes.len() {
+            let byte = bytes[i];
+            if in_string {
+                if escaped {
+                    escaped = false;
+                } else if byte == b'\\' {
+                    escaped = true;
+                } else if byte == b'"' {
+                    in_string = false;
+                }
+            } else if byte == b'"' {
+                in_string = true;
+            } else if byte == b'{' {
+                depth += 1;
+            } else if byte == b'}' {
+                depth -= 1;
+                if depth == 0 {
+                    i += 1;
+                    break;
+                }
+            }
+            i += 1;
+        }
+        entries.push(text[start..i].to_string());
+    }
+    entries
+}
+
+/// One set entry of a collection's entries, named by
+/// its label.
+fn entry_named<'a>(entries: &'a [String], label: &str) -> &'a str {
+    let needle = format!("\"label\": \"{label}\"");
+    entries
+        .iter()
+        .find(|entry| entry.contains(&needle))
+        .unwrap()
+        .as_str()
+}
+
+/// A collection file's text holding the named entries
+/// in the order they stand.
+fn collection_text(entries: &[&str]) -> String {
+    format!("{{\"sets\": [{}]}}", entries.join(", "))
+}
+
+/// The two repeated entry fixtures of CK-47 and the
+/// rejudged pair fixture, written into the caller's
+/// temp dir from the standing census collection's own
+/// entries. The pilot fixture carries the pilot set
+/// entry at two standings beside the round 2 set and
+/// the constructed round 4 example, the constructed
+/// fixture carries the constructed entry at two
+/// standings in the same company, and the pair fixture
+/// carries the pilot entry as both entries of a
+/// rejudged file.
+fn repeated_fixtures(dir: &Path) -> (String, String, String) {
+    let text = std::fs::read_to_string(root().join("examples/census.json")).unwrap();
+    let entries = set_entries(&text);
+    let round2 = entry_named(&entries, "round 2 set");
+    let pilot = entry_named(&entries, "pilot set");
+    let constructed = entry_named(&entries, "constructed round 4 example");
+    let pilot_twice = write(
+        dir,
+        "pilot_twice.json",
+        &collection_text(&[round2, pilot, pilot, constructed]),
+    );
+    let constructed_twice = write(
+        dir,
+        "constructed_twice.json",
+        &collection_text(&[round2, pilot, constructed, constructed]),
+    );
+    let pair = write(dir, "pair.json", &collection_text(&[pilot, pilot]));
+    (pilot_twice, constructed_twice, pair)
+}
+
+/// The closing block of a rendering, the lines after
+/// its last blank line.
+fn closing_block(out: &str) -> &str {
+    out.trim_end_matches('\n').rsplit("\n\n").next().unwrap()
+}
+
+/// The family pin of CK-47. Two collections, each
+/// carrying one set entry of the standing census
+/// collection at two standings, stand driven over the
+/// sixteen collection commands, and at each command
+/// the closing figures stand asserted in the reading's
+/// own closing forms, the figures a validated
+/// transcription of this posture states, executed
+/// whole against the standing binary before the pin
+/// was written. A build that counts a repeated entry
+/// once, that gathers a reading's counts through the
+/// fields its lines print, that counts a file at each
+/// standing naming it, or whose loader skips a
+/// repeated entry's second standing, fails here at the
+/// seat it touches, and the grain stands witnessed
+/// whole at the verdicts seat, whose four section
+/// closings over the pilot fixture stand asserted
+/// beside its closing counts. The outcomes closing
+/// stands asserted whole in the same form, its
+/// three judged lines standing in the block over
+/// both fixtures, where an earlier form of this
+/// pin asserted that seat by its first two lines
+/// alone, so a build that gathers the outcomes
+/// reading's groups through a deduplication of
+/// its own fails at that seat as the shared
+/// forms fail at theirs.
+#[test]
+fn every_collection_command_counts_a_repeated_entry_at_each_standing() {
+    let dir = temp_dir("repeated-entry");
+    let (pilot_path, constructed_path, _pair) = repeated_fixtures(&dir);
+    let seven_pilot = "Sets read, 4\nFlags read, 30\nFlags with verdicts, 29\n\
+        Verdicts read, 54\nChose stickler, 44\nChose clean, 5\nAbstained, 5";
+    let seven_constructed = "Sets read, 4\nFlags read, 24\nFlags with verdicts, 22\n\
+        Verdicts read, 42\nChose stickler, 28\nChose clean, 10\nAbstained, 4";
+    for command in ["verdicts", "models", "judgements", "grounds", "choices"] {
+        let (code, out, _err) = run(&[command, &pilot_path]);
+        assert_eq!(code, 0, "{command} over the pilot fixture\n{out}");
+        assert_eq!(
+            closing_block(&out),
+            seven_pilot,
+            "{command} closing over the pilot fixture\n{out}"
+        );
+        let (code, out, _err) = run(&[command, &constructed_path]);
+        assert_eq!(code, 0, "{command} over the constructed fixture\n{out}");
+        assert_eq!(
+            closing_block(&out),
+            seven_constructed,
+            "{command} closing over the constructed fixture\n{out}"
+        );
+    }
+    let per_file_pilot = "Sets read, 4\nFiles read, 5\nFlags read, 30\n\
+        Flags with verdicts, 29\nVerdicts read, 54\nChose stickler, 44\n\
+        Chose clean, 5\nAbstained, 5";
+    let per_file_constructed = "Sets read, 4\nFiles read, 5\nFlags read, 24\n\
+        Flags with verdicts, 22\nVerdicts read, 42\nChose stickler, 28\n\
+        Chose clean, 10\nAbstained, 4";
+    for command in ["standings", "states"] {
+        let (code, out, _err) = run(&[command, &pilot_path]);
+        assert_eq!(code, 0, "{command} over the pilot fixture\n{out}");
+        assert_eq!(
+            closing_block(&out),
+            per_file_pilot,
+            "{command} closing over the pilot fixture\n{out}"
+        );
+        let (code, out, _err) = run(&[command, &constructed_path]);
+        assert_eq!(code, 0, "{command} over the constructed fixture\n{out}");
+        assert_eq!(
+            closing_block(&out),
+            per_file_constructed,
+            "{command} closing over the constructed fixture\n{out}"
+        );
+    }
+    let seats: [(&str, &str, &str); 7] = [
+        (
+            "flags",
+            "Sets read, 4\nFiles read, 5\nFlags read, 30\nContested flags, 2",
+            "Sets read, 4\nFiles read, 5\nFlags read, 24\nContested flags, 4",
+        ),
+        (
+            "files",
+            "Sets read, 4\nFiles read, 5\nFlags read, 30\nContested flags, 2",
+            "Sets read, 4\nFiles read, 5\nFlags read, 24\nContested flags, 4",
+        ),
+        (
+            "pattern",
+            "Sets read, 4\nFlags read, 30\nContested flags, 2",
+            "Sets read, 4\nFlags read, 24\nContested flags, 4",
+        ),
+        (
+            "contested",
+            "Sets read, 4\nFlags read, 30\nContested flags, 2\nSets with contested flags, 1",
+            "Sets read, 4\nFlags read, 24\nContested flags, 4\nSets with contested flags, 2",
+        ),
+        (
+            "borderline",
+            "Sets standing, 3\nBorderline flags, 30\nSets read, 4",
+            "Sets standing, 3\nBorderline flags, 24\nSets read, 4",
+        ),
+        (
+            "shapes",
+            "Sets read, 4\nJudgements read, 5",
+            "Sets read, 4\nJudgements read, 5",
+        ),
+        (
+            "categories",
+            "Sets read, 4\nJudgements read, 5",
+            "Sets read, 4\nJudgements read, 5",
+        ),
+    ];
+    for (command, pilot_block, constructed_block) in seats {
+        let (code, out, _err) = run(&[command, &pilot_path]);
+        assert_eq!(code, 0, "{command} over the pilot fixture\n{out}");
+        assert_eq!(
+            closing_block(&out),
+            pilot_block,
+            "{command} closing over the pilot fixture\n{out}"
+        );
+        let (code, out, _err) = run(&[command, &constructed_path]);
+        assert_eq!(code, 0, "{command} over the constructed fixture\n{out}");
+        assert_eq!(
+            closing_block(&out),
+            constructed_block,
+            "{command} closing over the constructed fixture\n{out}"
+        );
+    }
+    let (code, out, _err) = run(&["outcomes", &pilot_path]);
+    assert_eq!(code, 0, "outcomes over the pilot fixture\n{out}");
+    assert_eq!(
+        closing_block(&out),
+        "Sets read, 4\nFlags read, 30\nJudged stickler, 25\nJudged clean, 2\nUnjudged, 3",
+        "outcomes closing over the pilot fixture\n{out}"
+    );
+    let (code, out, _err) = run(&["outcomes", &constructed_path]);
+    assert_eq!(code, 0, "outcomes over the constructed fixture\n{out}");
+    assert_eq!(
+        closing_block(&out),
+        "Sets read, 4\nFlags read, 24\nJudged stickler, 17\nJudged clean, 4\nUnjudged, 3",
+        "outcomes closing over the constructed fixture\n{out}"
+    );
+    let (code, out, _err) = run(&["census", &pilot_path]);
+    assert_eq!(code, 0, "census over the pilot fixture\n{out}");
+    let total = closing_block(&out);
+    for line in ["Sets, 4", "Files, 11", "Borderline, 30", "Contested, 2"] {
+        assert!(
+            total.lines().any(|standing| standing == line),
+            "census total over the pilot fixture holds {line}\n{out}"
+        );
+    }
+    let (code, out, _err) = run(&["census", &constructed_path]);
+    assert_eq!(code, 0, "census over the constructed fixture\n{out}");
+    let total = closing_block(&out);
+    for line in ["Sets, 4", "Files, 10", "Borderline, 24", "Contested, 4"] {
+        assert!(
+            total.lines().any(|standing| standing == line),
+            "census total over the constructed fixture holds {line}\n{out}"
+        );
+    }
+    let (code, out, _err) = run(&["verdicts", &pilot_path]);
+    assert_eq!(code, 0, "verdicts over the pilot fixture\n{out}");
+    assert!(
+        out.contains("Verdicts, none recorded\nVerdicts read, 0\n"),
+        "the round 2 set's section closing stands\n{out}"
+    );
+    assert_eq!(
+        out.matches("Verdicts read, 22\n").count(),
+        2,
+        "the pilot set's section closing stands at each of its standings\n{out}"
+    );
+    assert!(
+        out.contains("\nVerdicts read, 10\n"),
+        "the constructed entry's section closing stands\n{out}"
+    );
+}
+
+/// The rejudged pin of CK-47. A rejudged file whose
+/// two entries are one set entry standing twice reads
+/// as a pair held at every flag of the entry, its
+/// inputs read at the entry's flagged lines counted at
+/// each standing, its standing in both at the same
+/// count, its held count at the same count, and its
+/// changed count at zero, the closing asserted in
+/// full, so a build that drops or merges the second
+/// standing fails here on the counts themselves.
+#[test]
+fn a_rejudged_pair_of_one_entry_standing_twice_holds_at_every_flag() {
+    let dir = temp_dir("rejudged-repeated");
+    let (_pilot, _constructed, pair_path) = repeated_fixtures(&dir);
+    let (code, out, _err) = run(&["rejudged", &pair_path]);
+    assert_eq!(code, 0, "rejudged over the pair fixture\n{out}");
+    assert_eq!(
+        closing_block(&out),
+        "Inputs read, 24\nStanding in both, 12\nHeld, 12\nChanged, 0",
+        "the pair's closing stands in full\n{out}"
+    );
+}

@@ -201,8 +201,13 @@ fn readme_reports_the_round_4_standing() {
     // standing in review, so the count stood at one
     // while Round 23 stood built, until the Round 23
     // closure landed slice 24 and the count returned to
+    // zero. Adjusted again with the Round 24 slice, as
+    // the named mechanical consequence of slice 25
+    // standing in review, so the count stands at one
+    // while Round 24 stands built, until the Round 24
+    // closure lands slice 25 and the count returns to
     // zero.
-    assert_eq!(text.matches("built and in review").count(), 0);
+    assert_eq!(text.matches("built and in review").count(), 1);
 }
 
 #[test]
@@ -1325,6 +1330,40 @@ fn readme_reports_the_round_23_status() {
     let standing = "- Contract, CK-45 and CK-46 met. They stand in full form in CONTRACT.md, and Round 23 closed on the merged slice 24 after three reviews, with the standards review approving with findings at four Observations, the spec review approving clean, the red team approving with findings at three Minors standing against the design record, and CodeRabbit returning one Minor.";
     assert!(text.lines().any(|line| line == standing));
     let slice_line = "- Slice 24 has landed. It carries the models reading, the twenty-first command, its sections standing per model in first appearance order, each section holding one flag group per flag carrying a verdict of that model with the one pair of that model the flag carries, over the collection form of CK-12.";
+    assert!(text.lines().any(|line| line == slice_line));
+    assert!(text.contains("Closed perfection rounds, 23 of 100"));
+}
+
+/// The Round 24 pins. The obligations pin fails
+/// against the tree Round 23 closed on by the
+/// absence of the obligations it reads, and the
+/// status pin fails on that tree's README by the
+/// absence of the two lines it holds, each line
+/// read whole as the standing pins read theirs.
+#[test]
+fn contract_carries_the_round_24_obligations() {
+    let text = read("CONTRACT.md");
+    assert!(text.contains("## Round 24 obligations, full form"));
+    assert!(text.contains("- CK-47."));
+    assert!(text.contains(
+        "A collection of the form CK-12 states may carry the same set entry at two standings"
+    ));
+    assert!(text.contains("labels need not be unique"));
+    assert!(text.contains("## Round 24 repair amendment"));
+    assert!(text.contains("- FIX-CK-32."));
+    let ck46 = text
+        .lines()
+        .find(|line| line.starts_with("- CK-46."))
+        .unwrap_or("");
+    assert!(ck46.contains("no handed model name, file name, pattern, label, choice, or reason"));
+}
+
+#[test]
+fn readme_reports_the_round_24_status() {
+    let text = read("README.md");
+    let standing = "- Contract, CK-47 and the FIX-CK-32 repair amendment now stand in full form, the repeated entry standing across the collection readings and the fencing enumeration of CK-46 completed. Round 24 has not closed.";
+    assert!(text.lines().any(|line| line == standing));
+    let slice_line = "- Slice 25 is built and in review. It carries the repeated entry standing of CK-47, pinned at the command surface over the sixteen collection commands and the rejudged pair of one entry standing twice, and the fencing enumeration of CK-46 completed under FIX-CK-32, with no rendering over any collection moving.";
     assert!(text.lines().any(|line| line == slice_line));
     assert!(text.contains("Closed perfection rounds, 23 of 100"));
 }
