@@ -1749,11 +1749,13 @@ fn a_rejudged_pair_of_one_entry_standing_twice_holds_at_every_flag() {
 /// at the first standing of its label, that
 /// tallies them once per distinct label in the
 /// census, that keys its gathering on the fields
-/// a judgement line prints, or whose loader
-/// skips a repeated entry fails here at the seat
-/// it touches, where the family pin of CK-47
-/// cannot see the failure, its fixtures carrying
-/// no checker judgements for a defect to drop.
+/// a judgement line prints, that exchanges the
+/// sections of a later standing's judgements, or
+/// whose loader skips a repeated entry fails
+/// here at the seat it touches, where the family
+/// pin of CK-47 cannot see the failure, its
+/// fixtures carrying no checker judgements for a
+/// defect to drop.
 #[test]
 fn every_collection_command_counts_the_checker_judgements_of_a_repeated_entry_at_each_standing() {
     let dir = temp_dir("repeated-entry-judgements");
@@ -1835,17 +1837,39 @@ fn every_collection_command_counts_the_checker_judgements_of_a_repeated_entry_at
         "Sets read, 4\nJudgements read, 10",
         "shapes closing over the judgement fixture\n{out}"
     );
-    for line in [
-        "report.py, judgement 2, smell, set, round 2 set",
-        "report.py, judgement 3, smell, set, round 2 set",
-        "report.py, judgement 1, structure, set, round 2 set",
-        "basket.py, judgement 2, structure, set, round 2 set",
-        "basket.py, judgement 1, structure, set, round 2 set",
-    ] {
+    let shape_lines: [(&str, &str); 5] = [
+        (
+            "Shape, bare except",
+            "report.py, judgement 2, smell, set, round 2 set",
+        ),
+        (
+            "Shape, print call",
+            "report.py, judgement 3, smell, set, round 2 set",
+        ),
+        (
+            "Shape, mutable default",
+            "report.py, judgement 1, structure, set, round 2 set",
+        ),
+        (
+            "Shape, call default",
+            "basket.py, judgement 2, structure, set, round 2 set",
+        ),
+        (
+            "Shape, class attribute",
+            "basket.py, judgement 1, structure, set, round 2 set",
+        ),
+    ];
+    for (head, line) in shape_lines {
+        let start = out.find(head).expect("a shape section stands");
+        let rest = &out[start + head.len()..];
+        let section = match rest.find("\nShape, ") {
+            Some(next) => &rest[..next],
+            None => rest,
+        };
         assert_eq!(
-            out.matches(line).count(),
+            section.matches(line).count(),
             2,
-            "the judgement line {line} stands at each standing\n{out}"
+            "the judgement line {line} stands at each standing in its own section\n{out}"
         );
     }
     assert_eq!(
@@ -1880,17 +1904,39 @@ fn every_collection_command_counts_the_checker_judgements_of_a_repeated_entry_at
         "Sets read, 4\nJudgements read, 10",
         "categories closing over the judgement fixture\n{out}"
     );
-    for line in [
-        "basket.py, judgement 1, class attribute, set, round 2 set",
-        "basket.py, judgement 2, call default, set, round 2 set",
-        "report.py, judgement 1, mutable default, set, round 2 set",
-        "report.py, judgement 2, bare except, set, round 2 set",
-        "report.py, judgement 3, print call, set, round 2 set",
-    ] {
+    let category_lines: [(&str, &str); 5] = [
+        (
+            "Category, structure",
+            "basket.py, judgement 1, class attribute, set, round 2 set",
+        ),
+        (
+            "Category, structure",
+            "basket.py, judgement 2, call default, set, round 2 set",
+        ),
+        (
+            "Category, structure",
+            "report.py, judgement 1, mutable default, set, round 2 set",
+        ),
+        (
+            "Category, smell",
+            "report.py, judgement 2, bare except, set, round 2 set",
+        ),
+        (
+            "Category, smell",
+            "report.py, judgement 3, print call, set, round 2 set",
+        ),
+    ];
+    for (head, line) in category_lines {
+        let start = out.find(head).expect("a category section stands");
+        let rest = &out[start + head.len()..];
+        let section = match rest.find("\nCategory, ") {
+            Some(next) => &rest[..next],
+            None => rest,
+        };
         assert_eq!(
-            out.matches(line).count(),
+            section.matches(line).count(),
             2,
-            "the judgement line {line} stands at each standing\n{out}"
+            "the judgement line {line} stands at each standing in its own section\n{out}"
         );
     }
     assert!(
