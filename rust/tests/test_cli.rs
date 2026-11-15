@@ -2345,6 +2345,32 @@ fn every_collection_command_counts_the_checker_judgements_of_two_entries_at_each
         1,
         "the smell section reads its judgements at each standing of each entry\n{out}"
     );
+    let start = out
+        .find("Category, smell")
+        .expect("a category section stands");
+    let rest = &out[start..];
+    let section = match rest.find("\nCategory, ") {
+        Some(next) => &rest[..next],
+        None => rest,
+    };
+    let lines: Vec<&str> = section
+        .lines()
+        .filter(|line| line.starts_with("report.py"))
+        .collect();
+    assert_eq!(
+        lines,
+        vec![
+            "report.py, judgement 2, bare except, set, alpha set",
+            "report.py, judgement 3, print call, set, alpha set",
+            "report.py, judgement 2, bare except, set, round 2 set",
+            "report.py, judgement 3, print call, set, round 2 set",
+            "report.py, judgement 2, bare except, set, alpha set",
+            "report.py, judgement 3, print call, set, alpha set",
+            "report.py, judgement 2, bare except, set, round 2 set",
+            "report.py, judgement 3, print call, set, round 2 set",
+        ],
+        "the smell section's lines stand in standing order across the two labels\n{out}"
+    );
     let (code, out, _err) = run(&["census", &path]);
     assert_eq!(code, 0, "census over the interleaved fixture\n{out}");
     let alpha_block = "Set, alpha set\nFiles, 2\nJudgements, 5\n\
