@@ -2423,18 +2423,23 @@ fn every_collection_command_counts_the_checker_judgements_of_two_entries_at_each
 /// command the closing figures stand asserted whole,
 /// the judgement figures standing as each entry's
 /// own at the shapes, categories, and census seats,
-/// and the lines of the categories sections standing
+/// the four census blocks standing asserted in the
+/// order the sets stand in the collection, and the
+/// lines of the categories sections standing
 /// asserted in their standing order. A build that
 /// reads one entry's judgements at another entry's
 /// standing under the label they share, at the
 /// shapes gathering, at the categories gathering, or
-/// at the census tally, that tallies a collection
-/// once per distinct label, that gathers a set's
-/// judgements only at the first standing of its
-/// label, or whose loader skips a repeated entry
-/// fails here at the seat it touches, where the pin
-/// of CK-49 cannot see the failure, its fixture
-/// carrying one entry under each label.
+/// at the census tally, that walks the census
+/// standings grouped or permuted so its blocks part
+/// from the order the collection states them in,
+/// that tallies a collection once per distinct
+/// label, that gathers a set's judgements only at
+/// the first standing of its label, or whose loader
+/// skips a repeated entry fails here at the seat it
+/// touches, where the pin of CK-49 cannot see the
+/// failure, its fixture carrying one entry under
+/// each label.
 #[test]
 fn every_collection_command_counts_the_checker_judgements_of_two_distinct_entries_standing_under_one_label(
 ) {
@@ -2717,6 +2722,23 @@ fn every_collection_command_counts_the_checker_judgements_of_two_distinct_entrie
         out.matches(second_block).count(),
         2,
         "the second entry's census block stands at each of its standings\n{out}"
+    );
+    let blocks_in_order = [first_block, second_block, first_block, second_block];
+    let mut rest = out.as_str();
+    let mut blocks_stand_in_order = true;
+    for block in blocks_in_order {
+        match rest.find(block) {
+            Some(found) => rest = &rest[found + block.len()..],
+            None => {
+                blocks_stand_in_order = false;
+                break;
+            }
+        }
+    }
+    assert!(
+        blocks_stand_in_order,
+        "the census blocks stand in the order the sets stand in the collection, \
+            first, second, first, second\n{out}"
     );
     assert_eq!(
         closing_block(&out),
