@@ -2411,3 +2411,350 @@ fn every_collection_command_counts_the_checker_judgements_of_two_entries_at_each
         "each entry's section closing stands at each of its standings\n{out}"
     );
 }
+
+/// The pin of CK-50. One collection carrying two
+/// distinct judgement bearing set entries under
+/// one label, each at two standings in interleaved
+/// order, stands driven over the sixteen collection
+/// commands, the first entry holding the two
+/// judgement bearing files of the round 2 set entry
+/// and the second holding its one judgement bearing
+/// file beside its judgement free file, and at each
+/// command the closing figures stand asserted whole,
+/// the judgement figures standing as each entry's
+/// own at the shapes, categories, and census seats,
+/// the four census blocks standing asserted in the
+/// order the sets stand in the collection, and the
+/// lines of the categories sections standing
+/// asserted in their standing order. A build that
+/// reads one entry's judgements at another entry's
+/// standing under the label they share, at the
+/// shapes gathering, at the categories gathering, or
+/// at the census tally, that walks the census
+/// standings grouped or permuted so its blocks part
+/// from the order the collection states them in,
+/// that tallies a collection once per distinct
+/// label, that gathers a set's judgements only at
+/// the first standing of its label, or whose loader
+/// skips a repeated entry fails here at the seat it
+/// touches, where the pin of CK-49 cannot see the
+/// failure, its fixture carrying one entry under
+/// each label.
+#[test]
+fn every_collection_command_counts_the_checker_judgements_of_two_distinct_entries_standing_under_one_label(
+) {
+    let dir = temp_dir("shared-label-judgements");
+    let text = std::fs::read_to_string(root().join("examples/census.json")).unwrap();
+    let entries = set_entries(&text);
+    let round2 = entry_named(&entries, "round 2 set");
+    let first = entry_without_file(round2, "tidy.py");
+    assert_eq!(first.matches("\"label\": \"round 2 set\"").count(), 1);
+    let first = first.replace("\"label\": \"round 2 set\"", "\"label\": \"shared set\"");
+    let second = entry_without_file(round2, "basket.py");
+    assert_eq!(second.matches("\"label\": \"round 2 set\"").count(), 1);
+    let second = second.replace("\"label\": \"round 2 set\"", "\"label\": \"shared set\"");
+    let path = write(
+        &dir,
+        "shared.json",
+        &collection_text(&[&first, &second, &first, &second]),
+    );
+    let seven = "Sets read, 4\nFlags read, 0\nFlags with verdicts, 0\n\
+        Verdicts read, 0\nChose stickler, 0\nChose clean, 0\nAbstained, 0";
+    for command in ["verdicts", "models", "judgements", "grounds", "choices"] {
+        let (code, out, _err) = run(&[command, &path]);
+        assert_eq!(code, 0, "{command} over the shared label fixture\n{out}");
+        assert_eq!(
+            closing_block(&out),
+            seven,
+            "{command} closing over the shared label fixture\n{out}"
+        );
+    }
+    let per_file = "Sets read, 4\nFiles read, 0\nFlags read, 0\n\
+        Flags with verdicts, 0\nVerdicts read, 0\nChose stickler, 0\n\
+        Chose clean, 0\nAbstained, 0";
+    for command in ["standings", "states"] {
+        let (code, out, _err) = run(&[command, &path]);
+        assert_eq!(code, 0, "{command} over the shared label fixture\n{out}");
+        assert_eq!(
+            closing_block(&out),
+            per_file,
+            "{command} closing over the shared label fixture\n{out}"
+        );
+    }
+    let seats: [(&str, &str); 5] = [
+        (
+            "flags",
+            "Sets read, 4\nFiles read, 0\nFlags read, 0\nContested flags, 0",
+        ),
+        (
+            "files",
+            "Sets read, 4\nFiles read, 0\nFlags read, 0\nContested flags, 0",
+        ),
+        ("pattern", "Sets read, 4\nFlags read, 0\nContested flags, 0"),
+        (
+            "contested",
+            "Sets read, 4\nFlags read, 0\nContested flags, 0\nSets with contested flags, 0",
+        ),
+        (
+            "borderline",
+            "Sets standing, 0\nBorderline flags, 0\nSets read, 4",
+        ),
+    ];
+    for (command, block) in seats {
+        let (code, out, _err) = run(&[command, &path]);
+        assert_eq!(code, 0, "{command} over the shared label fixture\n{out}");
+        assert_eq!(
+            closing_block(&out),
+            block,
+            "{command} closing over the shared label fixture\n{out}"
+        );
+    }
+    let (code, out, _err) = run(&["outcomes", &path]);
+    assert_eq!(code, 0, "outcomes over the shared label fixture\n{out}");
+    assert_eq!(
+        closing_block(&out),
+        "Sets read, 4\nFlags read, 0\nJudged stickler, 0\nJudged clean, 0\nUnjudged, 0",
+        "outcomes closing over the shared label fixture\n{out}"
+    );
+    let (code, out, _err) = run(&["shapes", &path]);
+    assert_eq!(code, 0, "shapes over the shared label fixture\n{out}");
+    assert_eq!(
+        closing_block(&out),
+        "Sets read, 4\nJudgements read, 16",
+        "shapes closing over the shared label fixture\n{out}"
+    );
+    let shape_lines: [(&str, &str, usize); 5] = [
+        (
+            "Shape, bare except",
+            "report.py, judgement 2, smell, set, shared set",
+            4,
+        ),
+        (
+            "Shape, print call",
+            "report.py, judgement 3, smell, set, shared set",
+            4,
+        ),
+        (
+            "Shape, mutable default",
+            "report.py, judgement 1, structure, set, shared set",
+            4,
+        ),
+        (
+            "Shape, call default",
+            "basket.py, judgement 2, structure, set, shared set",
+            2,
+        ),
+        (
+            "Shape, class attribute",
+            "basket.py, judgement 1, structure, set, shared set",
+            2,
+        ),
+    ];
+    for (head, line, count) in shape_lines {
+        let start = out.find(head).expect("a shape section stands");
+        let rest = &out[start + head.len()..];
+        let section = match rest.find("\nShape, ") {
+            Some(next) => &rest[..next],
+            None => rest,
+        };
+        assert_eq!(
+            section.matches(line).count(),
+            count,
+            "the judgement line {line} stands at each standing of its entry in its own section\n{out}"
+        );
+    }
+    assert_eq!(
+        out.matches("Judgements read, 4\n").count(),
+        3,
+        "each report carrying shape section reads its judgements at each standing of each entry\n{out}"
+    );
+    assert_eq!(
+        out.matches("Judgements read, 2\n").count(),
+        2,
+        "each basket carrying shape section reads its judgements at each standing of the first entry\n{out}"
+    );
+    assert!(
+        out.contains("Shape, placeholder name\nNo judgements\nJudgements read, 0\n"),
+        "the placeholder name section stands empty\n{out}"
+    );
+    let order = [
+        "Shape, bare except",
+        "Shape, print call",
+        "Shape, mutable default",
+        "Shape, placeholder name",
+        "Shape, call default",
+        "Shape, class attribute",
+    ];
+    let positions: Vec<usize> = order
+        .iter()
+        .map(|head| out.find(head).expect("a shape section stands"))
+        .collect();
+    assert!(
+        positions.windows(2).all(|pair| pair[0] < pair[1]),
+        "the shape sections stand in their stated order\n{out}"
+    );
+    let (code, out, _err) = run(&["categories", &path]);
+    assert_eq!(code, 0, "categories over the shared label fixture\n{out}");
+    assert_eq!(
+        closing_block(&out),
+        "Sets read, 4\nJudgements read, 16",
+        "categories closing over the shared label fixture\n{out}"
+    );
+    let category_lines: [(&str, &str, usize); 5] = [
+        (
+            "Category, structure",
+            "basket.py, judgement 1, class attribute, set, shared set",
+            2,
+        ),
+        (
+            "Category, structure",
+            "basket.py, judgement 2, call default, set, shared set",
+            2,
+        ),
+        (
+            "Category, structure",
+            "report.py, judgement 1, mutable default, set, shared set",
+            4,
+        ),
+        (
+            "Category, smell",
+            "report.py, judgement 2, bare except, set, shared set",
+            4,
+        ),
+        (
+            "Category, smell",
+            "report.py, judgement 3, print call, set, shared set",
+            4,
+        ),
+    ];
+    for (head, line, count) in category_lines {
+        let start = out.find(head).expect("a category section stands");
+        let rest = &out[start + head.len()..];
+        let section = match rest.find("\nCategory, ") {
+            Some(next) => &rest[..next],
+            None => rest,
+        };
+        assert_eq!(
+            section.matches(line).count(),
+            count,
+            "the judgement line {line} stands at each standing of its entry in its own section\n{out}"
+        );
+    }
+    assert!(
+        out.contains("Category, naming\nNo judgements\nJudgements read, 0\n"),
+        "the naming section stands empty\n{out}"
+    );
+    assert_eq!(
+        out.matches("Judgements read, 8\n").count(),
+        2,
+        "each carrying category section reads its judgements at each standing of each entry\n{out}"
+    );
+    let start = out
+        .find("Category, structure")
+        .expect("a category section stands");
+    let rest = &out[start..];
+    let section = match rest.find("\nCategory, ") {
+        Some(next) => &rest[..next],
+        None => rest,
+    };
+    let lines: Vec<&str> = section
+        .lines()
+        .filter(|line| line.contains(", judgement "))
+        .collect();
+    assert_eq!(
+        lines,
+        vec![
+            "basket.py, judgement 1, class attribute, set, shared set",
+            "basket.py, judgement 2, call default, set, shared set",
+            "report.py, judgement 1, mutable default, set, shared set",
+            "report.py, judgement 1, mutable default, set, shared set",
+            "basket.py, judgement 1, class attribute, set, shared set",
+            "basket.py, judgement 2, call default, set, shared set",
+            "report.py, judgement 1, mutable default, set, shared set",
+            "report.py, judgement 1, mutable default, set, shared set",
+        ],
+        "the structure section's lines stand in standing order across the two entries\n{out}"
+    );
+    let start = out
+        .find("Category, smell")
+        .expect("a category section stands");
+    let rest = &out[start..];
+    let section = match rest.find("\nCategory, ") {
+        Some(next) => &rest[..next],
+        None => rest,
+    };
+    let lines: Vec<&str> = section
+        .lines()
+        .filter(|line| line.contains(", judgement "))
+        .collect();
+    assert_eq!(
+        lines,
+        vec![
+            "report.py, judgement 2, bare except, set, shared set",
+            "report.py, judgement 3, print call, set, shared set",
+            "report.py, judgement 2, bare except, set, shared set",
+            "report.py, judgement 3, print call, set, shared set",
+            "report.py, judgement 2, bare except, set, shared set",
+            "report.py, judgement 3, print call, set, shared set",
+            "report.py, judgement 2, bare except, set, shared set",
+            "report.py, judgement 3, print call, set, shared set",
+        ],
+        "the smell section's lines stand in standing order across the two entries\n{out}"
+    );
+    let (code, out, _err) = run(&["census", &path]);
+    assert_eq!(code, 0, "census over the shared label fixture\n{out}");
+    let first_block = "Set, shared set\nFiles, 2\nJudgements, 5\n\
+        Shape, bare except, 1\nShape, print call, 1\nShape, mutable default, 1\n\
+        Shape, placeholder name, 0\nShape, call default, 1\nShape, class attribute, 1\n\
+        Borderline, 0\nPattern, near placeholder name, 0\nPattern, broad handler, 0\n\
+        Pattern, shared member default, 0\nVerdicts, none recorded";
+    assert_eq!(
+        out.matches(first_block).count(),
+        2,
+        "the first entry's census block stands at each of its standings\n{out}"
+    );
+    let second_block = "Set, shared set\nFiles, 2\nJudgements, 3\n\
+        Shape, bare except, 1\nShape, print call, 1\nShape, mutable default, 1\n\
+        Shape, placeholder name, 0\nShape, call default, 0\nShape, class attribute, 0\n\
+        Borderline, 0\nPattern, near placeholder name, 0\nPattern, broad handler, 0\n\
+        Pattern, shared member default, 0\nVerdicts, none recorded";
+    assert_eq!(
+        out.matches(second_block).count(),
+        2,
+        "the second entry's census block stands at each of its standings\n{out}"
+    );
+    let blocks_in_order = [first_block, second_block, first_block, second_block];
+    let mut rest = out.as_str();
+    let mut blocks_stand_in_order = true;
+    for block in blocks_in_order {
+        match rest.find(block) {
+            Some(found) => rest = &rest[found + block.len()..],
+            None => {
+                blocks_stand_in_order = false;
+                break;
+            }
+        }
+    }
+    assert!(
+        blocks_stand_in_order,
+        "the census blocks stand in the order the sets stand in the collection, \
+            first, second, first, second\n{out}"
+    );
+    assert_eq!(
+        closing_block(&out),
+        "Total\nSets, 4\nFiles, 8\nJudgements, 16\n\
+            Shape, bare except, 4\nShape, print call, 4\nShape, mutable default, 4\n\
+            Shape, placeholder name, 0\nShape, call default, 2\nShape, class attribute, 2\n\
+            Borderline, 0\nPattern, near placeholder name, 0\nPattern, broad handler, 0\n\
+            Pattern, shared member default, 0\nVerdicts, none recorded",
+        "census total over the shared label fixture\n{out}"
+    );
+    let (code, out, _err) = run(&["verdicts", &path]);
+    assert_eq!(code, 0, "verdicts over the shared label fixture\n{out}");
+    assert_eq!(
+        out.matches("Verdicts, none recorded\nVerdicts read, 0\n")
+            .count(),
+        4,
+        "each entry's section closing stands at each of its standings\n{out}"
+    );
+}
