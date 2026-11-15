@@ -211,8 +211,13 @@ fn readme_reports_the_round_4_standing() {
     // standing in review, so the count stood at one
     // while Round 25 stood built, until the Round 25
     // closure landed slice 26 and the count returned to
+    // zero. Adjusted again with the Round 26 slice, as
+    // the named mechanical consequence of slice 27
+    // standing in review, so the count stood at one
+    // while Round 26 stood built, until the Round 26
+    // closure landed slice 27 and the count returned to
     // zero.
-    assert_eq!(text.matches("built and in review").count(), 0);
+    assert_eq!(text.matches("built and in review").count(), 1);
 }
 
 #[test]
@@ -1384,8 +1389,12 @@ fn contract_carries_the_round_25_obligations() {
     let text = read("CONTRACT.md");
     assert!(text.contains("## Round 25 obligations, full form"));
     assert!(text.contains("- CK-48."));
-    assert!(text.contains("The checker judgements of CK-30 and CK-34 stand at each standing"));
-    assert!(text.contains("No judgement gathering and no judgement count deduplicates a standing"));
+    let ck48 = text
+        .lines()
+        .find(|line| line.starts_with("- CK-48."))
+        .unwrap_or("");
+    assert!(ck48.contains("The checker judgements of CK-30 and CK-34 stand at each standing"));
+    assert!(ck48.contains("No judgement gathering and no judgement count deduplicates a standing"));
 }
 
 #[test]
@@ -1394,6 +1403,35 @@ fn readme_reports_the_round_25_status() {
     let standing = "- Contract, CK-48 met. It stands in full form in CONTRACT.md, and Round 25 closed on the merged slice 26 after three reviews, with the standards review approving with findings at three Observations, the spec review approving with findings at two Observations, the red team approving with findings at one Minor, the Minor standing as CodeRabbit's one inline Minor on the slice, adjudicated valid on the code and cured in the slice by the repair at d2a5355d, and CodeRabbit returning one Minor. The design record's section 4 phrasing names sixteen collection goldens over census.json, where fifteen stand counted over that input and the files golden stands over files.json, as the spec review's Observation records it. The census total stands computed at two homes, the renderer's summed tally standing as its printed home and the builder's Census.total field standing read by the suite as an independent oracle and never by the renderer, and the QC leg stands seated at both homes in the posture of the Round 24 PD leg, the design record naming the tally's behaviour and no seat. The standards review's anchoring Observation stands against the obligations pin, whose two phrases stand asserted by whole file contains where the Round 24 pin anchors its guarded phrase within its bullet, equivalent in effect today, the cure priced at the next contract opening and not charged to this slice. The design record's sweep ran on the Round 24 red team binary, its provenance proven with every rust/src blob standing identical between that tree and the base, and the slice's warm-up on the slice tree stands as the execution of record. The section exchange mutant passed the whole suite against the pin as first built, and stands executed again against the repaired tree, failing the repaired pin alone after the section scoped restatement.";
     assert!(text.lines().any(|line| line == standing));
     let slice_line = "- Slice 26 has landed. It carries the checker judgement standing of a repeated entry under CK-48, pinned at the command surface over the sixteen collection commands, with no rendering over any collection moving.";
+    assert!(text.lines().any(|line| line == slice_line));
+    assert!(text.contains("Closed perfection rounds, 25 of 100"));
+}
+
+/// The Round 26 pins. The obligations pin fails
+/// against the tree Round 25 closed on by the
+/// absence of the obligations it reads, and the
+/// status pin fails on that tree's README by the
+/// absence of the two lines it holds, each line
+/// read whole as the standing pins read theirs.
+#[test]
+fn contract_carries_the_round_26_obligations() {
+    let text = read("CONTRACT.md");
+    assert!(text.contains("## Round 26 obligations, full form"));
+    assert!(text.contains("- CK-49."));
+    let ck49 = text
+        .lines()
+        .find(|line| line.starts_with("- CK-49."))
+        .unwrap_or("");
+    assert!(ck49.contains("two judgement bearing set entries each standing twice"));
+    assert!(ck49.contains("no gathering orders a section's lines by label"));
+}
+
+#[test]
+fn readme_reports_the_round_26_status() {
+    let text = read("README.md");
+    let standing = "- Contract, CK-49 now stands in full form, the checker judgement standing of two judgement bearing set entries each standing twice in one collection across the shapes, categories, and census readings. Round 26 has not closed.";
+    assert!(text.lines().any(|line| line == standing));
+    let slice_line = "- Slice 27 is built and in review. It carries the checker judgement standing of two judgement bearing entries each standing twice under CK-49, pinned at the command surface over the sixteen collection commands, with no rendering over any collection moving.";
     assert!(text.lines().any(|line| line == slice_line));
     assert!(text.contains("Closed perfection rounds, 25 of 100"));
 }
