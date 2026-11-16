@@ -2758,3 +2758,335 @@ fn every_collection_command_counts_the_checker_judgements_of_two_distinct_entrie
         "each entry's section closing stands at each of its standings\n{out}"
     );
 }
+
+/// The pin of CK-51. One collection carrying two
+/// judgement bearing set entries each at two
+/// standings in interleaved order under their own
+/// labels stands driven over the sixteen collection
+/// commands, the first entry holding the two
+/// judgement bearing files of the round 2 set entry
+/// under its own label and the second standing as
+/// the round 2 set entry itself, and at each command
+/// the closing figures stand asserted whole, the
+/// judgement lines of each shape section and of the
+/// categories sections standing asserted in their
+/// standing order whole, and the four census blocks
+/// standing asserted in the order the standings
+/// stand. A census walk that groups the block of a
+/// standing with the blocks of its label mates, at
+/// the renderer or at the builder, a gathering that
+/// orders the lines of one section by label in place
+/// of the standing order, at the structure section
+/// of the categories reading or at a section of the
+/// shapes reading beside the bare except section,
+/// or a walk that groups the census blocks by their
+/// tallies fails here at the seat it touches, where
+/// the pin of CK-49 cannot see the failure, its
+/// census assertions standing at occurrence counts
+/// and its order assertions standing at the bare
+/// except and smell sections alone, and where the
+/// pin of CK-50 cannot see the label keyed failures,
+/// its fixture carrying one label, over which every
+/// grouping by label is the identity.
+#[test]
+fn every_collection_command_prints_the_checker_judgements_of_two_entries_in_standing_order_at_each_of_their_standings(
+) {
+    let dir = temp_dir("repeated-entries-standing-order");
+    let text = std::fs::read_to_string(root().join("examples/census.json")).unwrap();
+    let entries = set_entries(&text);
+    let round2 = entry_named(&entries, "round 2 set");
+    let alpha = entry_without_file(round2, "tidy.py");
+    assert_eq!(alpha.matches("\"label\": \"round 2 set\"").count(), 1);
+    let alpha = alpha.replace("\"label\": \"round 2 set\"", "\"label\": \"alpha set\"");
+    let path = write(
+        &dir,
+        "interleaved.json",
+        &collection_text(&[&alpha, round2, &alpha, round2]),
+    );
+    let seven = "Sets read, 4\nFlags read, 0\nFlags with verdicts, 0\n\
+        Verdicts read, 0\nChose stickler, 0\nChose clean, 0\nAbstained, 0";
+    for command in ["verdicts", "models", "judgements", "grounds", "choices"] {
+        let (code, out, _err) = run(&[command, &path]);
+        assert_eq!(code, 0, "{command} over the interleaved fixture\n{out}");
+        assert_eq!(
+            closing_block(&out),
+            seven,
+            "{command} closing over the interleaved fixture\n{out}"
+        );
+    }
+    let per_file = "Sets read, 4\nFiles read, 0\nFlags read, 0\n\
+        Flags with verdicts, 0\nVerdicts read, 0\nChose stickler, 0\n\
+        Chose clean, 0\nAbstained, 0";
+    for command in ["standings", "states"] {
+        let (code, out, _err) = run(&[command, &path]);
+        assert_eq!(code, 0, "{command} over the interleaved fixture\n{out}");
+        assert_eq!(
+            closing_block(&out),
+            per_file,
+            "{command} closing over the interleaved fixture\n{out}"
+        );
+    }
+    let seats: [(&str, &str); 5] = [
+        (
+            "flags",
+            "Sets read, 4\nFiles read, 0\nFlags read, 0\nContested flags, 0",
+        ),
+        (
+            "files",
+            "Sets read, 4\nFiles read, 0\nFlags read, 0\nContested flags, 0",
+        ),
+        ("pattern", "Sets read, 4\nFlags read, 0\nContested flags, 0"),
+        (
+            "contested",
+            "Sets read, 4\nFlags read, 0\nContested flags, 0\nSets with contested flags, 0",
+        ),
+        (
+            "borderline",
+            "Sets standing, 0\nBorderline flags, 0\nSets read, 4",
+        ),
+    ];
+    for (command, block) in seats {
+        let (code, out, _err) = run(&[command, &path]);
+        assert_eq!(code, 0, "{command} over the interleaved fixture\n{out}");
+        assert_eq!(
+            closing_block(&out),
+            block,
+            "{command} closing over the interleaved fixture\n{out}"
+        );
+    }
+    let (code, out, _err) = run(&["outcomes", &path]);
+    assert_eq!(code, 0, "outcomes over the interleaved fixture\n{out}");
+    assert_eq!(
+        closing_block(&out),
+        "Sets read, 4\nFlags read, 0\nJudged stickler, 0\nJudged clean, 0\nUnjudged, 0",
+        "outcomes closing over the interleaved fixture\n{out}"
+    );
+    let (code, out, _err) = run(&["shapes", &path]);
+    assert_eq!(code, 0, "shapes over the interleaved fixture\n{out}");
+    assert_eq!(
+        closing_block(&out),
+        "Sets read, 4\nJudgements read, 20",
+        "shapes closing over the interleaved fixture\n{out}"
+    );
+    let order = [
+        "Shape, bare except",
+        "Shape, print call",
+        "Shape, mutable default",
+        "Shape, placeholder name",
+        "Shape, call default",
+        "Shape, class attribute",
+    ];
+    let positions: Vec<usize> = order
+        .iter()
+        .map(|head| out.find(head).expect("a shape section stands"))
+        .collect();
+    assert!(
+        positions.windows(2).all(|pair| pair[0] < pair[1]),
+        "the shape sections stand in their stated order\n{out}"
+    );
+    assert!(
+        out.contains("Shape, placeholder name\nNo judgements\nJudgements read, 0\n"),
+        "the placeholder name section stands empty\n{out}"
+    );
+    let shape_sections: [(&str, Vec<&str>); 5] = [
+        (
+            "Shape, bare except",
+            vec![
+                "report.py, judgement 2, smell, set, alpha set",
+                "report.py, judgement 2, smell, set, round 2 set",
+                "report.py, judgement 2, smell, set, alpha set",
+                "report.py, judgement 2, smell, set, round 2 set",
+            ],
+        ),
+        (
+            "Shape, print call",
+            vec![
+                "report.py, judgement 3, smell, set, alpha set",
+                "report.py, judgement 3, smell, set, round 2 set",
+                "report.py, judgement 3, smell, set, alpha set",
+                "report.py, judgement 3, smell, set, round 2 set",
+            ],
+        ),
+        (
+            "Shape, mutable default",
+            vec![
+                "report.py, judgement 1, structure, set, alpha set",
+                "report.py, judgement 1, structure, set, round 2 set",
+                "report.py, judgement 1, structure, set, alpha set",
+                "report.py, judgement 1, structure, set, round 2 set",
+            ],
+        ),
+        (
+            "Shape, call default",
+            vec![
+                "basket.py, judgement 2, structure, set, alpha set",
+                "basket.py, judgement 2, structure, set, round 2 set",
+                "basket.py, judgement 2, structure, set, alpha set",
+                "basket.py, judgement 2, structure, set, round 2 set",
+            ],
+        ),
+        (
+            "Shape, class attribute",
+            vec![
+                "basket.py, judgement 1, structure, set, alpha set",
+                "basket.py, judgement 1, structure, set, round 2 set",
+                "basket.py, judgement 1, structure, set, alpha set",
+                "basket.py, judgement 1, structure, set, round 2 set",
+            ],
+        ),
+    ];
+    for (head, expected) in shape_sections {
+        let start = out.find(head).expect("a shape section stands");
+        let rest = &out[start..];
+        let section = match rest.find("\nShape, ") {
+            Some(next) => &rest[..next],
+            None => rest,
+        };
+        let lines: Vec<&str> = section
+            .lines()
+            .filter(|line| line.contains(", judgement "))
+            .collect();
+        assert_eq!(
+            lines, expected,
+            "the {head} section's lines stand in standing order across the two labels\n{out}"
+        );
+    }
+    assert_eq!(
+        out.matches("Judgements read, 4\n").count(),
+        5,
+        "each carrying shape section reads its judgements at each standing of each entry\n{out}"
+    );
+    let (code, out, _err) = run(&["categories", &path]);
+    assert_eq!(code, 0, "categories over the interleaved fixture\n{out}");
+    assert_eq!(
+        closing_block(&out),
+        "Sets read, 4\nJudgements read, 20",
+        "categories closing over the interleaved fixture\n{out}"
+    );
+    assert!(
+        out.contains("Category, naming\nNo judgements\nJudgements read, 0\n"),
+        "the naming section stands empty\n{out}"
+    );
+    let start = out
+        .find("Category, structure")
+        .expect("a category section stands");
+    let rest = &out[start..];
+    let section = match rest.find("\nCategory, ") {
+        Some(next) => &rest[..next],
+        None => rest,
+    };
+    let lines: Vec<&str> = section
+        .lines()
+        .filter(|line| line.contains(", judgement "))
+        .collect();
+    assert_eq!(
+        lines,
+        vec![
+            "basket.py, judgement 1, class attribute, set, alpha set",
+            "basket.py, judgement 2, call default, set, alpha set",
+            "report.py, judgement 1, mutable default, set, alpha set",
+            "basket.py, judgement 1, class attribute, set, round 2 set",
+            "basket.py, judgement 2, call default, set, round 2 set",
+            "report.py, judgement 1, mutable default, set, round 2 set",
+            "basket.py, judgement 1, class attribute, set, alpha set",
+            "basket.py, judgement 2, call default, set, alpha set",
+            "report.py, judgement 1, mutable default, set, alpha set",
+            "basket.py, judgement 1, class attribute, set, round 2 set",
+            "basket.py, judgement 2, call default, set, round 2 set",
+            "report.py, judgement 1, mutable default, set, round 2 set",
+        ],
+        "the structure section's lines stand in standing order across the two labels\n{out}"
+    );
+    let start = out
+        .find("Category, smell")
+        .expect("a category section stands");
+    let rest = &out[start..];
+    let section = match rest.find("\nCategory, ") {
+        Some(next) => &rest[..next],
+        None => rest,
+    };
+    let lines: Vec<&str> = section
+        .lines()
+        .filter(|line| line.contains(", judgement "))
+        .collect();
+    assert_eq!(
+        lines,
+        vec![
+            "report.py, judgement 2, bare except, set, alpha set",
+            "report.py, judgement 3, print call, set, alpha set",
+            "report.py, judgement 2, bare except, set, round 2 set",
+            "report.py, judgement 3, print call, set, round 2 set",
+            "report.py, judgement 2, bare except, set, alpha set",
+            "report.py, judgement 3, print call, set, alpha set",
+            "report.py, judgement 2, bare except, set, round 2 set",
+            "report.py, judgement 3, print call, set, round 2 set",
+        ],
+        "the smell section's lines stand in standing order across the two labels\n{out}"
+    );
+    assert_eq!(
+        out.matches("Judgements read, 12\n").count(),
+        1,
+        "the structure section reads its judgements at each standing of each entry\n{out}"
+    );
+    assert_eq!(
+        out.matches("Judgements read, 8\n").count(),
+        1,
+        "the smell section reads its judgements at each standing of each entry\n{out}"
+    );
+    let (code, out, _err) = run(&["census", &path]);
+    assert_eq!(code, 0, "census over the interleaved fixture\n{out}");
+    let alpha_block = "Set, alpha set\nFiles, 2\nJudgements, 5\n\
+        Shape, bare except, 1\nShape, print call, 1\nShape, mutable default, 1\n\
+        Shape, placeholder name, 0\nShape, call default, 1\nShape, class attribute, 1\n\
+        Borderline, 0\nPattern, near placeholder name, 0\nPattern, broad handler, 0\n\
+        Pattern, shared member default, 0\nVerdicts, none recorded";
+    assert_eq!(
+        out.matches(alpha_block).count(),
+        2,
+        "the alpha set's census block stands at each standing\n{out}"
+    );
+    let round2_block = "Set, round 2 set\nFiles, 3\nJudgements, 5\n\
+        Shape, bare except, 1\nShape, print call, 1\nShape, mutable default, 1\n\
+        Shape, placeholder name, 0\nShape, call default, 1\nShape, class attribute, 1\n\
+        Borderline, 0\nPattern, near placeholder name, 0\nPattern, broad handler, 0\n\
+        Pattern, shared member default, 0\nVerdicts, none recorded";
+    assert_eq!(
+        out.matches(round2_block).count(),
+        2,
+        "the round 2 set's census block stands at each standing\n{out}"
+    );
+    let blocks_in_order = [alpha_block, round2_block, alpha_block, round2_block];
+    let mut rest = out.as_str();
+    let mut blocks_stand_in_order = true;
+    for block in blocks_in_order {
+        match rest.find(block) {
+            Some(found) => rest = &rest[found + block.len()..],
+            None => {
+                blocks_stand_in_order = false;
+                break;
+            }
+        }
+    }
+    assert!(
+        blocks_stand_in_order,
+        "the census blocks stand in the order the sets stand in the collection, \
+            first, second, first, second\n{out}"
+    );
+    assert_eq!(
+        closing_block(&out),
+        "Total\nSets, 4\nFiles, 10\nJudgements, 20\n\
+            Shape, bare except, 4\nShape, print call, 4\nShape, mutable default, 4\n\
+            Shape, placeholder name, 0\nShape, call default, 4\nShape, class attribute, 4\n\
+            Borderline, 0\nPattern, near placeholder name, 0\nPattern, broad handler, 0\n\
+            Pattern, shared member default, 0\nVerdicts, none recorded",
+        "census total over the interleaved fixture\n{out}"
+    );
+    let (code, out, _err) = run(&["verdicts", &path]);
+    assert_eq!(code, 0, "verdicts over the interleaved fixture\n{out}");
+    assert_eq!(
+        out.matches("Verdicts, none recorded\nVerdicts read, 0\n")
+            .count(),
+        4,
+        "each entry's section closing stands at each of its standings\n{out}"
+    );
+}

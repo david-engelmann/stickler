@@ -221,8 +221,13 @@ fn readme_reports_the_round_4_standing() {
     // standing in review, so the count stood at one
     // while Round 27 stood built, until the Round 27
     // closure landed slice 28 and the count returned to
+    // zero. Adjusted again with the Round 28 slice, as
+    // the named mechanical consequence of slice 29
+    // standing in review, so the count stood at one
+    // while Round 28 stood built, until the Round 28
+    // closure landed slice 29 and the count returned to
     // zero.
-    assert_eq!(text.matches("built and in review").count(), 0);
+    assert_eq!(text.matches("built and in review").count(), 1);
 }
 
 #[test]
@@ -1504,4 +1509,33 @@ fn the_formats_section_carries_no_readers_enumeration_and_no_ck_45() {
         ),
         "the enumeration stands nowhere in the formats section"
     );
+}
+
+/// The Round 28 pins. The obligations pin fails
+/// against the tree Round 27 closed on by the
+/// absence of the obligations it reads, and the
+/// status pin fails on that tree's README by the
+/// absence of the two lines it holds, each line
+/// read whole as the standing pins read theirs.
+#[test]
+fn contract_carries_the_round_28_obligations() {
+    let text = read("CONTRACT.md");
+    assert!(text.contains("## Round 28 obligations, full form"));
+    assert!(text.contains("- CK-51."));
+    let ck51 = text
+        .lines()
+        .find(|line| line.starts_with("- CK-51."))
+        .unwrap_or("");
+    assert!(ck51.contains("in the form the pins of those obligations cannot witness"));
+    assert!(ck51.contains("groups the block of a standing with the blocks of its label mates"));
+}
+
+#[test]
+fn readme_reports_the_round_28_status() {
+    let text = read("README.md");
+    let standing = "- Contract, CK-51 now stands in full form, the standing order of the checker judgement standing of two judgement bearing set entries each standing twice across the shapes, categories, and census readings, Round 28 has not closed.";
+    assert!(text.lines().any(|line| line == standing));
+    let slice_line = "- Slice 29 is built and in review. It carries the standing order of two judgement bearing entries each standing twice under CK-51, pinned at the command surface over the sixteen collection commands, with no rendering over any collection moving.";
+    assert!(text.lines().any(|line| line == slice_line));
+    assert!(text.contains("Closed perfection rounds, 27 of 100"));
 }
