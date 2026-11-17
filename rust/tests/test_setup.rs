@@ -24,7 +24,7 @@ fn agents_carries_the_canonical_marker() {
 #[test]
 fn readme_states_the_closed_round_count() {
     let text = read("README.md");
-    assert!(text.contains("Closed perfection rounds, 30 of 100"));
+    assert!(text.contains("Closed perfection rounds, 31 of 100"));
 }
 
 #[test]
@@ -242,7 +242,7 @@ fn readme_reports_the_round_4_standing() {
     // while Round 31 stood built, until the Round 31
     // closure landed slice 32 and the count returned to
     // zero.
-    assert_eq!(text.matches("built and in review").count(), 1);
+    assert_eq!(text.matches("built and in review").count(), 0);
 }
 
 #[test]
@@ -260,7 +260,7 @@ fn readme_reports_the_round_5_standing() {
         example named as constructed, with the suite running offline \
         on the recorded and constructed sets.";
     assert!(text.lines().any(|line| line == slice_line));
-    assert!(text.contains("Closed perfection rounds, 30 of 100"));
+    assert!(text.contains("Closed perfection rounds, 31 of 100"));
 }
 
 #[test]
@@ -279,7 +279,7 @@ fn readme_reports_the_round_6_standing() {
         and census, with the suite running offline on the recorded \
         envelopes and sets.";
     assert!(text.lines().any(|line| line == slice_line));
-    assert!(text.contains("Closed perfection rounds, 30 of 100"));
+    assert!(text.contains("Closed perfection rounds, 31 of 100"));
 }
 
 #[test]
@@ -297,7 +297,7 @@ fn readme_reports_the_round_7_standing() {
         beside check, render, review, census, and rejudged, with the \
         suite running offline on the recorded verdicts.";
     assert!(text.lines().any(|line| line == slice_line));
-    assert!(text.contains("Closed perfection rounds, 30 of 100"));
+    assert!(text.contains("Closed perfection rounds, 31 of 100"));
 }
 
 #[test]
@@ -319,7 +319,7 @@ fn readme_reports_the_round_8_standing() {
         review, census, rejudged, and split, with the suite running \
         offline on the recorded verdicts.";
     assert!(text.lines().any(|line| line == slice_line));
-    assert!(text.contains("Closed perfection rounds, 30 of 100"));
+    assert!(text.contains("Closed perfection rounds, 31 of 100"));
 }
 
 #[test]
@@ -345,7 +345,7 @@ fn readme_reports_the_round_9_standing() {
         rejudged, split, and set review renderings, with the suite \
         running offline on the recorded verdicts.";
     assert!(text.lines().any(|line| line == slice_line));
-    assert!(text.contains("Closed perfection rounds, 30 of 100"));
+    assert!(text.contains("Closed perfection rounds, 31 of 100"));
 }
 
 #[test]
@@ -371,7 +371,7 @@ fn readme_reports_the_round_10_standing() {
         README brought to the fleet README standard, with the suite \
         running offline on the recorded verdicts.";
     assert!(text.lines().any(|line| line == slice_line));
-    assert!(text.contains("Closed perfection rounds, 30 of 100"));
+    assert!(text.contains("Closed perfection rounds, 31 of 100"));
 }
 
 #[test]
@@ -397,7 +397,7 @@ fn readme_reports_the_round_11_standing() {
         the set review rendering, with the suite running offline on the \
         recorded verdicts.";
     assert!(text.lines().any(|line| line == slice_line));
-    assert!(text.contains("Closed perfection rounds, 30 of 100"));
+    assert!(text.contains("Closed perfection rounds, 31 of 100"));
 }
 
 #[test]
@@ -425,7 +425,7 @@ fn readme_reports_the_round_12_status() {
         large change set and large diff under examples, with the suite \
         running offline on the recorded verdicts.";
     assert!(text.lines().any(|line| line == slice_line));
-    assert!(text.contains("Closed perfection rounds, 30 of 100"));
+    assert!(text.contains("Closed perfection rounds, 31 of 100"));
 }
 
 /// The Round 13 pins. The obligations pin fails against
@@ -945,7 +945,7 @@ fn readme_reports_the_round_13_status() {
         examples, with the suite running offline on the recorded \
         verdicts.";
     assert!(text.lines().any(|line| line == slice_line));
-    assert!(text.contains("Closed perfection rounds, 30 of 100"));
+    assert!(text.contains("Closed perfection rounds, 31 of 100"));
 }
 
 /// The Round 14 status pin, in the standing form. It
@@ -975,7 +975,7 @@ fn readme_reports_the_round_14_status() {
         the constructed shapes collection under examples, with the \
         suite running offline on the recorded verdicts.";
     assert!(text.lines().any(|line| line == slice_line));
-    assert!(text.contains("Closed perfection rounds, 30 of 100"));
+    assert!(text.contains("Closed perfection rounds, 31 of 100"));
 }
 
 /// The Round 15 status pin, in the standing form. It
@@ -1007,7 +1007,7 @@ fn readme_reports_the_round_15_status() {
         heads, and the constructed choices collection under examples, \
         with the suite running offline on the recorded verdicts.";
     assert!(text.lines().any(|line| line == slice_line));
-    assert!(text.contains("Closed perfection rounds, 30 of 100"));
+    assert!(text.contains("Closed perfection rounds, 31 of 100"));
 }
 
 /// The Round 16 status pin in slice form. It fails
@@ -1035,7 +1035,7 @@ fn readme_reports_the_round_16_status() {
         and choices, and the constructed categories collection under \
         examples, with the suite running offline on the recorded verdicts.";
     assert!(text.lines().any(|line| line == slice_line));
-    assert!(text.contains("Closed perfection rounds, 30 of 100"));
+    assert!(text.contains("Closed perfection rounds, 31 of 100"));
 }
 
 /// The Round 17 status pin in slice form. It fails
@@ -1066,7 +1066,7 @@ fn readme_reports_the_round_17_status() {
         constructed grounds collection under examples, with the suite \
         running offline on the recorded verdicts.";
     assert!(text.lines().any(|line| line == slice_line));
-    assert!(text.contains("Closed perfection rounds, 30 of 100"));
+    assert!(text.contains("Closed perfection rounds, 31 of 100"));
 }
 
 /// The Round 18 status pin in slice form. It fails
@@ -1098,7 +1098,7 @@ fn readme_reports_the_round_18_status() {
         and grounds, and the constructed judgements collection under \
         examples, with the suite running offline on the recorded verdicts.";
     assert!(text.lines().any(|line| line == slice_line));
-    assert!(text.contains("Closed perfection rounds, 30 of 100"));
+    assert!(text.contains("Closed perfection rounds, 31 of 100"));
 }
 
 #[test]
@@ -1116,7 +1116,7 @@ fn readme_reports_the_round_19_status() {
         file's recorded pairs standing whole on their flags, over the \
         collection form of CK-12.";
     assert!(text.lines().any(|line| line == slice_line));
-    assert!(text.contains("Closed perfection rounds, 30 of 100"));
+    assert!(text.contains("Closed perfection rounds, 31 of 100"));
 }
 
 #[test]
@@ -1211,7 +1211,7 @@ fn readme_reports_the_round_20_status() {
         state in the order CK-8 states the judgements, each file's recorded pairs \
         standing whole on their flags, over the collection form of CK-12.";
     assert!(text.lines().any(|line| line == slice_line));
-    assert!(text.contains("Closed perfection rounds, 30 of 100"));
+    assert!(text.contains("Closed perfection rounds, 31 of 100"));
 }
 
 /// The formats posture pin of the Round 20 slice. The
@@ -1279,7 +1279,7 @@ fn readme_reports_the_round_21_status() {
         that state standing as one flag line in the form of CK-20, over the \
         collection form of CK-12.";
     assert!(text.lines().any(|line| line == slice_line));
-    assert!(text.contains("Closed perfection rounds, 30 of 100"));
+    assert!(text.contains("Closed perfection rounds, 31 of 100"));
 }
 
 /// The formats posture pin of the Round 21 slice. The
@@ -1339,7 +1339,7 @@ fn readme_reports_the_round_22_status() {
     assert!(text.lines().any(|line| line == standing));
     let slice_line = "- Slice 23 has landed. It carries the depth message repair under FIX-CK-31, the seventeen covered commands naming the depth refusal in their defect, with the render command's nesting fall and the split command's generic defect standing as they stand, and no reading of a file that parses rendering one byte differently.";
     assert!(text.lines().any(|line| line == slice_line));
-    assert!(text.contains("Closed perfection rounds, 30 of 100"));
+    assert!(text.contains("Closed perfection rounds, 31 of 100"));
 }
 /// The Round 23 pins. The obligations pin fails
 /// against the tree Round 22 closed on by the
@@ -1366,7 +1366,7 @@ fn readme_reports_the_round_23_status() {
     assert!(text.lines().any(|line| line == standing));
     let slice_line = "- Slice 24 has landed. It carries the models reading, the twenty-first command, its sections standing per model in first appearance order, each section holding one flag group per flag carrying a verdict of that model with the one pair of that model the flag carries, over the collection form of CK-12.";
     assert!(text.lines().any(|line| line == slice_line));
-    assert!(text.contains("Closed perfection rounds, 30 of 100"));
+    assert!(text.contains("Closed perfection rounds, 31 of 100"));
 }
 
 /// The Round 24 pins. The obligations pin fails
@@ -1400,7 +1400,7 @@ fn readme_reports_the_round_24_status() {
     assert!(text.lines().any(|line| line == standing));
     let slice_line = "- Slice 25 has landed. It carries the repeated entry standing of CK-47, pinned at the command surface over the sixteen collection commands and the rejudged pair of one entry standing twice, and the fencing enumeration of CK-46 completed under FIX-CK-32, with no rendering over any collection moving.";
     assert!(text.lines().any(|line| line == slice_line));
-    assert!(text.contains("Closed perfection rounds, 30 of 100"));
+    assert!(text.contains("Closed perfection rounds, 31 of 100"));
 }
 
 /// The Round 25 pins. The obligations pin fails
@@ -1429,7 +1429,7 @@ fn readme_reports_the_round_25_status() {
     assert!(text.lines().any(|line| line == standing));
     let slice_line = "- Slice 26 has landed. It carries the checker judgement standing of a repeated entry under CK-48, pinned at the command surface over the sixteen collection commands, with no rendering over any collection moving.";
     assert!(text.lines().any(|line| line == slice_line));
-    assert!(text.contains("Closed perfection rounds, 30 of 100"));
+    assert!(text.contains("Closed perfection rounds, 31 of 100"));
 }
 
 /// The Round 26 pins. The obligations pin fails
@@ -1458,7 +1458,7 @@ fn readme_reports_the_round_26_status() {
     assert!(text.lines().any(|line| line == standing));
     let slice_line = "- Slice 27 has landed. It carries the checker judgement standing of two judgement bearing entries each standing twice under CK-49, pinned at the command surface over the sixteen collection commands, with no rendering over any collection moving.";
     assert!(text.lines().any(|line| line == slice_line));
-    assert!(text.contains("Closed perfection rounds, 30 of 100"));
+    assert!(text.contains("Closed perfection rounds, 31 of 100"));
 }
 
 /// The Round 27 pins. The obligations pin fails
@@ -1487,7 +1487,7 @@ fn readme_reports_the_round_27_status() {
     assert!(text.lines().any(|line| line == standing));
     let slice_line = "- Slice 28 has landed. It carries the checker judgement standing of two distinct entries under one label under CK-50, pinned at the command surface over the sixteen collection commands, with no rendering over any collection moving.";
     assert!(text.lines().any(|line| line == slice_line));
-    assert!(text.contains("Closed perfection rounds, 30 of 100"));
+    assert!(text.contains("Closed perfection rounds, 31 of 100"));
 }
 
 /// The formats posture pin of the Round 23 slice.
@@ -1552,7 +1552,7 @@ fn readme_reports_the_round_28_status() {
     assert!(text.lines().any(|line| line == standing));
     let slice_line = "- Slice 29 has landed. It carries the standing order of two judgement bearing entries each standing twice under CK-51, pinned at the command surface over the sixteen collection commands, with no rendering over any collection moving.";
     assert!(text.lines().any(|line| line == slice_line));
-    assert!(text.contains("Closed perfection rounds, 30 of 100"));
+    assert!(text.contains("Closed perfection rounds, 31 of 100"));
 }
 
 /// The Round 29 pins. The obligations pin fails
@@ -1583,7 +1583,7 @@ fn readme_reports_the_round_29_status() {
     assert!(text.lines().any(|line| line == standing));
     let slice_line = "- Slice 30 has landed. It carries the standing order of two judgement bearing entries each standing twice at the naming seats under CK-52, pinned at the command surface over the sixteen collection commands, with no rendering over any collection moving.";
     assert!(text.lines().any(|line| line == slice_line));
-    assert!(text.contains("Closed perfection rounds, 30 of 100"));
+    assert!(text.contains("Closed perfection rounds, 31 of 100"));
 }
 
 /// The Round 30 pins. The obligations pin fails
@@ -1614,7 +1614,7 @@ fn readme_reports_the_round_30_status() {
     assert!(text.lines().any(|line| line == standing));
     let slice_line = "- Slice 31 has landed. It carries the standing order of two judgement bearing entries each standing twice at the naming seats under CK-53, pinned at the command surface over the sixteen collection commands, with no rendering over any collection moving.";
     assert!(text.lines().any(|line| line == slice_line));
-    assert!(text.contains("Closed perfection rounds, 30 of 100"));
+    assert!(text.contains("Closed perfection rounds, 31 of 100"));
 }
 
 /// The Round 31 pins. The obligations pin fails
@@ -1643,9 +1643,9 @@ fn contract_carries_the_round_31_obligations() {
 #[test]
 fn readme_reports_the_round_31_status() {
     let text = read("README.md");
-    let standing = "- Contract, CK-54 now stands in full form, the standing order of the checker judgement standing of two judgement bearing set entries each standing twice at the print call, mutable default and call default sections and at the smell section, the print call judgements of the collection standing in two files and the mutable default and call default judgements of the collection each standing in two files, across the shapes and categories readings, Round 31 has not closed.";
+    let standing = "- Contract, CK-54 met. It stands in full form in CONTRACT.md, and Round 31 closed on the merged slice 32 after three reviews, with the spec review approving with findings at one Minor and one Observation, the Minor standing charged to the slice on the contract section's seat and the Observation to the build record for its silence on the seat the splice in fact took, the standards review approving with no findings charged on any axis, its formatting proof standing unexecuted under its rate limit stop and charged forward to this closure's fresh extraction gate, and the red team approving with findings at two Minors, both standing against the design record and none charged to the slice, and CodeRabbit returning one submitted review holding one nitpick on the standing count assertion's repeated form and no inline comments, the nitpick dismissed as addressing the family's standing status pin form and naming no defect in the slice. The Minor stands cured in slice before the landing by the repair lane, the Round 31 section reseated at the end of the Round 30 body directly before the formats heading, the formats heading standing at char 328,107 in the reseated contract, and the branch reparented onto main at the resulting trees, the new head's tree verified blob for blob against the reviewed head's map with the contract at its reseated blob. CK-54 stands met by one pin in the form of the pin of CK-53 over the surgical fixture, one collection carrying two judgement bearing entries of the standing census collection at two standings each in interleaved order under their own labels, the first a surgical derivative of the round 2 set entry without basket.py under the label alpha set and the second the round 2 set entry itself, the pin's surgery restating the def line of basket.py as a def line carrying a mutable default beside its call default, the def line of report.py as a def line carrying a call default beside its mutable default, and the one added line of tidy.py as an assignment of a print call's result to a placeholder name, and so seating the print call judgements of the collection in two files and the mutable default and call default judgements of the collection each in two files, where the fixtures of CK-49 to CK-53 seat the lines of the three shapes sections in one file and at one judgement number and the lines of the smell section in one file, the pin driving the sixteen collection commands and asserting the closings whole, the six shapes sections' lines as ordered wholes, the three categories sections' lines as ordered wholes, and the census blocks byte for byte from the derived counts, with no file under rust/src moving, the build step standing expressly empty, and the slice's one restatement of a standing pin standing as the round 4 standing pin's chain segment with its count moving from zero to one. The slice stands as pull request 77 merged at 1ce0c8b5, with main's tree standing verified equal to the repaired slice tree af776185, and the census standing at 1059. The design proved the gap by computation over the hash verified texts, the file name ordering standing as the identity at six sections and the judgement number ordering at five sections over every asserted drive, and the pin's figures standing computed three ways, by hand from the checker text, by the transliteration the Round 30 red team built, and by the matches rule of the standing pins. The build verified the premise whole over all 171 files of the base tree, re-derived the pin's figures independently by running that transliteration over the fixture surgery in memory, reproducing the design note's figures line for line, and executed its formatting proof whole in memory over both touched Rust files with the base texts standing as controls, three assertion wraps in the pin's surgery standing adopted from the formatter's own output where the lane's first wrapping parted from it. The spec review's completion seating verified the census ladder whole at 1056, 1056, 1057 and 1059 by its own counts, the inserted contract span byte identical to the note's drafted section, and the pin's figures figure for figure against its own hand derivation from the checker text. The red team's adopted oracle, validated against the pins of CK-52 and CK-53 whole and against both goldens before it stood believed anywhere, reproduced the gap computation whole over the new fixture at thirty judgements with its census blocks and matches pairs, confirmed the completeness claim over every asserted drive, and priced the cure's boundary inside the design's own stated radius, the same file tie at the mutable default section standing at the fixture's heart rather than at its edge. The form gate's format leg stands discharged by proof at three seats, the build's formatting proof, the red team's independent reproduction over the base and head texts of both touched files, and this closure's fresh extraction gate, which fetched the head tree's 171 blobs whole with every SHA-1 asserted, recounted the census over the assembled texts at 1059, and proved both touched files byte identical to the installed rustfmt's output at edition 2021 with the base texts standing as controls. The warm-up family stands in three legs beside them. The first leg, the nine legs and the differential the Round 29 closure carried, stands executed at b1-ph-shapes alone, the red team's resumed session running that leg whole in the window after the rate reset at 1050 passed and 0 failed, matching its computed expectation exactly, its executed verdict resting on the runner's printed line of the run itself with the run's log standing overwritten by a later refused attempt, and its remaining eight legs, b2-nm-categories, b3-tc-bareexcept, b4-tb-smell, c1-pin-on-base, c2-status-on-base, f1-ph-shapes, f2-nm-categories, and the local form gate run, stand carried unexecuted with the differential over the standing command set, after twenty nine counted attempts in the Round 29 build, forty five counted attempts and a persistent run of four hundred ninety nine at the Round 30 design, ten leg attempts at the Round 30 build, ten attempts in the red team's detached b2 retry loop, seven driver attempts at b1-ph-shapes and eighty refused window probes in the red team's completion lane, thirty attempts at b2-nm-categories and three attempts at every other carried leg in the red team's resumed session, the one b2 attempt that reached compilation in that session dying on the fault at seven os errors with no assertion failure, eight attempts at every carried leg in the Round 31 build against the source trees standing intact on disk, four attempts at every carried leg in the Round 31 red team's campaign, and three attempts at every carried leg at this closure, every attempt of the last three seatings refused at its tree copy's first file by the write fault, and the hosted gate on the slice head standing as the verdict of record in their place. The second leg, the ten legs and the differential of the Round 30 round, stands carried whole and unexecuted, its gap legs g1-fn-shapes and g2-fn-categories standing derived by the oracle and nowhere executed, its controls and candidate legs standing at their computed figures, its form gate's format leg over the two touched files standing discharged by the Round 30 build's formatting proof, after the Round 31 build's attempts at its base tree landing standing refused at eight counted writes at the first file, four attempts at every leg in the Round 31 red team's campaign, and three attempts at every leg at this closure. The third leg, this round's own twenty nine legs and its differential, stands carried whole and unexecuted, its eleven gap legs standing as the identity over every asserted drive as computed, its three control legs and two candidate legs standing at their computed figures, its seven form legs standing desk proven at the pin's own literals by the standards review at exactly the parting indices the design states, its four boundary legs standing priced inside the design's stated radius by the red team, and its form gate's format leg standing discharged by the proofs above, after the build's landings of its two source trees standing refused at the base tree's first twelve files across eight attempts each and at the form tree's first file across eight attempts, two hundred sixty six leg attempts in the red team's campaign, and three attempts at every leg at this closure, the hosted gate on the slice head standing as the verdict of record in their place. The design record's items stand named in the open, its fourth section's structure row stating the judgement number first parting at index 1 over every fixture drive where it stands at index 2 over the fixtures of CK-52 and CK-53, the census, CK-49 and CK-50 drives standing at index 1 as stated, and its CK-48 sentence stating set label partings at index 1 at the print call, mutable default and call default sections and at index 2 at structure and seating that fixture's placeholder name and naming lines in tidy.py, where over the fixture as constructed no set label parting stands anywhere and those two sections stand empty, both items riding the errata queue and neither moving a verdict, a gap claim, or a leg expectation, and the build record's one Observation standing beside them, its silence on the seat the splice in fact took against its own premise section's recital of the charged seat. The round's obligations pin stands written in the anchored form from its first writing, and the suite stands at 1059. No amendment stands spent by the round, FIX-CK-33 standing free and unspent and FIX-CK-27 standing unconsumed.";
     assert!(text.lines().any(|line| line == standing));
-    let slice_line = "- Slice 32 is built and in review. It carries the standing order of two judgement bearing entries each standing twice at the print call, mutable default, call default and smell seats under CK-54, pinned at the command surface over the sixteen collection commands, with no rendering over any collection moving.";
+    let slice_line = "- Slice 32 has landed. It carries the standing order of two judgement bearing entries each standing twice at the print call, mutable default, call default and smell seats under CK-54, pinned at the command surface over the sixteen collection commands, with no rendering over any collection moving.";
     assert!(text.lines().any(|line| line == slice_line));
-    assert!(text.contains("Closed perfection rounds, 30 of 100"));
+    assert!(text.contains("Closed perfection rounds, 31 of 100"));
 }
