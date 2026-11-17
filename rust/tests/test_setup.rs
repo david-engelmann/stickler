@@ -226,8 +226,13 @@ fn readme_reports_the_round_4_standing() {
     // standing in review, so the count stood at one
     // while Round 28 stood built, until the Round 28
     // closure landed slice 29 and the count returned to
+    // zero. Adjusted again with the Round 29 slice, as
+    // the named mechanical consequence of slice 30
+    // standing in review, so the count stood at one
+    // while Round 29 stood built, until the Round 29
+    // closure landed slice 30 and the count returned to
     // zero.
-    assert_eq!(text.matches("built and in review").count(), 0);
+    assert_eq!(text.matches("built and in review").count(), 1);
 }
 
 #[test]
@@ -1536,6 +1541,37 @@ fn readme_reports_the_round_28_status() {
     let standing = "- Contract, CK-51 met. It stands in full form in CONTRACT.md, and Round 28 closed on the merged slice 29 after three reviews, with the spec review approving with findings at two Observations, the standards review approving with findings at one Observation, and the red team approving with no findings against the slice and one Observation, every Observation standing against the design record and none charged to the slice, and CodeRabbit returning no actionable comments, no inline comments, and no submitted reviews on the slice. CK-51 stands met by one companion pin over the pin of CK-49's own fixture, one collection carrying two judgement bearing entries of the standing census collection at two standings each in interleaved order under their own labels, the first a surgical derivative of the round 2 set entry relabelled alpha set and the second the round 2 set entry itself, the pin driving the sixteen collection commands and asserting the census blocks in standing order, each block asserted whole at two occurrences and the four blocks ordered by the advancing cursor form the Round 27 repair set, each carrying shapes section's lines as an ordered whole at all five sections, and the categories structure and smell sections' lines as ordered wholes, with no standing pin restated, no file under rust/src moving, and the build step standing expressly empty. The slice stands as pull request 69 merged at bce4fd1c, with main's tree standing verified equal to the slice tree c777988c, and the census standing at 1050. The design executed its whole mutation family at design time and the build re-executed it name for name in the warm-up, the warm-up standing whole with no parting and the build's and the design's eighteen line leg ledgers standing byte identical, the four gap legs passing whole on the base at 1047 passed and 0 failed and every gap leg falling at the new pin on the form. The red team re-executed the four base gap legs whole at 1047 passed and 0 failed and TA at the renderer and the grouped tally walk TG on the head name for name, and its own disturbance, a stable sort of the categories structure section's lines by file name, a field no leg of the design's family names, falls at the pin of CK-50 and the new pin as it predicted before its run, the new pin falling at its structure section assertion, and its differential over 208 drives between the base and head binaries standing at no parting. The standards review's own label grouping disturbance at the census renderer fails the new pin alone at its census block order assertion, the pin of CK-49 passing under the same disturbance. The one parting the build found stands settled by execution and recorded in the open, the design note's section 4 print of the pin grouping the shapes call default and class attribute vecs by label, alpha, alpha, round 2, round 2, where the executed text alternates them by standing, alpha, round 2, alpha, round 2, the note's own section 5 prose standing with the executed text against the print, and the print standing named for the errata queue. The design report's section 5 claim, that the pin text printed in the note stands verified byte for byte against the executed scratch text, stands refuted at those two vecs by the spec review's three way comparison of the note's print, the design lane's form tree, and the committed blob, both items standing as records items with no cure charged. The round's obligations pin stands written in the anchored form from its first writing, and the suite stands at 1050. No amendment stands spent by the round, FIX-CK-33 standing free and unspent and FIX-CK-27 standing unconsumed.";
     assert!(text.lines().any(|line| line == standing));
     let slice_line = "- Slice 29 has landed. It carries the standing order of two judgement bearing entries each standing twice under CK-51, pinned at the command surface over the sixteen collection commands, with no rendering over any collection moving.";
+    assert!(text.lines().any(|line| line == slice_line));
+    assert!(text.contains("Closed perfection rounds, 28 of 100"));
+}
+
+/// The Round 29 pins. The obligations pin fails
+/// against the tree Round 28 closed on by the
+/// absence of the obligations it reads, and the
+/// status pin fails on that tree's README by the
+/// absence of the two lines it holds, each line
+/// read whole as the standing pins read theirs.
+#[test]
+fn contract_carries_the_round_29_obligations() {
+    let text = read("CONTRACT.md");
+    assert!(text.contains("## Round 29 obligations, full form"));
+    assert!(text.contains("- CK-52."));
+    let ck52 = text
+        .lines()
+        .find(|line| line.starts_with("- CK-52."))
+        .unwrap_or("");
+    assert!(ck52.contains(
+        "at the placeholder name section of the shapes reading and the naming section of the categories reading"
+    ));
+    assert!(ck52.contains("by the pin's own restatement of the one added line"));
+}
+
+#[test]
+fn readme_reports_the_round_29_status() {
+    let text = read("README.md");
+    let standing = "- Contract, CK-52 now stands in full form, the standing order of the checker judgement standing of two judgement bearing set entries each standing twice at the placeholder name and naming sections across the shapes and categories readings, Round 29 has not closed.";
+    assert!(text.lines().any(|line| line == standing));
+    let slice_line = "- Slice 30 is built and in review. It carries the standing order of two judgement bearing entries each standing twice at the naming seats under CK-52, pinned at the command surface over the sixteen collection commands, with no rendering over any collection moving.";
     assert!(text.lines().any(|line| line == slice_line));
     assert!(text.contains("Closed perfection rounds, 28 of 100"));
 }
