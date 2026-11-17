@@ -4471,7 +4471,7 @@ fn every_collection_command_prints_the_bare_except_judgements_of_two_files_in_st
         .collect();
     assert_eq!(
         lines,
-        vec![],
+        Vec::<&str>::new(),
         "the naming section's lines stand in standing order across the two labels\n{out}"
     );
     let start = out
