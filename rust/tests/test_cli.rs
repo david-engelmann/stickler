@@ -1837,29 +1837,34 @@ fn every_collection_command_counts_the_checker_judgements_of_a_repeated_entry_at
         "Sets read, 4\nJudgements read, 10",
         "shapes closing over the judgement fixture\n{out}"
     );
-    let shape_lines: [(&str, &str); 5] = [
+    let shape_lines: [(&str, &str, usize); 5] = [
         (
             "Shape, bare except",
             "report.py, judgement 2, smell, set, round 2 set",
+            2,
         ),
         (
             "Shape, print call",
             "report.py, judgement 3, smell, set, round 2 set",
+            2,
         ),
         (
             "Shape, mutable default",
             "report.py, judgement 1, structure, set, round 2 set",
+            2,
         ),
         (
             "Shape, call default",
             "basket.py, judgement 2, structure, set, round 2 set",
+            2,
         ),
         (
             "Shape, class attribute",
             "basket.py, judgement 1, structure, set, round 2 set",
+            2,
         ),
     ];
-    for (head, line) in shape_lines {
+    for (head, line, total) in shape_lines {
         let start = out.find(head).expect("a shape section stands");
         let rest = &out[start + head.len()..];
         let section = match rest.find("\nShape, ") {
@@ -1871,15 +1876,30 @@ fn every_collection_command_counts_the_checker_judgements_of_a_repeated_entry_at
             2,
             "the judgement line {line} stands at each standing in its own section\n{out}"
         );
+        assert_eq!(
+            section
+                .matches(&format!("Judgements read, {total}\n"))
+                .count(),
+            1,
+            "the {head} section's closing stands at its own total within its own slice\n{out}"
+        );
     }
-    assert_eq!(
-        out.matches("Judgements read, 2\n").count(),
-        5,
-        "each carrying shape section reads its judgements at each standing\n{out}"
-    );
     assert!(
         out.contains("Shape, placeholder name\nNo judgements\nJudgements read, 0\n"),
         "the placeholder name section stands empty\n{out}"
+    );
+    let start = out
+        .find("Shape, placeholder name")
+        .expect("a shape section stands");
+    let rest = &out[start + "Shape, placeholder name".len()..];
+    let section = match rest.find("\nShape, ") {
+        Some(next) => &rest[..next],
+        None => rest,
+    };
+    assert_eq!(
+        section.matches("Judgements read, 0\n").count(),
+        1,
+        "the placeholder name section's closing stands at zero within its own slice\n{out}"
     );
     let order = [
         "Shape, bare except",
@@ -1904,29 +1924,34 @@ fn every_collection_command_counts_the_checker_judgements_of_a_repeated_entry_at
         "Sets read, 4\nJudgements read, 10",
         "categories closing over the judgement fixture\n{out}"
     );
-    let category_lines: [(&str, &str); 5] = [
+    let category_lines: [(&str, &str, usize); 5] = [
         (
             "Category, structure",
             "basket.py, judgement 1, class attribute, set, round 2 set",
+            6,
         ),
         (
             "Category, structure",
             "basket.py, judgement 2, call default, set, round 2 set",
+            6,
         ),
         (
             "Category, structure",
             "report.py, judgement 1, mutable default, set, round 2 set",
+            6,
         ),
         (
             "Category, smell",
             "report.py, judgement 2, bare except, set, round 2 set",
+            4,
         ),
         (
             "Category, smell",
             "report.py, judgement 3, print call, set, round 2 set",
+            4,
         ),
     ];
-    for (head, line) in category_lines {
+    for (head, line, total) in category_lines {
         let start = out.find(head).expect("a category section stands");
         let rest = &out[start + head.len()..];
         let section = match rest.find("\nCategory, ") {
@@ -1938,20 +1963,30 @@ fn every_collection_command_counts_the_checker_judgements_of_a_repeated_entry_at
             2,
             "the judgement line {line} stands at each standing in its own section\n{out}"
         );
+        assert_eq!(
+            section
+                .matches(&format!("Judgements read, {total}\n"))
+                .count(),
+            1,
+            "the {head} section's closing stands at its own total within its own slice\n{out}"
+        );
     }
     assert!(
         out.contains("Category, naming\nNo judgements\nJudgements read, 0\n"),
         "the naming section stands empty\n{out}"
     );
+    let start = out
+        .find("Category, naming")
+        .expect("a category section stands");
+    let rest = &out[start + "Category, naming".len()..];
+    let section = match rest.find("\nCategory, ") {
+        Some(next) => &rest[..next],
+        None => rest,
+    };
     assert_eq!(
-        out.matches("Judgements read, 6\n").count(),
+        section.matches("Judgements read, 0\n").count(),
         1,
-        "the structure section reads its judgements at each standing\n{out}"
-    );
-    assert_eq!(
-        out.matches("Judgements read, 4\n").count(),
-        1,
-        "the smell section reads its judgements at each standing\n{out}"
+        "the naming section's closing stands at zero within its own slice\n{out}"
     );
     let (code, out, _err) = run(&["census", &path]);
     assert_eq!(code, 0, "census over the judgement fixture\n{out}");
@@ -2167,49 +2202,59 @@ fn every_collection_command_counts_the_checker_judgements_of_two_entries_at_each
         "Sets read, 4\nJudgements read, 20",
         "shapes closing over the interleaved fixture\n{out}"
     );
-    let shape_lines: [(&str, &str); 10] = [
+    let shape_lines: [(&str, &str, usize); 10] = [
         (
             "Shape, bare except",
             "report.py, judgement 2, smell, set, alpha set",
+            4,
         ),
         (
             "Shape, bare except",
             "report.py, judgement 2, smell, set, round 2 set",
+            4,
         ),
         (
             "Shape, print call",
             "report.py, judgement 3, smell, set, alpha set",
+            4,
         ),
         (
             "Shape, print call",
             "report.py, judgement 3, smell, set, round 2 set",
+            4,
         ),
         (
             "Shape, mutable default",
             "report.py, judgement 1, structure, set, alpha set",
+            4,
         ),
         (
             "Shape, mutable default",
             "report.py, judgement 1, structure, set, round 2 set",
+            4,
         ),
         (
             "Shape, call default",
             "basket.py, judgement 2, structure, set, alpha set",
+            4,
         ),
         (
             "Shape, call default",
             "basket.py, judgement 2, structure, set, round 2 set",
+            4,
         ),
         (
             "Shape, class attribute",
             "basket.py, judgement 1, structure, set, alpha set",
+            4,
         ),
         (
             "Shape, class attribute",
             "basket.py, judgement 1, structure, set, round 2 set",
+            4,
         ),
     ];
-    for (head, line) in shape_lines {
+    for (head, line, total) in shape_lines {
         let start = out.find(head).expect("a shape section stands");
         let rest = &out[start + head.len()..];
         let section = match rest.find("\nShape, ") {
@@ -2221,15 +2266,30 @@ fn every_collection_command_counts_the_checker_judgements_of_two_entries_at_each
             2,
             "the judgement line {line} stands at each standing in its own section\n{out}"
         );
+        assert_eq!(
+            section
+                .matches(&format!("Judgements read, {total}\n"))
+                .count(),
+            1,
+            "the {head} section's closing stands at its own total within its own slice\n{out}"
+        );
     }
-    assert_eq!(
-        out.matches("Judgements read, 4\n").count(),
-        5,
-        "each carrying shape section reads its judgements at each standing of each entry\n{out}"
-    );
     assert!(
         out.contains("Shape, placeholder name\nNo judgements\nJudgements read, 0\n"),
         "the placeholder name section stands empty\n{out}"
+    );
+    let start = out
+        .find("Shape, placeholder name")
+        .expect("a shape section stands");
+    let rest = &out[start + "Shape, placeholder name".len()..];
+    let section = match rest.find("\nShape, ") {
+        Some(next) => &rest[..next],
+        None => rest,
+    };
+    assert_eq!(
+        section.matches("Judgements read, 0\n").count(),
+        1,
+        "the placeholder name section's closing stands at zero within its own slice\n{out}"
     );
     let order = [
         "Shape, bare except",
@@ -2276,49 +2336,59 @@ fn every_collection_command_counts_the_checker_judgements_of_two_entries_at_each
         "Sets read, 4\nJudgements read, 20",
         "categories closing over the interleaved fixture\n{out}"
     );
-    let category_lines: [(&str, &str); 10] = [
+    let category_lines: [(&str, &str, usize); 10] = [
         (
             "Category, structure",
             "basket.py, judgement 1, class attribute, set, alpha set",
+            12,
         ),
         (
             "Category, structure",
             "basket.py, judgement 1, class attribute, set, round 2 set",
+            12,
         ),
         (
             "Category, structure",
             "basket.py, judgement 2, call default, set, alpha set",
+            12,
         ),
         (
             "Category, structure",
             "basket.py, judgement 2, call default, set, round 2 set",
+            12,
         ),
         (
             "Category, structure",
             "report.py, judgement 1, mutable default, set, alpha set",
+            12,
         ),
         (
             "Category, structure",
             "report.py, judgement 1, mutable default, set, round 2 set",
+            12,
         ),
         (
             "Category, smell",
             "report.py, judgement 2, bare except, set, alpha set",
+            8,
         ),
         (
             "Category, smell",
             "report.py, judgement 2, bare except, set, round 2 set",
+            8,
         ),
         (
             "Category, smell",
             "report.py, judgement 3, print call, set, alpha set",
+            8,
         ),
         (
             "Category, smell",
             "report.py, judgement 3, print call, set, round 2 set",
+            8,
         ),
     ];
-    for (head, line) in category_lines {
+    for (head, line, total) in category_lines {
         let start = out.find(head).expect("a category section stands");
         let rest = &out[start + head.len()..];
         let section = match rest.find("\nCategory, ") {
@@ -2330,20 +2400,30 @@ fn every_collection_command_counts_the_checker_judgements_of_two_entries_at_each
             2,
             "the judgement line {line} stands at each standing in its own section\n{out}"
         );
+        assert_eq!(
+            section
+                .matches(&format!("Judgements read, {total}\n"))
+                .count(),
+            1,
+            "the {head} section's closing stands at its own total within its own slice\n{out}"
+        );
     }
     assert!(
         out.contains("Category, naming\nNo judgements\nJudgements read, 0\n"),
         "the naming section stands empty\n{out}"
     );
+    let start = out
+        .find("Category, naming")
+        .expect("a category section stands");
+    let rest = &out[start + "Category, naming".len()..];
+    let section = match rest.find("\nCategory, ") {
+        Some(next) => &rest[..next],
+        None => rest,
+    };
     assert_eq!(
-        out.matches("Judgements read, 12\n").count(),
+        section.matches("Judgements read, 0\n").count(),
         1,
-        "the structure section reads its judgements at each standing of each entry\n{out}"
-    );
-    assert_eq!(
-        out.matches("Judgements read, 8\n").count(),
-        1,
-        "the smell section reads its judgements at each standing of each entry\n{out}"
+        "the naming section's closing stands at zero within its own slice\n{out}"
     );
     let start = out
         .find("Category, smell")
@@ -2523,34 +2603,39 @@ fn every_collection_command_counts_the_checker_judgements_of_two_distinct_entrie
         "Sets read, 4\nJudgements read, 16",
         "shapes closing over the shared label fixture\n{out}"
     );
-    let shape_lines: [(&str, &str, usize); 5] = [
+    let shape_lines: [(&str, &str, usize, usize); 5] = [
         (
             "Shape, bare except",
             "report.py, judgement 2, smell, set, shared set",
+            4,
             4,
         ),
         (
             "Shape, print call",
             "report.py, judgement 3, smell, set, shared set",
             4,
+            4,
         ),
         (
             "Shape, mutable default",
             "report.py, judgement 1, structure, set, shared set",
+            4,
             4,
         ),
         (
             "Shape, call default",
             "basket.py, judgement 2, structure, set, shared set",
             2,
+            2,
         ),
         (
             "Shape, class attribute",
             "basket.py, judgement 1, structure, set, shared set",
             2,
+            2,
         ),
     ];
-    for (head, line, count) in shape_lines {
+    for (head, line, count, total) in shape_lines {
         let start = out.find(head).expect("a shape section stands");
         let rest = &out[start + head.len()..];
         let section = match rest.find("\nShape, ") {
@@ -2562,20 +2647,30 @@ fn every_collection_command_counts_the_checker_judgements_of_two_distinct_entrie
             count,
             "the judgement line {line} stands at each standing of its entry in its own section\n{out}"
         );
+        assert_eq!(
+            section
+                .matches(&format!("Judgements read, {total}\n"))
+                .count(),
+            1,
+            "the {head} section's closing stands at its own total within its own slice\n{out}"
+        );
     }
-    assert_eq!(
-        out.matches("Judgements read, 4\n").count(),
-        3,
-        "each report carrying shape section reads its judgements at each standing of each entry\n{out}"
-    );
-    assert_eq!(
-        out.matches("Judgements read, 2\n").count(),
-        2,
-        "each basket carrying shape section reads its judgements at each standing of the first entry\n{out}"
-    );
     assert!(
         out.contains("Shape, placeholder name\nNo judgements\nJudgements read, 0\n"),
         "the placeholder name section stands empty\n{out}"
+    );
+    let start = out
+        .find("Shape, placeholder name")
+        .expect("a shape section stands");
+    let rest = &out[start + "Shape, placeholder name".len()..];
+    let section = match rest.find("\nShape, ") {
+        Some(next) => &rest[..next],
+        None => rest,
+    };
+    assert_eq!(
+        section.matches("Judgements read, 0\n").count(),
+        1,
+        "the placeholder name section's closing stands at zero within its own slice\n{out}"
     );
     let order = [
         "Shape, bare except",
@@ -2600,34 +2695,39 @@ fn every_collection_command_counts_the_checker_judgements_of_two_distinct_entrie
         "Sets read, 4\nJudgements read, 16",
         "categories closing over the shared label fixture\n{out}"
     );
-    let category_lines: [(&str, &str, usize); 5] = [
+    let category_lines: [(&str, &str, usize, usize); 5] = [
         (
             "Category, structure",
             "basket.py, judgement 1, class attribute, set, shared set",
             2,
+            8,
         ),
         (
             "Category, structure",
             "basket.py, judgement 2, call default, set, shared set",
             2,
+            8,
         ),
         (
             "Category, structure",
             "report.py, judgement 1, mutable default, set, shared set",
             4,
+            8,
         ),
         (
             "Category, smell",
             "report.py, judgement 2, bare except, set, shared set",
             4,
+            8,
         ),
         (
             "Category, smell",
             "report.py, judgement 3, print call, set, shared set",
             4,
+            8,
         ),
     ];
-    for (head, line, count) in category_lines {
+    for (head, line, count, total) in category_lines {
         let start = out.find(head).expect("a category section stands");
         let rest = &out[start + head.len()..];
         let section = match rest.find("\nCategory, ") {
@@ -2639,15 +2739,30 @@ fn every_collection_command_counts_the_checker_judgements_of_two_distinct_entrie
             count,
             "the judgement line {line} stands at each standing of its entry in its own section\n{out}"
         );
+        assert_eq!(
+            section
+                .matches(&format!("Judgements read, {total}\n"))
+                .count(),
+            1,
+            "the {head} section's closing stands at its own total within its own slice\n{out}"
+        );
     }
     assert!(
         out.contains("Category, naming\nNo judgements\nJudgements read, 0\n"),
         "the naming section stands empty\n{out}"
     );
+    let start = out
+        .find("Category, naming")
+        .expect("a category section stands");
+    let rest = &out[start + "Category, naming".len()..];
+    let section = match rest.find("\nCategory, ") {
+        Some(next) => &rest[..next],
+        None => rest,
+    };
     assert_eq!(
-        out.matches("Judgements read, 8\n").count(),
-        2,
-        "each carrying category section reads its judgements at each standing of each entry\n{out}"
+        section.matches("Judgements read, 0\n").count(),
+        1,
+        "the naming section's closing stands at zero within its own slice\n{out}"
     );
     let start = out
         .find("Category, structure")
@@ -2888,6 +3003,19 @@ fn every_collection_command_prints_the_checker_judgements_of_two_entries_in_stan
         out.contains("Shape, placeholder name\nNo judgements\nJudgements read, 0\n"),
         "the placeholder name section stands empty\n{out}"
     );
+    let start = out
+        .find("Shape, placeholder name")
+        .expect("a shape section stands");
+    let rest = &out[start..];
+    let section = match rest.find("\nShape, ") {
+        Some(next) => &rest[..next],
+        None => rest,
+    };
+    assert_eq!(
+        section.matches("Judgements read, 0\n").count(),
+        1,
+        "the placeholder name section's closing stands at zero within its own slice\n{out}"
+    );
     let shape_sections: [(&str, Vec<&str>); 5] = [
         (
             "Shape, bare except",
@@ -2950,12 +3078,14 @@ fn every_collection_command_prints_the_checker_judgements_of_two_entries_in_stan
             lines, expected,
             "the {head} section's lines stand in standing order across the two labels\n{out}"
         );
+        assert_eq!(
+            section
+                .matches(&format!("Judgements read, {}\n", expected.len()))
+                .count(),
+            1,
+            "the {head} section's closing stands at its own total within its own slice\n{out}"
+        );
     }
-    assert_eq!(
-        out.matches("Judgements read, 4\n").count(),
-        5,
-        "each carrying shape section reads its judgements at each standing of each entry\n{out}"
-    );
     let (code, out, _err) = run(&["categories", &path]);
     assert_eq!(code, 0, "categories over the interleaved fixture\n{out}");
     assert_eq!(
@@ -2966,6 +3096,19 @@ fn every_collection_command_prints_the_checker_judgements_of_two_entries_in_stan
     assert!(
         out.contains("Category, naming\nNo judgements\nJudgements read, 0\n"),
         "the naming section stands empty\n{out}"
+    );
+    let start = out
+        .find("Category, naming")
+        .expect("a category section stands");
+    let rest = &out[start..];
+    let section = match rest.find("\nCategory, ") {
+        Some(next) => &rest[..next],
+        None => rest,
+    };
+    assert_eq!(
+        section.matches("Judgements read, 0\n").count(),
+        1,
+        "the naming section's closing stands at zero within its own slice\n{out}"
     );
     let start = out
         .find("Category, structure")
@@ -2997,6 +3140,11 @@ fn every_collection_command_prints_the_checker_judgements_of_two_entries_in_stan
         ],
         "the structure section's lines stand in standing order across the two labels\n{out}"
     );
+    assert_eq!(
+        section.matches("Judgements read, 12\n").count(),
+        1,
+        "the structure section's closing stands at its own total within its own slice\n{out}"
+    );
     let start = out
         .find("Category, smell")
         .expect("a category section stands");
@@ -3024,14 +3172,9 @@ fn every_collection_command_prints_the_checker_judgements_of_two_entries_in_stan
         "the smell section's lines stand in standing order across the two labels\n{out}"
     );
     assert_eq!(
-        out.matches("Judgements read, 12\n").count(),
+        section.matches("Judgements read, 8\n").count(),
         1,
-        "the structure section reads its judgements at each standing of each entry\n{out}"
-    );
-    assert_eq!(
-        out.matches("Judgements read, 8\n").count(),
-        1,
-        "the smell section reads its judgements at each standing of each entry\n{out}"
+        "the smell section's closing stands at its own total within its own slice\n{out}"
     );
     let (code, out, _err) = run(&["census", &path]);
     assert_eq!(code, 0, "census over the interleaved fixture\n{out}");
@@ -3286,17 +3429,14 @@ fn every_collection_command_prints_the_placeholder_name_judgements_of_two_entrie
             lines, expected,
             "the {head} section's lines stand in standing order across the two labels\n{out}"
         );
+        assert_eq!(
+            section
+                .matches(&format!("Judgements read, {}\n", expected.len()))
+                .count(),
+            1,
+            "the {head} section's closing stands at its own total within its own slice\n{out}"
+        );
     }
-    assert_eq!(
-        out.matches("Judgements read, 4\n").count(),
-        4,
-        "each full shape section reads its judgements at each standing of each entry\n{out}"
-    );
-    assert_eq!(
-        out.matches("Judgements read, 2\n").count(),
-        2,
-        "each part shape section reads its judgements at each standing of the round 2 entry\n{out}"
-    );
     let (code, out, _err) = run(&["categories", &path]);
     assert_eq!(code, 0, "categories over the interleaved fixture\n{out}");
     assert_eq!(
@@ -3326,6 +3466,11 @@ fn every_collection_command_prints_the_placeholder_name_judgements_of_two_entrie
         ],
         "the naming section's lines stand in standing order across the two labels\n{out}"
     );
+    assert_eq!(
+        section.matches("Judgements read, 4\n").count(),
+        1,
+        "the naming section's closing stands at its own total within its own slice\n{out}"
+    );
     let start = out
         .find("Category, structure")
         .expect("a category section stands");
@@ -3351,6 +3496,11 @@ fn every_collection_command_prints_the_placeholder_name_judgements_of_two_entrie
             "report.py, judgement 1, mutable default, set, round 2 set",
         ],
         "the structure section's lines stand in standing order across the two labels\n{out}"
+    );
+    assert_eq!(
+        section.matches("Judgements read, 8\n").count(),
+        1,
+        "the structure section's closing stands at its own total within its own slice\n{out}"
     );
     let start = out
         .find("Category, smell")
@@ -3379,14 +3529,9 @@ fn every_collection_command_prints_the_placeholder_name_judgements_of_two_entrie
         "the smell section's lines stand in standing order across the two labels\n{out}"
     );
     assert_eq!(
-        out.matches("Judgements read, 8\n").count(),
-        2,
-        "the structure and smell sections read their judgements at each standing of each entry\n{out}"
-    );
-    assert_eq!(
-        out.matches("Judgements read, 4\n").count(),
+        section.matches("Judgements read, 8\n").count(),
         1,
-        "the naming section reads its judgements at each standing of each entry\n{out}"
+        "the smell section's closing stands at its own total within its own slice\n{out}"
     );
     let (code, out, _err) = run(&["census", &path]);
     assert_eq!(code, 0, "census over the interleaved fixture\n{out}");
@@ -3645,22 +3790,14 @@ fn every_collection_command_prints_the_placeholder_name_judgements_of_two_files_
             lines, expected,
             "the {head} section's lines stand in standing order across the two labels\n{out}"
         );
+        assert_eq!(
+            section
+                .matches(&format!("Judgements read, {}\n", expected.len()))
+                .count(),
+            1,
+            "the {head} section's closing stands at its own total within its own slice\n{out}"
+        );
     }
-    assert_eq!(
-        out.matches("Judgements read, 4\n").count(),
-        2,
-        "the bare except and mutable default sections read their judgements at each standing of each entry\n{out}"
-    );
-    assert_eq!(
-        out.matches("Judgements read, 8\n").count(),
-        1,
-        "the placeholder name section reads its judgements at each standing of each entry\n{out}"
-    );
-    assert_eq!(
-        out.matches("Judgements read, 2\n").count(),
-        2,
-        "each part shape section reads its judgements at each standing of the round 2 entry\n{out}"
-    );
     let (code, out, _err) = run(&["categories", &path]);
     assert_eq!(code, 0, "categories over the interleaved fixture\n{out}");
     assert_eq!(
@@ -3694,6 +3831,11 @@ fn every_collection_command_prints_the_placeholder_name_judgements_of_two_files_
         ],
         "the naming section's lines stand in standing order across the two labels\n{out}"
     );
+    assert_eq!(
+        section.matches("Judgements read, 8\n").count(),
+        1,
+        "the naming section's closing stands at its own total within its own slice\n{out}"
+    );
     let start = out
         .find("Category, structure")
         .expect("a category section stands");
@@ -3720,6 +3862,11 @@ fn every_collection_command_prints_the_placeholder_name_judgements_of_two_files_
         ],
         "the structure section's lines stand in standing order across the two labels\n{out}"
     );
+    assert_eq!(
+        section.matches("Judgements read, 8\n").count(),
+        1,
+        "the structure section's closing stands at its own total within its own slice\n{out}"
+    );
     let start = out
         .find("Category, smell")
         .expect("a category section stands");
@@ -3743,14 +3890,9 @@ fn every_collection_command_prints_the_placeholder_name_judgements_of_two_files_
         "the smell section's lines stand in standing order across the two labels\n{out}"
     );
     assert_eq!(
-        out.matches("Judgements read, 8\n").count(),
-        2,
-        "the naming and structure sections read their judgements at each standing of each entry\n{out}"
-    );
-    assert_eq!(
-        out.matches("Judgements read, 4\n").count(),
+        section.matches("Judgements read, 4\n").count(),
         1,
-        "the smell section reads its judgements at each standing of each entry\n{out}"
+        "the smell section's closing stands at its own total within its own slice\n{out}"
     );
     let (code, out, _err) = run(&["census", &path]);
     assert_eq!(code, 0, "census over the interleaved fixture\n{out}");
@@ -4054,27 +4196,14 @@ fn every_collection_command_prints_the_print_call_mutable_default_and_call_defau
             lines, expected,
             "the {head} section's lines stand in standing order across the two labels\n{out}"
         );
+        assert_eq!(
+            section
+                .matches(&format!("Judgements read, {}\n", expected.len()))
+                .count(),
+            1,
+            "the {head} section's closing stands at its own total within its own slice\n{out}"
+        );
     }
-    assert_eq!(
-        out.matches("Judgements read, 4\n").count(),
-        2,
-        "the bare except and placeholder name sections read their judgements at each standing of each entry\n{out}"
-    );
-    assert_eq!(
-        out.matches("Judgements read, 8\n").count(),
-        1,
-        "the print call section reads its judgements at each standing of each entry\n{out}"
-    );
-    assert_eq!(
-        out.matches("Judgements read, 6\n").count(),
-        2,
-        "the mutable default and call default sections read their judgements at each standing of each entry\n{out}"
-    );
-    assert_eq!(
-        out.matches("Judgements read, 2\n").count(),
-        1,
-        "the class attribute section reads its judgements at each standing of the round 2 entry\n{out}"
-    );
     let (code, out, _err) = run(&["categories", &path]);
     assert_eq!(code, 0, "categories over the interleaved fixture\n{out}");
     assert_eq!(
@@ -4103,6 +4232,11 @@ fn every_collection_command_prints_the_print_call_mutable_default_and_call_defau
             "tidy.py, judgement 2, placeholder name, set, round 2 set",
         ],
         "the naming section's lines stand in standing order across the two labels\n{out}"
+    );
+    assert_eq!(
+        section.matches("Judgements read, 4\n").count(),
+        1,
+        "the naming section's closing stands at its own total within its own slice\n{out}"
     );
     let start = out
         .find("Category, structure")
@@ -4136,6 +4270,11 @@ fn every_collection_command_prints_the_print_call_mutable_default_and_call_defau
         ],
         "the structure section's lines stand in standing order across the two labels\n{out}"
     );
+    assert_eq!(
+        section.matches("Judgements read, 14\n").count(),
+        1,
+        "the structure section's closing stands at its own total within its own slice\n{out}"
+    );
     let start = out
         .find("Category, smell")
         .expect("a category section stands");
@@ -4167,19 +4306,9 @@ fn every_collection_command_prints_the_print_call_mutable_default_and_call_defau
         "the smell section's lines stand in standing order across the two labels\n{out}"
     );
     assert_eq!(
-        out.matches("Judgements read, 4\n").count(),
+        section.matches("Judgements read, 12\n").count(),
         1,
-        "the naming section reads its judgements at each standing of each entry\n{out}"
-    );
-    assert_eq!(
-        out.matches("Judgements read, 14\n").count(),
-        1,
-        "the structure section reads its judgements at each standing of each entry\n{out}"
-    );
-    assert_eq!(
-        out.matches("Judgements read, 12\n").count(),
-        1,
-        "the smell section reads its judgements at each standing of each entry\n{out}"
+        "the smell section's closing stands at its own total within its own slice\n{out}"
     );
     let (code, out, _err) = run(&["census", &path]);
     assert_eq!(code, 0, "census over the interleaved fixture\n{out}");
@@ -4434,22 +4563,14 @@ fn every_collection_command_prints_the_bare_except_judgements_of_two_files_in_st
             lines, expected,
             "the {head} section's lines stand in standing order across the two labels\n{out}"
         );
+        assert_eq!(
+            section
+                .matches(&format!("Judgements read, {}\n", expected.len()))
+                .count(),
+            1,
+            "the {head} section's closing stands at its own total within its own slice\n{out}"
+        );
     }
-    assert_eq!(
-        out.matches("Judgements read, 8\n").count(),
-        1,
-        "the bare except section reads its judgements at each standing of each entry\n{out}"
-    );
-    assert_eq!(
-        out.matches("Judgements read, 4\n").count(),
-        2,
-        "the print call and mutable default sections read their judgements at each standing of each entry\n{out}"
-    );
-    assert_eq!(
-        out.matches("Judgements read, 2\n").count(),
-        2,
-        "the call default and class attribute sections read their judgements at each standing of the round 2 entry\n{out}"
-    );
     let (code, out, _err) = run(&["categories", &path]);
     assert_eq!(code, 0, "categories over the interleaved fixture\n{out}");
     assert_eq!(
@@ -4473,6 +4594,11 @@ fn every_collection_command_prints_the_bare_except_judgements_of_two_files_in_st
         lines,
         Vec::<&str>::new(),
         "the naming section's lines stand in standing order across the two labels\n{out}"
+    );
+    assert_eq!(
+        section.matches("Judgements read, 0\n").count(),
+        1,
+        "the naming section's closing stands at its own total within its own slice\n{out}"
     );
     let start = out
         .find("Category, structure")
@@ -4499,6 +4625,11 @@ fn every_collection_command_prints_the_bare_except_judgements_of_two_files_in_st
             "report.py, judgement 1, mutable default, set, round 2 set",
         ],
         "the structure section's lines stand in standing order across the two labels\n{out}"
+    );
+    assert_eq!(
+        section.matches("Judgements read, 8\n").count(),
+        1,
+        "the structure section's closing stands at its own total within its own slice\n{out}"
     );
     let start = out
         .find("Category, smell")
@@ -4531,14 +4662,9 @@ fn every_collection_command_prints_the_bare_except_judgements_of_two_files_in_st
         "the smell section's lines stand in standing order across the two labels\n{out}"
     );
     assert_eq!(
-        out.matches("Judgements read, 8\n").count(),
+        section.matches("Judgements read, 12\n").count(),
         1,
-        "the structure section reads its judgements at each standing of each entry\n{out}"
-    );
-    assert_eq!(
-        out.matches("Judgements read, 12\n").count(),
-        1,
-        "the smell section reads its judgements at each standing of each entry\n{out}"
+        "the smell section's closing stands at its own total within its own slice\n{out}"
     );
     let (code, out, _err) = run(&["census", &path]);
     assert_eq!(code, 0, "census over the interleaved fixture\n{out}");
@@ -4797,22 +4923,14 @@ fn every_collection_command_prints_the_class_attribute_judgements_of_two_files_i
             lines, expected,
             "the {head} section's lines stand in standing order across the two labels\n{out}"
         );
+        assert_eq!(
+            section
+                .matches(&format!("Judgements read, {}\n", expected.len()))
+                .count(),
+            1,
+            "the {head} section's closing stands at its own total within its own slice\n{out}"
+        );
     }
-    assert_eq!(
-        out.matches("Judgements read, 6\n").count(),
-        1,
-        "the class attribute section reads its judgements at each standing of each entry\n{out}"
-    );
-    assert_eq!(
-        out.matches("Judgements read, 4\n").count(),
-        2,
-        "the bare except and placeholder name sections read their judgements at each standing of each entry\n{out}"
-    );
-    assert_eq!(
-        out.matches("Judgements read, 2\n").count(),
-        1,
-        "the call default section reads its judgements at each standing of the round 2 entry\n{out}"
-    );
     let (code, out, _err) = run(&["categories", &path]);
     assert_eq!(code, 0, "categories over the interleaved fixture\n{out}");
     assert_eq!(
@@ -4842,6 +4960,11 @@ fn every_collection_command_prints_the_class_attribute_judgements_of_two_files_i
         ],
         "the naming section's lines stand in standing order across the two labels\n{out}"
     );
+    assert_eq!(
+        section.matches("Judgements read, 4\n").count(),
+        1,
+        "the naming section's closing stands at its own total within its own slice\n{out}"
+    );
     let start = out
         .find("Category, structure")
         .expect("a category section stands");
@@ -4868,6 +4991,11 @@ fn every_collection_command_prints_the_class_attribute_judgements_of_two_files_i
         ],
         "the structure section's lines stand in standing order across the two labels\n{out}"
     );
+    assert_eq!(
+        section.matches("Judgements read, 8\n").count(),
+        1,
+        "the structure section's closing stands at its own total within its own slice\n{out}"
+    );
     let start = out
         .find("Category, smell")
         .expect("a category section stands");
@@ -4891,14 +5019,9 @@ fn every_collection_command_prints_the_class_attribute_judgements_of_two_files_i
         "the smell section's lines stand in standing order across the two labels\n{out}"
     );
     assert_eq!(
-        out.matches("Judgements read, 8\n").count(),
+        section.matches("Judgements read, 4\n").count(),
         1,
-        "the structure section reads its judgements at each standing of each entry\n{out}"
-    );
-    assert_eq!(
-        out.matches("Judgements read, 4\n").count(),
-        2,
-        "the naming and smell sections read their judgements at each standing of each entry\n{out}"
+        "the smell section's closing stands at its own total within its own slice\n{out}"
     );
     let (code, out, _err) = run(&["census", &path]);
     assert_eq!(code, 0, "census over the interleaved fixture\n{out}");
