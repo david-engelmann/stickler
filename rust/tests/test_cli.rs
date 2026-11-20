@@ -1539,6 +1539,17 @@ fn closing_block(out: &str) -> &str {
     out.trim_end_matches('\n').rsplit("\n\n").next().unwrap()
 }
 
+/// The part of a section's slice of a printed
+/// reading standing before the reading's closing
+/// counts, under the split the closing seat line
+/// reads, carrying the section's head, its
+/// judgement lines or its no judgements line, and
+/// its closing, and not carrying the reading's own
+/// closing counts, which stand below the split.
+fn closing_prefix(section: &str) -> &str {
+    section.split("\nSets read, ").next().unwrap_or(section)
+}
+
 /// The line standing at the closing seat of a
 /// section's slice of a printed reading, the last
 /// line of the slice where a further section
@@ -1547,8 +1558,7 @@ fn closing_block(out: &str) -> &str {
 /// the output, the line standing directly before
 /// the reading's closing counts.
 fn closing_seat_line(section: &str) -> &str {
-    let seat = section.split("\nSets read, ").next().unwrap_or(section);
-    seat.lines().last().unwrap_or("")
+    closing_prefix(section).lines().last().unwrap_or("")
 }
 
 /// The family pin of CK-47. Two collections, each
@@ -1909,6 +1919,14 @@ fn every_collection_command_counts_the_checker_judgements_of_a_repeated_entry_at
             closing.as_str(),
             "the {head} section's closing stands as the line at the closing seat of its own slice\n{out}"
         );
+        assert_eq!(
+            closing_prefix(section)
+                .lines()
+                .filter(|line| *line == closing.as_str())
+                .count(),
+            1,
+            "the {head} section's closing stands once among the lines standing before the reading's closing counts in its own slice\n{out}"
+        );
     }
     assert!(
         out.contains("Shape, placeholder name\nNo judgements\nJudgements read, 0\n"),
@@ -1926,6 +1944,14 @@ fn every_collection_command_counts_the_checker_judgements_of_a_repeated_entry_at
         closing_seat_line(section),
         "Judgements read, 0",
         "the placeholder name section's closing stands at zero as the line at the closing seat of its own slice\n{out}"
+    );
+    assert_eq!(
+        closing_prefix(section)
+            .lines()
+            .filter(|line| *line == "Judgements read, 0")
+            .count(),
+        1,
+        "the placeholder name section's closing stands once among the lines standing before the reading's closing counts in its own slice\n{out}"
     );
     let order = [
         "Shape, bare except",
@@ -2005,6 +2031,14 @@ fn every_collection_command_counts_the_checker_judgements_of_a_repeated_entry_at
             closing.as_str(),
             "the {head} section's closing stands as the line at the closing seat of its own slice\n{out}"
         );
+        assert_eq!(
+            closing_prefix(section)
+                .lines()
+                .filter(|line| *line == closing.as_str())
+                .count(),
+            1,
+            "the {head} section's closing stands once among the lines standing before the reading's closing counts in its own slice\n{out}"
+        );
     }
     assert!(
         out.contains("Category, naming\nNo judgements\nJudgements read, 0\n"),
@@ -2022,6 +2056,14 @@ fn every_collection_command_counts_the_checker_judgements_of_a_repeated_entry_at
         closing_seat_line(section),
         "Judgements read, 0",
         "the naming section's closing stands at zero as the line at the closing seat of its own slice\n{out}"
+    );
+    assert_eq!(
+        closing_prefix(section)
+            .lines()
+            .filter(|line| *line == "Judgements read, 0")
+            .count(),
+        1,
+        "the naming section's closing stands once among the lines standing before the reading's closing counts in its own slice\n{out}"
     );
     let (code, out, _err) = run(&["census", &path]);
     assert_eq!(code, 0, "census over the judgement fixture\n{out}");
@@ -2322,6 +2364,14 @@ fn every_collection_command_counts_the_checker_judgements_of_two_entries_at_each
             closing.as_str(),
             "the {head} section's closing stands as the line at the closing seat of its own slice\n{out}"
         );
+        assert_eq!(
+            closing_prefix(section)
+                .lines()
+                .filter(|line| *line == closing.as_str())
+                .count(),
+            1,
+            "the {head} section's closing stands once among the lines standing before the reading's closing counts in its own slice\n{out}"
+        );
     }
     assert!(
         out.contains("Shape, placeholder name\nNo judgements\nJudgements read, 0\n"),
@@ -2339,6 +2389,14 @@ fn every_collection_command_counts_the_checker_judgements_of_two_entries_at_each
         closing_seat_line(section),
         "Judgements read, 0",
         "the placeholder name section's closing stands at zero as the line at the closing seat of its own slice\n{out}"
+    );
+    assert_eq!(
+        closing_prefix(section)
+            .lines()
+            .filter(|line| *line == "Judgements read, 0")
+            .count(),
+        1,
+        "the placeholder name section's closing stands once among the lines standing before the reading's closing counts in its own slice\n{out}"
     );
     let order = [
         "Shape, bare except",
@@ -2465,6 +2523,14 @@ fn every_collection_command_counts_the_checker_judgements_of_two_entries_at_each
             closing.as_str(),
             "the {head} section's closing stands as the line at the closing seat of its own slice\n{out}"
         );
+        assert_eq!(
+            closing_prefix(section)
+                .lines()
+                .filter(|line| *line == closing.as_str())
+                .count(),
+            1,
+            "the {head} section's closing stands once among the lines standing before the reading's closing counts in its own slice\n{out}"
+        );
     }
     assert!(
         out.contains("Category, naming\nNo judgements\nJudgements read, 0\n"),
@@ -2482,6 +2548,14 @@ fn every_collection_command_counts_the_checker_judgements_of_two_entries_at_each
         closing_seat_line(section),
         "Judgements read, 0",
         "the naming section's closing stands at zero as the line at the closing seat of its own slice\n{out}"
+    );
+    assert_eq!(
+        closing_prefix(section)
+            .lines()
+            .filter(|line| *line == "Judgements read, 0")
+            .count(),
+        1,
+        "the naming section's closing stands once among the lines standing before the reading's closing counts in its own slice\n{out}"
     );
     let start = out
         .find("Category, smell")
@@ -2726,6 +2800,14 @@ fn every_collection_command_counts_the_checker_judgements_of_two_distinct_entrie
             closing.as_str(),
             "the {head} section's closing stands as the line at the closing seat of its own slice\n{out}"
         );
+        assert_eq!(
+            closing_prefix(section)
+                .lines()
+                .filter(|line| *line == closing.as_str())
+                .count(),
+            1,
+            "the {head} section's closing stands once among the lines standing before the reading's closing counts in its own slice\n{out}"
+        );
     }
     assert!(
         out.contains("Shape, placeholder name\nNo judgements\nJudgements read, 0\n"),
@@ -2743,6 +2825,14 @@ fn every_collection_command_counts_the_checker_judgements_of_two_distinct_entrie
         closing_seat_line(section),
         "Judgements read, 0",
         "the placeholder name section's closing stands at zero as the line at the closing seat of its own slice\n{out}"
+    );
+    assert_eq!(
+        closing_prefix(section)
+            .lines()
+            .filter(|line| *line == "Judgements read, 0")
+            .count(),
+        1,
+        "the placeholder name section's closing stands once among the lines standing before the reading's closing counts in its own slice\n{out}"
     );
     let order = [
         "Shape, bare except",
@@ -2827,6 +2917,14 @@ fn every_collection_command_counts_the_checker_judgements_of_two_distinct_entrie
             closing.as_str(),
             "the {head} section's closing stands as the line at the closing seat of its own slice\n{out}"
         );
+        assert_eq!(
+            closing_prefix(section)
+                .lines()
+                .filter(|line| *line == closing.as_str())
+                .count(),
+            1,
+            "the {head} section's closing stands once among the lines standing before the reading's closing counts in its own slice\n{out}"
+        );
     }
     assert!(
         out.contains("Category, naming\nNo judgements\nJudgements read, 0\n"),
@@ -2844,6 +2942,14 @@ fn every_collection_command_counts_the_checker_judgements_of_two_distinct_entrie
         closing_seat_line(section),
         "Judgements read, 0",
         "the naming section's closing stands at zero as the line at the closing seat of its own slice\n{out}"
+    );
+    assert_eq!(
+        closing_prefix(section)
+            .lines()
+            .filter(|line| *line == "Judgements read, 0")
+            .count(),
+        1,
+        "the naming section's closing stands once among the lines standing before the reading's closing counts in its own slice\n{out}"
     );
     let start = out
         .find("Category, structure")
@@ -3097,6 +3203,14 @@ fn every_collection_command_prints_the_checker_judgements_of_two_entries_in_stan
         "Judgements read, 0",
         "the placeholder name section's closing stands at zero as the line at the closing seat of its own slice\n{out}"
     );
+    assert_eq!(
+        closing_prefix(section)
+            .lines()
+            .filter(|line| *line == "Judgements read, 0")
+            .count(),
+        1,
+        "the placeholder name section's closing stands once among the lines standing before the reading's closing counts in its own slice\n{out}"
+    );
     let shape_sections: [(&str, Vec<&str>); 5] = [
         (
             "Shape, bare except",
@@ -3165,6 +3279,14 @@ fn every_collection_command_prints_the_checker_judgements_of_two_entries_in_stan
             closing.as_str(),
             "the {head} section's closing stands as the line at the closing seat of its own slice\n{out}"
         );
+        assert_eq!(
+            closing_prefix(section)
+                .lines()
+                .filter(|line| *line == closing.as_str())
+                .count(),
+            1,
+            "the {head} section's closing stands once among the lines standing before the reading's closing counts in its own slice\n{out}"
+        );
     }
     let (code, out, _err) = run(&["categories", &path]);
     assert_eq!(code, 0, "categories over the interleaved fixture\n{out}");
@@ -3189,6 +3311,14 @@ fn every_collection_command_prints_the_checker_judgements_of_two_entries_in_stan
         closing_seat_line(section),
         "Judgements read, 0",
         "the naming section's closing stands at zero as the line at the closing seat of its own slice\n{out}"
+    );
+    assert_eq!(
+        closing_prefix(section)
+            .lines()
+            .filter(|line| *line == "Judgements read, 0")
+            .count(),
+        1,
+        "the naming section's closing stands once among the lines standing before the reading's closing counts in its own slice\n{out}"
     );
     let start = out
         .find("Category, structure")
@@ -3225,6 +3355,14 @@ fn every_collection_command_prints_the_checker_judgements_of_two_entries_in_stan
         "Judgements read, 12",
         "the structure section's closing stands as the line at the closing seat of its own slice\n{out}"
     );
+    assert_eq!(
+        closing_prefix(section)
+            .lines()
+            .filter(|line| *line == "Judgements read, 12")
+            .count(),
+        1,
+        "the structure section's closing stands once among the lines standing before the reading's closing counts in its own slice\n{out}"
+    );
     let start = out
         .find("Category, smell")
         .expect("a category section stands");
@@ -3255,6 +3393,14 @@ fn every_collection_command_prints_the_checker_judgements_of_two_entries_in_stan
         closing_seat_line(section),
         "Judgements read, 8",
         "the smell section's closing stands as the line at the closing seat of its own slice\n{out}"
+    );
+    assert_eq!(
+        closing_prefix(section)
+            .lines()
+            .filter(|line| *line == "Judgements read, 8")
+            .count(),
+        1,
+        "the smell section's closing stands once among the lines standing before the reading's closing counts in its own slice\n{out}"
     );
     let (code, out, _err) = run(&["census", &path]);
     assert_eq!(code, 0, "census over the interleaved fixture\n{out}");
@@ -3515,6 +3661,14 @@ fn every_collection_command_prints_the_placeholder_name_judgements_of_two_entrie
             closing.as_str(),
             "the {head} section's closing stands as the line at the closing seat of its own slice\n{out}"
         );
+        assert_eq!(
+            closing_prefix(section)
+                .lines()
+                .filter(|line| *line == closing.as_str())
+                .count(),
+            1,
+            "the {head} section's closing stands once among the lines standing before the reading's closing counts in its own slice\n{out}"
+        );
     }
     let (code, out, _err) = run(&["categories", &path]);
     assert_eq!(code, 0, "categories over the interleaved fixture\n{out}");
@@ -3550,6 +3704,14 @@ fn every_collection_command_prints_the_placeholder_name_judgements_of_two_entrie
         "Judgements read, 4",
         "the naming section's closing stands as the line at the closing seat of its own slice\n{out}"
     );
+    assert_eq!(
+        closing_prefix(section)
+            .lines()
+            .filter(|line| *line == "Judgements read, 4")
+            .count(),
+        1,
+        "the naming section's closing stands once among the lines standing before the reading's closing counts in its own slice\n{out}"
+    );
     let start = out
         .find("Category, structure")
         .expect("a category section stands");
@@ -3581,6 +3743,14 @@ fn every_collection_command_prints_the_placeholder_name_judgements_of_two_entrie
         "Judgements read, 8",
         "the structure section's closing stands as the line at the closing seat of its own slice\n{out}"
     );
+    assert_eq!(
+        closing_prefix(section)
+            .lines()
+            .filter(|line| *line == "Judgements read, 8")
+            .count(),
+        1,
+        "the structure section's closing stands once among the lines standing before the reading's closing counts in its own slice\n{out}"
+    );
     let start = out
         .find("Category, smell")
         .expect("a category section stands");
@@ -3611,6 +3781,14 @@ fn every_collection_command_prints_the_placeholder_name_judgements_of_two_entrie
         closing_seat_line(section),
         "Judgements read, 8",
         "the smell section's closing stands as the line at the closing seat of its own slice\n{out}"
+    );
+    assert_eq!(
+        closing_prefix(section)
+            .lines()
+            .filter(|line| *line == "Judgements read, 8")
+            .count(),
+        1,
+        "the smell section's closing stands once among the lines standing before the reading's closing counts in its own slice\n{out}"
     );
     let (code, out, _err) = run(&["census", &path]);
     assert_eq!(code, 0, "census over the interleaved fixture\n{out}");
@@ -3875,6 +4053,14 @@ fn every_collection_command_prints_the_placeholder_name_judgements_of_two_files_
             closing.as_str(),
             "the {head} section's closing stands as the line at the closing seat of its own slice\n{out}"
         );
+        assert_eq!(
+            closing_prefix(section)
+                .lines()
+                .filter(|line| *line == closing.as_str())
+                .count(),
+            1,
+            "the {head} section's closing stands once among the lines standing before the reading's closing counts in its own slice\n{out}"
+        );
     }
     let (code, out, _err) = run(&["categories", &path]);
     assert_eq!(code, 0, "categories over the interleaved fixture\n{out}");
@@ -3914,6 +4100,14 @@ fn every_collection_command_prints_the_placeholder_name_judgements_of_two_files_
         "Judgements read, 8",
         "the naming section's closing stands as the line at the closing seat of its own slice\n{out}"
     );
+    assert_eq!(
+        closing_prefix(section)
+            .lines()
+            .filter(|line| *line == "Judgements read, 8")
+            .count(),
+        1,
+        "the naming section's closing stands once among the lines standing before the reading's closing counts in its own slice\n{out}"
+    );
     let start = out
         .find("Category, structure")
         .expect("a category section stands");
@@ -3945,6 +4139,14 @@ fn every_collection_command_prints_the_placeholder_name_judgements_of_two_files_
         "Judgements read, 8",
         "the structure section's closing stands as the line at the closing seat of its own slice\n{out}"
     );
+    assert_eq!(
+        closing_prefix(section)
+            .lines()
+            .filter(|line| *line == "Judgements read, 8")
+            .count(),
+        1,
+        "the structure section's closing stands once among the lines standing before the reading's closing counts in its own slice\n{out}"
+    );
     let start = out
         .find("Category, smell")
         .expect("a category section stands");
@@ -3971,6 +4173,14 @@ fn every_collection_command_prints_the_placeholder_name_judgements_of_two_files_
         closing_seat_line(section),
         "Judgements read, 4",
         "the smell section's closing stands as the line at the closing seat of its own slice\n{out}"
+    );
+    assert_eq!(
+        closing_prefix(section)
+            .lines()
+            .filter(|line| *line == "Judgements read, 4")
+            .count(),
+        1,
+        "the smell section's closing stands once among the lines standing before the reading's closing counts in its own slice\n{out}"
     );
     let (code, out, _err) = run(&["census", &path]);
     assert_eq!(code, 0, "census over the interleaved fixture\n{out}");
@@ -4280,6 +4490,14 @@ fn every_collection_command_prints_the_print_call_mutable_default_and_call_defau
             closing.as_str(),
             "the {head} section's closing stands as the line at the closing seat of its own slice\n{out}"
         );
+        assert_eq!(
+            closing_prefix(section)
+                .lines()
+                .filter(|line| *line == closing.as_str())
+                .count(),
+            1,
+            "the {head} section's closing stands once among the lines standing before the reading's closing counts in its own slice\n{out}"
+        );
     }
     let (code, out, _err) = run(&["categories", &path]);
     assert_eq!(code, 0, "categories over the interleaved fixture\n{out}");
@@ -4314,6 +4532,14 @@ fn every_collection_command_prints_the_print_call_mutable_default_and_call_defau
         closing_seat_line(section),
         "Judgements read, 4",
         "the naming section's closing stands as the line at the closing seat of its own slice\n{out}"
+    );
+    assert_eq!(
+        closing_prefix(section)
+            .lines()
+            .filter(|line| *line == "Judgements read, 4")
+            .count(),
+        1,
+        "the naming section's closing stands once among the lines standing before the reading's closing counts in its own slice\n{out}"
     );
     let start = out
         .find("Category, structure")
@@ -4352,6 +4578,14 @@ fn every_collection_command_prints_the_print_call_mutable_default_and_call_defau
         "Judgements read, 14",
         "the structure section's closing stands as the line at the closing seat of its own slice\n{out}"
     );
+    assert_eq!(
+        closing_prefix(section)
+            .lines()
+            .filter(|line| *line == "Judgements read, 14")
+            .count(),
+        1,
+        "the structure section's closing stands once among the lines standing before the reading's closing counts in its own slice\n{out}"
+    );
     let start = out
         .find("Category, smell")
         .expect("a category section stands");
@@ -4386,6 +4620,14 @@ fn every_collection_command_prints_the_print_call_mutable_default_and_call_defau
         closing_seat_line(section),
         "Judgements read, 12",
         "the smell section's closing stands as the line at the closing seat of its own slice\n{out}"
+    );
+    assert_eq!(
+        closing_prefix(section)
+            .lines()
+            .filter(|line| *line == "Judgements read, 12")
+            .count(),
+        1,
+        "the smell section's closing stands once among the lines standing before the reading's closing counts in its own slice\n{out}"
     );
     let (code, out, _err) = run(&["census", &path]);
     assert_eq!(code, 0, "census over the interleaved fixture\n{out}");
@@ -4646,6 +4888,14 @@ fn every_collection_command_prints_the_bare_except_judgements_of_two_files_in_st
             closing.as_str(),
             "the {head} section's closing stands as the line at the closing seat of its own slice\n{out}"
         );
+        assert_eq!(
+            closing_prefix(section)
+                .lines()
+                .filter(|line| *line == closing.as_str())
+                .count(),
+            1,
+            "the {head} section's closing stands once among the lines standing before the reading's closing counts in its own slice\n{out}"
+        );
     }
     let (code, out, _err) = run(&["categories", &path]);
     assert_eq!(code, 0, "categories over the interleaved fixture\n{out}");
@@ -4675,6 +4925,14 @@ fn every_collection_command_prints_the_bare_except_judgements_of_two_files_in_st
         closing_seat_line(section),
         "Judgements read, 0",
         "the naming section's closing stands at zero as the line at the closing seat of its own slice\n{out}"
+    );
+    assert_eq!(
+        closing_prefix(section)
+            .lines()
+            .filter(|line| *line == "Judgements read, 0")
+            .count(),
+        1,
+        "the naming section's closing stands once among the lines standing before the reading's closing counts in its own slice\n{out}"
     );
     let start = out
         .find("Category, structure")
@@ -4706,6 +4964,14 @@ fn every_collection_command_prints_the_bare_except_judgements_of_two_files_in_st
         closing_seat_line(section),
         "Judgements read, 8",
         "the structure section's closing stands as the line at the closing seat of its own slice\n{out}"
+    );
+    assert_eq!(
+        closing_prefix(section)
+            .lines()
+            .filter(|line| *line == "Judgements read, 8")
+            .count(),
+        1,
+        "the structure section's closing stands once among the lines standing before the reading's closing counts in its own slice\n{out}"
     );
     let start = out
         .find("Category, smell")
@@ -4741,6 +5007,14 @@ fn every_collection_command_prints_the_bare_except_judgements_of_two_files_in_st
         closing_seat_line(section),
         "Judgements read, 12",
         "the smell section's closing stands as the line at the closing seat of its own slice\n{out}"
+    );
+    assert_eq!(
+        closing_prefix(section)
+            .lines()
+            .filter(|line| *line == "Judgements read, 12")
+            .count(),
+        1,
+        "the smell section's closing stands once among the lines standing before the reading's closing counts in its own slice\n{out}"
     );
     let (code, out, _err) = run(&["census", &path]);
     assert_eq!(code, 0, "census over the interleaved fixture\n{out}");
@@ -5005,6 +5279,14 @@ fn every_collection_command_prints_the_class_attribute_judgements_of_two_files_i
             closing.as_str(),
             "the {head} section's closing stands as the line at the closing seat of its own slice\n{out}"
         );
+        assert_eq!(
+            closing_prefix(section)
+                .lines()
+                .filter(|line| *line == closing.as_str())
+                .count(),
+            1,
+            "the {head} section's closing stands once among the lines standing before the reading's closing counts in its own slice\n{out}"
+        );
     }
     let (code, out, _err) = run(&["categories", &path]);
     assert_eq!(code, 0, "categories over the interleaved fixture\n{out}");
@@ -5040,6 +5322,14 @@ fn every_collection_command_prints_the_class_attribute_judgements_of_two_files_i
         "Judgements read, 4",
         "the naming section's closing stands as the line at the closing seat of its own slice\n{out}"
     );
+    assert_eq!(
+        closing_prefix(section)
+            .lines()
+            .filter(|line| *line == "Judgements read, 4")
+            .count(),
+        1,
+        "the naming section's closing stands once among the lines standing before the reading's closing counts in its own slice\n{out}"
+    );
     let start = out
         .find("Category, structure")
         .expect("a category section stands");
@@ -5071,6 +5361,14 @@ fn every_collection_command_prints_the_class_attribute_judgements_of_two_files_i
         "Judgements read, 8",
         "the structure section's closing stands as the line at the closing seat of its own slice\n{out}"
     );
+    assert_eq!(
+        closing_prefix(section)
+            .lines()
+            .filter(|line| *line == "Judgements read, 8")
+            .count(),
+        1,
+        "the structure section's closing stands once among the lines standing before the reading's closing counts in its own slice\n{out}"
+    );
     let start = out
         .find("Category, smell")
         .expect("a category section stands");
@@ -5097,6 +5395,14 @@ fn every_collection_command_prints_the_class_attribute_judgements_of_two_files_i
         closing_seat_line(section),
         "Judgements read, 4",
         "the smell section's closing stands as the line at the closing seat of its own slice\n{out}"
+    );
+    assert_eq!(
+        closing_prefix(section)
+            .lines()
+            .filter(|line| *line == "Judgements read, 4")
+            .count(),
+        1,
+        "the smell section's closing stands once among the lines standing before the reading's closing counts in its own slice\n{out}"
     );
     let (code, out, _err) = run(&["census", &path]);
     assert_eq!(code, 0, "census over the interleaved fixture\n{out}");
@@ -5219,6 +5525,14 @@ fn every_collection_command_selects_the_closing_line_of_a_section_carrying_the_w
             closing.as_str(),
             "the {head} section's closing stands as the line at the closing seat of its own slice\n{out}"
         );
+        assert_eq!(
+            closing_prefix(section)
+                .lines()
+                .filter(|line| *line == closing.as_str())
+                .count(),
+            1,
+            "the {head} section's closing stands once among the lines standing before the reading's closing counts in its own slice\n{out}"
+        );
     }
     let (code, out, _err) = run(&["categories", &class_attribute]);
     assert_eq!(
@@ -5247,6 +5561,14 @@ fn every_collection_command_selects_the_closing_line_of_a_section_carrying_the_w
             closing_seat_line(section),
             closing.as_str(),
             "the {head} section's closing stands as the line at the closing seat of its own slice\n{out}"
+        );
+        assert_eq!(
+            closing_prefix(section)
+                .lines()
+                .filter(|line| *line == closing.as_str())
+                .count(),
+            1,
+            "the {head} section's closing stands once among the lines standing before the reading's closing counts in its own slice\n{out}"
         );
     }
     let smell = write(
@@ -5282,6 +5604,14 @@ fn every_collection_command_selects_the_closing_line_of_a_section_carrying_the_w
             closing.as_str(),
             "the {head} section's closing stands as the line at the closing seat of its own slice\n{out}"
         );
+        assert_eq!(
+            closing_prefix(section)
+                .lines()
+                .filter(|line| *line == closing.as_str())
+                .count(),
+            1,
+            "the {head} section's closing stands once among the lines standing before the reading's closing counts in its own slice\n{out}"
+        );
     }
     let (code, out, _err) = run(&["categories", &smell]);
     assert_eq!(code, 0, "categories over the smell fixture\n{out}");
@@ -5307,6 +5637,14 @@ fn every_collection_command_selects_the_closing_line_of_a_section_carrying_the_w
             closing_seat_line(section),
             closing.as_str(),
             "the {head} section's closing stands as the line at the closing seat of its own slice\n{out}"
+        );
+        assert_eq!(
+            closing_prefix(section)
+                .lines()
+                .filter(|line| *line == closing.as_str())
+                .count(),
+            1,
+            "the {head} section's closing stands once among the lines standing before the reading's closing counts in its own slice\n{out}"
         );
     }
 }
