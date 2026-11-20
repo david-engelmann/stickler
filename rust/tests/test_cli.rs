@@ -1719,18 +1719,41 @@ fn every_collection_command_counts_a_repeated_entry_at_each_standing() {
     }
     let (code, out, _err) = run(&["verdicts", &pilot_path]);
     assert_eq!(code, 0, "verdicts over the pilot fixture\n{out}");
-    assert!(
-        out.contains("Verdicts, none recorded\nVerdicts read, 0\n"),
-        "the round 2 set's section closing stands\n{out}"
-    );
+    let verdicts_sections: [(&str, usize); 4] = [
+        ("round 2 set", 0),
+        ("pilot set", 22),
+        ("pilot set", 22),
+        ("constructed entry", 10),
+    ];
+    let parts: Vec<&str> = out.split("\n\n").collect();
+    let sections = &parts[1..parts.len() - 1];
     assert_eq!(
-        out.matches("Verdicts read, 22\n").count(),
-        2,
-        "the pilot set's section closing stands at each of its standings\n{out}"
+        sections.len(),
+        verdicts_sections.len(),
+        "the verdicts output stands in its section blocks\n{out}"
     );
-    assert!(
-        out.contains("\nVerdicts read, 10\n"),
-        "the constructed entry's section closing stands\n{out}"
+    for (index, (head, total)) in verdicts_sections.iter().enumerate() {
+        let section = sections[index];
+        let closing = format!("Verdicts read, {total}");
+        assert_eq!(
+            section.lines().last().unwrap_or(""),
+            closing.as_str(),
+            "the {head} section's closing stands as the line at the closing seat of its own slice\n{out}"
+        );
+        assert_eq!(
+            section
+                .lines()
+                .filter(|line| *line == closing.as_str())
+                .count(),
+            1,
+            "the {head} section's closing stands once among the lines standing before the reading's closing counts in its own slice\n{out}"
+        );
+    }
+    let round_2_lines: Vec<&str> = sections[0].lines().collect();
+    assert_eq!(
+        round_2_lines[round_2_lines.len() - 2],
+        "Verdicts, none recorded",
+        "the round 2 set's none recorded line stands at the line directly before its closing seat in its slice\n{out}"
     );
 }
 
