@@ -256,8 +256,13 @@ fn readme_reports_the_round_4_standing() {
     // standing in review, so the count stood at one
     // while Round 34 stood built, until the Round 34
     // closure landed slice 35 and the count returned to
+    // zero. Adjusted again with the Round 35 slice, as
+    // the named mechanical consequence of slice 36
+    // standing in review, so the count stood at one
+    // while Round 35 stood built, until the Round 35
+    // closure landed slice 36 and the count returned to
     // zero.
-    assert_eq!(text.matches("built and in review").count(), 0);
+    assert_eq!(text.matches("built and in review").count(), 1);
 }
 
 #[test]
@@ -1748,6 +1753,37 @@ fn readme_reports_the_round_34_status() {
     let standing = "- Contract, CK-57 met. It stands in full form in CONTRACT.md, and Round 34 closed on the merged slice 35 after three reviews and the owner's verification, with the spec review approving with no findings charged against the slice, one Major, two Minors and one Observation charged against the design record, and one Observation charged against the build record, the standards review approving with findings, one Observation charged against the slice at the count pins' categories closing assertion riding the line entries loop in the standing loop's inherited shape, two Observations charged against the design record, and one Observation charged against the build record, and the red team approving with findings, one Observation charged against the slice at the CodeRabbit occurrence form item, three Minors charged against the design record, and one Observation charged against the build record, its population re-derived independently at nine pins and thirty eight assertions by an extraction sharing no code with the design's and its two gap legs and form shapes leg executed firsthand at their corrected expectations, and CodeRabbit returning one COMMENTED review with one inline comment, one summary comment and one administrative reply, the inline comment standing dismissed by all three axes at the prices the reviews state, the slice carrying exactly one line of the judgements form under the shipped grammar, its own section's closing, and the summary standing as a walkthrough with no actionable item beyond the one inline comment. CK-57 stands met by the restatement of the nine standing pins of rust/tests/test_cli.rs, the thirty eight whole output matches assertions over the judgements footer standing removed and the within slice closing assertions standing in their place at thirty seven assertion sites covering the eighty one section seats, nine sections in each of the nine pins, each section's printed judgement total standing bound within that section's own slice of the printed output and at no other seat, the eight empty section seats carrying a slice cut beside their unmoved containment blocks with the closing asserted at zero within the slice, the tenth pin's count over the verdicts closing standing untouched outside the obligation, and no production code, no fixture and no golden moving anywhere in the round, with the slice's one restatement of a standing pin standing as the round 4 standing pin's chain segment with its count moving from zero to one. The slice stands as pull request 89 merged at 41916fc6, with main's tree standing verified equal to the slice tree d67e360a, and the census standing at 1067. The design recomputed the footer population whole by two independent extractions agreeing at nine pins and thirty eight assertions, priced the exchange mutation as the discriminating leg the whole output form cannot see, and charged the construction in the family's commit order, its gap proof standing corrected at the four containment seats and its form leg statements at their range under the owner's two rulings, the corrections standing charged to the design record and moving no text the slice ships, the categories head order thread standing declined a fifth time on its unmoved evidence, and FIX-CK-27 standing declined again with its trigger unmet. The build verified the premise whole over all 171 files of the base tree, stopped twice under CK-57's own stopping rule with each parting reported before any repair, and constructed the slice in seven commits only under the corrected expectations the rulings adopted, the expressly empty steps standing proven by tree hash identity at every stage, and the seven stage construction standing read back at every stage. The form gate's format leg stands discharged by proof at four seats, the build's formatting proof executed at two of its seatings, the standards review's independent execution of the same proof whole, and this closure's fresh extraction gate, which fetched the head tree's 171 blobs whole with every SHA-1 asserted, recounted the census over the assembled texts at 1067, and proved both touched files byte identical to the installed rustfmt's output at edition 2021. The warm up stands executed whole over the round's six legs at the build, no unit standing carried from the build itself. Leg gap-shapes stands at two falls at the in-place binders of the shapes reading, leg gap-categories at eleven falls at the seven categories binders and four carrying pins at their naming containment assertions, leg form-shapes at eight falls whole over the suite at its six restated pins and the two shapes binders, leg form-categories at fifteen falls whole over the suite at its eight restated pins and the seven categories binders with the CK-53 pin passing where the pair stands equal, leg cand-pin34 passing whole at the standing census, and leg cand-status34 at its three named status pins. The red team executed the two gap legs and leg form-shapes firsthand at the same sets and carried leg form-categories under the write fault, and that leg stands executed whole at this closure on its sixth counted attempt at 1052 passed and 15 failed with its fall set exact by name, four of its attempts standing refused whole by the fault with zero tests executed and its fourth standing executed over thirty three of the suite's thirty four binaries with the fall set exact and one binary's death standing as a fault failure beside the set. The carried family of the earlier rounds stands empty, the Round 33 closure having executed its sixty three units whole and carried nothing. The records items stand named in the open, the design note's gap categories proof standing corrected to the eleven falls the execution stands at, its form leg statements standing corrected to the whole suite sets of eight and fifteen, its naming of the shapes golden pin among the gap shapes falls standing corrected to the two in-place binders alone, the design note's pricing of the eighty one standing corrected to section seats over thirty seven assertion sites, and the build record's first seating figure for the base setup file standing corrected in its own record from 124,168 characters to the true 134,275, none of the items moving a verdict or a leg's corrected set beyond the corrections each states. The round's obligations pin and its status pin stand in the family's form as charged, and the suite stands at 1067. No amendment stands spent by the round, FIX-CK-33 standing free and unspent and FIX-CK-27 standing unconsumed.";
     assert!(text.lines().any(|line| line == standing));
     let slice_line = "- Slice 35 has landed. It carries the footer bound under CK-57, the nine standing pins restated to bind each section's printed judgement total within that section's own slice, with no rendering over any collection moving.";
+    assert!(text.lines().any(|line| line == slice_line));
+    assert!(text.contains("Closed perfection rounds, 34 of 100"));
+}
+
+/// The Round 35 pins. The obligations pin fails
+/// against the tree Round 34 closed on by the
+/// absence of the obligations it reads, and the
+/// status pin fails on that tree's README by the
+/// absence of the two lines it holds, each line
+/// read whole as the standing pins read theirs.
+#[test]
+fn contract_carries_the_round_35_obligations() {
+    let text = read("CONTRACT.md");
+    assert!(text.contains("## Round 35 obligations, full form"));
+    assert!(text.contains("- CK-58."));
+    let ck58 = text
+        .lines()
+        .find(|line| line.starts_with("- CK-58."))
+        .unwrap_or("");
+    assert!(ck58.contains(
+        "stands asserted by the line standing at the closing seat of that section's own slice"
+    ));
+    assert!(ck58.contains("each section's closing stands asserted once in its pin"));
+}
+
+#[test]
+fn readme_reports_the_round_35_status() {
+    let text = read("README.md");
+    let standing = "- Contract, CK-58 now stands in full form, each section's closing of the shapes reading and the categories reading stands asserted by the line standing at the closing seat of that section's own slice of the printed output at the nine standing pins, Round 35 has not closed.";
+    assert!(text.lines().any(|line| line == standing));
+    let slice_line = "- Slice 36 stands built and in review. It carries the closing line selected as such under CK-58, the nine standing pins restated to assert each section's closing by the line at its closing seat, asserted once per section, and one new pin seating the section whose own total carries the whole population of its reading, with no rendering over any collection moving.";
     assert!(text.lines().any(|line| line == slice_line));
     assert!(text.contains("Closed perfection rounds, 34 of 100"));
 }
