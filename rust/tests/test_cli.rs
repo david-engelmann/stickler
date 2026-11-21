@@ -1574,18 +1574,21 @@ fn closing_seat_line(section: &str) -> &str {
 /// fields its lines print, that counts a file at each
 /// standing naming it, or whose loader skips a
 /// repeated entry's second standing, fails here at the
-/// seat it touches, and the grain stands witnessed
-/// whole at the verdicts seat, whose four section
-/// closings over the pilot fixture stand asserted
-/// beside its closing counts. The outcomes closing
-/// stands asserted whole in the same form, its
-/// three judged lines standing in the block over
-/// both fixtures, where an earlier form of this
-/// pin asserted that seat by its first two lines
-/// alone, so a build that gathers the outcomes
-/// reading's groups through a deduplication of
-/// its own fails at that seat as the shared
-/// forms fail at theirs.
+/// seat it touches, and the grain stands
+/// witnessed at the verdicts seat and at the
+/// seats of the five readings of its form,
+/// whose section closings over both of the
+/// pin's fixtures stand asserted beside their
+/// closing counts under CK-61. The outcomes
+/// closing stands asserted whole in the same
+/// form, its three judged lines standing in the
+/// block over both fixtures, where an earlier
+/// form of this pin asserted that seat by its
+/// first two lines alone, so a build that
+/// gathers the outcomes reading's groups
+/// through a deduplication of its own fails at
+/// that seat as the shared forms fail at
+/// theirs.
 #[test]
 fn every_collection_command_counts_a_repeated_entry_at_each_standing() {
     let dir = temp_dir("repeated-entry");
@@ -1755,6 +1758,309 @@ fn every_collection_command_counts_a_repeated_entry_at_each_standing() {
         "Verdicts, none recorded",
         "the round 2 set's none recorded line stands at the line directly before its closing seat in its slice\n{out}"
     );
+    let (code, out, _err) = run(&["choices", &pilot_path]);
+    assert_eq!(code, 0, "choices over the pilot fixture\n{out}");
+    let choices_sections: [(&str, usize); 3] =
+        [("Chose stickler", 44), ("Chose clean", 5), ("Abstained", 5)];
+    let parts: Vec<&str> = out.split("\n\n").collect();
+    let sections = &parts[1..parts.len() - 1];
+    assert_eq!(
+        sections.len(),
+        choices_sections.len(),
+        "the choices output stands in its section blocks\n{out}"
+    );
+    for (index, (head, total)) in choices_sections.iter().enumerate() {
+        let section = sections[index];
+        let closing = format!("Verdicts read, {total}");
+        assert_eq!(
+            section.lines().last().unwrap_or(""),
+            closing.as_str(),
+            "the {head} section's closing stands as the line at the closing seat of its own slice\n{out}"
+        );
+        assert_eq!(
+            section
+                .lines()
+                .filter(|line| *line == closing.as_str())
+                .count(),
+            1,
+            "the {head} section's closing stands once among the lines of its own slice\n{out}"
+        );
+    }
+    let (code, out, _err) = run(&["choices", &constructed_path]);
+    assert_eq!(code, 0, "choices over the constructed fixture\n{out}");
+    let choices_sections: [(&str, usize); 3] = [
+        ("Chose stickler", 28),
+        ("Chose clean", 10),
+        ("Abstained", 4),
+    ];
+    let parts: Vec<&str> = out.split("\n\n").collect();
+    let sections = &parts[1..parts.len() - 1];
+    assert_eq!(
+        sections.len(),
+        choices_sections.len(),
+        "the choices output stands in its section blocks\n{out}"
+    );
+    for (index, (head, total)) in choices_sections.iter().enumerate() {
+        let section = sections[index];
+        let closing = format!("Verdicts read, {total}");
+        assert_eq!(
+            section.lines().last().unwrap_or(""),
+            closing.as_str(),
+            "the {head} section's closing stands as the line at the closing seat of its own slice\n{out}"
+        );
+        assert_eq!(
+            section
+                .lines()
+                .filter(|line| *line == closing.as_str())
+                .count(),
+            1,
+            "the {head} section's closing stands once among the lines of its own slice\n{out}"
+        );
+    }
+    let (code, out, _err) = run(&["grounds", &pilot_path]);
+    assert_eq!(code, 0, "grounds over the pilot fixture\n{out}");
+    let grounds_sections: [(&str, usize); 3] = [
+        ("near placeholder name", 22),
+        ("broad handler", 14),
+        ("shared member default", 18),
+    ];
+    let parts: Vec<&str> = out.split("\n\n").collect();
+    let sections = &parts[1..parts.len() - 1];
+    assert_eq!(
+        sections.len(),
+        grounds_sections.len(),
+        "the grounds output stands in its section blocks\n{out}"
+    );
+    for (index, (head, total)) in grounds_sections.iter().enumerate() {
+        let section = sections[index];
+        let closing = format!("Verdicts read, {total}");
+        assert_eq!(
+            section.lines().last().unwrap_or(""),
+            closing.as_str(),
+            "the {head} section's closing stands as the line at the closing seat of its own slice\n{out}"
+        );
+        assert_eq!(
+            section
+                .lines()
+                .filter(|line| *line == closing.as_str())
+                .count(),
+            1,
+            "the {head} section's closing stands once among the lines of its own slice\n{out}"
+        );
+    }
+    let (code, out, _err) = run(&["grounds", &constructed_path]);
+    assert_eq!(code, 0, "grounds over the constructed fixture\n{out}");
+    let grounds_sections: [(&str, usize); 3] = [
+        ("near placeholder name", 20),
+        ("broad handler", 10),
+        ("shared member default", 12),
+    ];
+    let parts: Vec<&str> = out.split("\n\n").collect();
+    let sections = &parts[1..parts.len() - 1];
+    assert_eq!(
+        sections.len(),
+        grounds_sections.len(),
+        "the grounds output stands in its section blocks\n{out}"
+    );
+    for (index, (head, total)) in grounds_sections.iter().enumerate() {
+        let section = sections[index];
+        let closing = format!("Verdicts read, {total}");
+        assert_eq!(
+            section.lines().last().unwrap_or(""),
+            closing.as_str(),
+            "the {head} section's closing stands as the line at the closing seat of its own slice\n{out}"
+        );
+        assert_eq!(
+            section
+                .lines()
+                .filter(|line| *line == closing.as_str())
+                .count(),
+            1,
+            "the {head} section's closing stands once among the lines of its own slice\n{out}"
+        );
+    }
+    let (code, out, _err) = run(&["judgements", &pilot_path]);
+    assert_eq!(code, 0, "judgements over the pilot fixture\n{out}");
+    let judgements_sections: [(&str, usize); 3] = [
+        ("Judged stickler", 48),
+        ("Judged clean", 4),
+        ("Unjudged", 2),
+    ];
+    let parts: Vec<&str> = out.split("\n\n").collect();
+    let sections = &parts[1..parts.len() - 1];
+    assert_eq!(
+        sections.len(),
+        judgements_sections.len(),
+        "the judgements output stands in its section blocks\n{out}"
+    );
+    for (index, (head, total)) in judgements_sections.iter().enumerate() {
+        let section = sections[index];
+        let closing = format!("Verdicts read, {total}");
+        assert_eq!(
+            section.lines().last().unwrap_or(""),
+            closing.as_str(),
+            "the {head} section's closing stands as the line at the closing seat of its own slice\n{out}"
+        );
+        assert_eq!(
+            section
+                .lines()
+                .filter(|line| *line == closing.as_str())
+                .count(),
+            1,
+            "the {head} section's closing stands once among the lines of its own slice\n{out}"
+        );
+    }
+    let (code, out, _err) = run(&["judgements", &constructed_path]);
+    assert_eq!(code, 0, "judgements over the constructed fixture\n{out}");
+    let judgements_sections: [(&str, usize); 3] = [
+        ("Judged stickler", 33),
+        ("Judged clean", 8),
+        ("Unjudged", 1),
+    ];
+    let parts: Vec<&str> = out.split("\n\n").collect();
+    let sections = &parts[1..parts.len() - 1];
+    assert_eq!(
+        sections.len(),
+        judgements_sections.len(),
+        "the judgements output stands in its section blocks\n{out}"
+    );
+    for (index, (head, total)) in judgements_sections.iter().enumerate() {
+        let section = sections[index];
+        let closing = format!("Verdicts read, {total}");
+        assert_eq!(
+            section.lines().last().unwrap_or(""),
+            closing.as_str(),
+            "the {head} section's closing stands as the line at the closing seat of its own slice\n{out}"
+        );
+        assert_eq!(
+            section
+                .lines()
+                .filter(|line| *line == closing.as_str())
+                .count(),
+            1,
+            "the {head} section's closing stands once among the lines of its own slice\n{out}"
+        );
+    }
+    let (code, out, _err) = run(&["standings", &pilot_path]);
+    assert_eq!(code, 0, "standings over the pilot fixture\n{out}");
+    let standings_sections: [(&str, usize); 5] = [
+        ("harvest.py", 12),
+        ("windows.py", 16),
+        ("sorting.py", 16),
+        ("ledger.py", 4),
+        ("cache.py", 6),
+    ];
+    let parts: Vec<&str> = out.split("\n\n").collect();
+    let sections = &parts[1..parts.len() - 1];
+    assert_eq!(
+        sections.len(),
+        standings_sections.len(),
+        "the standings output stands in its section blocks\n{out}"
+    );
+    for (index, (head, total)) in standings_sections.iter().enumerate() {
+        let section = sections[index];
+        let closing = format!("Verdicts read, {total}");
+        assert_eq!(
+            section.lines().last().unwrap_or(""),
+            closing.as_str(),
+            "the {head} section's closing stands as the line at the closing seat of its own slice\n{out}"
+        );
+        assert_eq!(
+            section
+                .lines()
+                .filter(|line| *line == closing.as_str())
+                .count(),
+            1,
+            "the {head} section's closing stands once among the lines of its own slice\n{out}"
+        );
+    }
+    let (code, out, _err) = run(&["standings", &constructed_path]);
+    assert_eq!(code, 0, "standings over the constructed fixture\n{out}");
+    let standings_sections: [(&str, usize); 5] = [
+        ("harvest.py", 6),
+        ("windows.py", 8),
+        ("sorting.py", 8),
+        ("ledger.py", 8),
+        ("cache.py", 12),
+    ];
+    let parts: Vec<&str> = out.split("\n\n").collect();
+    let sections = &parts[1..parts.len() - 1];
+    assert_eq!(
+        sections.len(),
+        standings_sections.len(),
+        "the standings output stands in its section blocks\n{out}"
+    );
+    for (index, (head, total)) in standings_sections.iter().enumerate() {
+        let section = sections[index];
+        let closing = format!("Verdicts read, {total}");
+        assert_eq!(
+            section.lines().last().unwrap_or(""),
+            closing.as_str(),
+            "the {head} section's closing stands as the line at the closing seat of its own slice\n{out}"
+        );
+        assert_eq!(
+            section
+                .lines()
+                .filter(|line| *line == closing.as_str())
+                .count(),
+            1,
+            "the {head} section's closing stands once among the lines of its own slice\n{out}"
+        );
+    }
+    let (code, out, _err) = run(&["models", &pilot_path]);
+    assert_eq!(code, 0, "models over the pilot fixture\n{out}");
+    let models_sections: [(&str, usize); 2] = [("jev-1.13.0", 29), ("openai/gpt-6-luna", 25)];
+    let parts: Vec<&str> = out.split("\n\n").collect();
+    let sections = &parts[1..parts.len() - 1];
+    assert_eq!(
+        sections.len(),
+        models_sections.len(),
+        "the models output stands in its section blocks\n{out}"
+    );
+    for (index, (head, total)) in models_sections.iter().enumerate() {
+        let section = sections[index];
+        let closing = format!("Verdicts read, {total}");
+        assert_eq!(
+            section.lines().last().unwrap_or(""),
+            closing.as_str(),
+            "the {head} section's closing stands as the line at the closing seat of its own slice\n{out}"
+        );
+        assert_eq!(
+            section
+                .lines()
+                .filter(|line| *line == closing.as_str())
+                .count(),
+            1,
+            "the {head} section's closing stands once among the lines of its own slice\n{out}"
+        );
+    }
+    let (code, out, _err) = run(&["models", &constructed_path]);
+    assert_eq!(code, 0, "models over the constructed fixture\n{out}");
+    let models_sections: [(&str, usize); 2] = [("jev-1.13.0", 22), ("openai/gpt-6-luna", 20)];
+    let parts: Vec<&str> = out.split("\n\n").collect();
+    let sections = &parts[1..parts.len() - 1];
+    assert_eq!(
+        sections.len(),
+        models_sections.len(),
+        "the models output stands in its section blocks\n{out}"
+    );
+    for (index, (head, total)) in models_sections.iter().enumerate() {
+        let section = sections[index];
+        let closing = format!("Verdicts read, {total}");
+        assert_eq!(
+            section.lines().last().unwrap_or(""),
+            closing.as_str(),
+            "the {head} section's closing stands as the line at the closing seat of its own slice\n{out}"
+        );
+        assert_eq!(
+            section
+                .lines()
+                .filter(|line| *line == closing.as_str())
+                .count(),
+            1,
+            "the {head} section's closing stands once among the lines of its own slice\n{out}"
+        );
+    }
 }
 
 /// The rejudged pin of CK-47. A rejudged file whose
