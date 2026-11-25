@@ -1579,16 +1579,19 @@ fn closing_seat_line(section: &str) -> &str {
 /// seats of the five readings of its form,
 /// whose section closings over both of the
 /// pin's fixtures stand asserted beside their
-/// closing counts under CK-61. The outcomes
-/// closing stands asserted whole in the same
-/// form, its three judged lines standing in the
-/// block over both fixtures, where an earlier
-/// form of this pin asserted that seat by its
-/// first two lines alone, so a build that
-/// gathers the outcomes reading's groups
-/// through a deduplication of its own fails at
-/// that seat as the shared forms fail at
-/// theirs.
+/// closing counts under CK-61, and at the
+/// states seat, whose closings at both of its
+/// grains over both of the pin's fixtures stand
+/// asserted beside their closing counts under
+/// CK-62. The outcomes closing stands asserted
+/// whole in the same form, its three judged
+/// lines standing in the block over both
+/// fixtures, where an earlier form of this pin
+/// asserted that seat by its first two lines
+/// alone, so a build that gathers the outcomes
+/// reading's groups through a deduplication of
+/// its own fails at that seat as the shared
+/// forms fail at theirs.
 #[test]
 fn every_collection_command_counts_a_repeated_entry_at_each_standing() {
     let dir = temp_dir("repeated-entry");
@@ -2060,6 +2063,155 @@ fn every_collection_command_counts_a_repeated_entry_at_each_standing() {
             1,
             "the {head} section's closing stands once among the lines of its own slice\n{out}"
         );
+    }
+    type StatesSections = [(&str, &[(&str, usize)], usize); 3];
+    let (code, out, _err) = run(&["states", &pilot_path]);
+    assert_eq!(code, 0, "states over the pilot fixture\n{out}");
+    let states_sections: StatesSections = [
+        (
+            "Judged stickler",
+            &[
+                ("harvest.py", 12),
+                ("windows.py", 16),
+                ("sorting.py", 16),
+                ("ledger.py", 4),
+                ("cache.py", 6),
+            ],
+            54,
+        ),
+        ("Judged clean", &[], 0),
+        ("Unjudged", &[], 0),
+    ];
+    let parts: Vec<&str> = out.split("\n\n").collect();
+    let sections = &parts[1..parts.len() - 1];
+    assert_eq!(
+        sections.len(),
+        states_sections.len(),
+        "the states output stands in its section blocks\n{out}"
+    );
+    for (index, (head, files, total)) in states_sections.iter().enumerate() {
+        let section = sections[index];
+        let closing = format!("Verdicts read, {total}");
+        assert_eq!(
+            section.lines().last().unwrap_or(""),
+            closing.as_str(),
+            "the {head} section's closing stands as the line at the closing seat of its own slice\n{out}"
+        );
+        let stated = if files.len() == 1 { 2 } else { 1 };
+        assert_eq!(
+            section
+                .lines()
+                .filter(|line| *line == closing.as_str())
+                .count(),
+            stated,
+            "the {head} section's closing stands among the lines of its own slice at the count the obligation states\n{out}"
+        );
+        let section_lines: Vec<&str> = section.lines().collect();
+        for (file_index, (file_name, file_total)) in files.iter().enumerate() {
+            let head_line = format!("File, {file_name}");
+            let start = section_lines
+                .iter()
+                .position(|line| *line == head_line.as_str())
+                .unwrap_or(section_lines.len());
+            let end = if file_index + 1 < files.len() {
+                let next_head = format!("File, {}", files[file_index + 1].0);
+                section_lines
+                    .iter()
+                    .position(|line| *line == next_head.as_str())
+                    .unwrap_or(section_lines.len())
+            } else {
+                section_lines.len() - 1
+            };
+            let file_slice = &section_lines[start..end];
+            let file_closing = format!("Verdicts read, {file_total}");
+            assert_eq!(
+                file_slice.last().copied().unwrap_or(""),
+                file_closing.as_str(),
+                "the {file_name} file's closing stands as the line at the closing seat of its own file slice\n{out}"
+            );
+            assert_eq!(
+                file_slice
+                    .iter()
+                    .filter(|line| **line == file_closing.as_str())
+                    .count(),
+                1,
+                "the {file_name} file's closing stands once among the lines of its own file slice\n{out}"
+            );
+        }
+    }
+    let (code, out, _err) = run(&["states", &constructed_path]);
+    assert_eq!(code, 0, "states over the constructed fixture\n{out}");
+    let states_sections: StatesSections = [
+        (
+            "Judged stickler",
+            &[
+                ("harvest.py", 6),
+                ("windows.py", 8),
+                ("sorting.py", 8),
+                ("ledger.py", 8),
+                ("cache.py", 12),
+            ],
+            42,
+        ),
+        ("Judged clean", &[], 0),
+        ("Unjudged", &[], 0),
+    ];
+    let parts: Vec<&str> = out.split("\n\n").collect();
+    let sections = &parts[1..parts.len() - 1];
+    assert_eq!(
+        sections.len(),
+        states_sections.len(),
+        "the states output stands in its section blocks\n{out}"
+    );
+    for (index, (head, files, total)) in states_sections.iter().enumerate() {
+        let section = sections[index];
+        let closing = format!("Verdicts read, {total}");
+        assert_eq!(
+            section.lines().last().unwrap_or(""),
+            closing.as_str(),
+            "the {head} section's closing stands as the line at the closing seat of its own slice\n{out}"
+        );
+        let stated = if files.len() == 1 { 2 } else { 1 };
+        assert_eq!(
+            section
+                .lines()
+                .filter(|line| *line == closing.as_str())
+                .count(),
+            stated,
+            "the {head} section's closing stands among the lines of its own slice at the count the obligation states\n{out}"
+        );
+        let section_lines: Vec<&str> = section.lines().collect();
+        for (file_index, (file_name, file_total)) in files.iter().enumerate() {
+            let head_line = format!("File, {file_name}");
+            let start = section_lines
+                .iter()
+                .position(|line| *line == head_line.as_str())
+                .unwrap_or(section_lines.len());
+            let end = if file_index + 1 < files.len() {
+                let next_head = format!("File, {}", files[file_index + 1].0);
+                section_lines
+                    .iter()
+                    .position(|line| *line == next_head.as_str())
+                    .unwrap_or(section_lines.len())
+            } else {
+                section_lines.len() - 1
+            };
+            let file_slice = &section_lines[start..end];
+            let file_closing = format!("Verdicts read, {file_total}");
+            assert_eq!(
+                file_slice.last().copied().unwrap_or(""),
+                file_closing.as_str(),
+                "the {file_name} file's closing stands as the line at the closing seat of its own file slice\n{out}"
+            );
+            assert_eq!(
+                file_slice
+                    .iter()
+                    .filter(|line| **line == file_closing.as_str())
+                    .count(),
+                1,
+                "the {file_name} file's closing stands once among the lines of its own file slice\n{out}"
+            );
+        }
     }
 }
 
