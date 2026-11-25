@@ -2064,7 +2064,7 @@ fn every_collection_command_counts_a_repeated_entry_at_each_standing() {
             "the {head} section's closing stands once among the lines of its own slice\n{out}"
         );
     }
-    type StatesSections = [(&str, &[(&str, usize)], usize); 3];
+    type StatesSections<'a> = [(&'a str, &'a [(&'a str, usize)], usize); 3];
     let (code, out, _err) = run(&["states", &pilot_path]);
     assert_eq!(code, 0, "states over the pilot fixture\n{out}");
     let states_sections: StatesSections = [
