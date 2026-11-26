@@ -1576,26 +1576,29 @@ fn closing_seat_line(section: &str) -> &str {
 /// repeated entry's second standing, fails here at the
 /// seat it touches, and the grain stands
 /// witnessed at the verdicts seat and at the
-/// seats of the five readings of its form,
-/// whose section closings over both of the
-/// pin's fixtures stand asserted beside their
-/// closing counts under CK-61, and at the
-/// states seat, whose closings at both of its
-/// grains over both of the pin's fixtures stand
+/// seats of the five readings of its form, whose
+/// section closings over both of the pin's
+/// fixtures stand asserted beside their closing
+/// counts under CK-61, and at the states seat,
+/// whose closings at both of its grains over
+/// both of the pin's fixtures stand asserted
+/// beside their closing counts under CK-62, and
+/// at the flags and outcomes seats, whose
+/// section closings over both of the pin's
+/// fixtures stand asserted beside their closing
+/// counts under CK-63, and at the pattern, files
+/// and contested seats, whose section closings
+/// over both of the pin's fixtures stand
 /// asserted beside their closing counts under
-/// CK-62, and at the flags and outcomes seats,
-/// whose section closings over both of the
-/// pin's fixtures stand asserted beside their
-/// closing counts under CK-63. The outcomes
-/// closing stands asserted whole in the same
-/// form, its three judged lines standing in the
-/// block over both fixtures, where an earlier
-/// form of this pin asserted that seat by its
-/// first two lines alone, so a build that
-/// gathers the outcomes reading's groups
-/// through a deduplication of its own fails at
-/// that seat as the shared forms fail at
-/// theirs.
+/// CK-64. The outcomes closing stands asserted
+/// whole in the same form, its three judged
+/// lines standing in the block over both
+/// fixtures, where an earlier form of this pin
+/// asserted that seat by its first two lines
+/// alone, so a build that gathers the outcomes
+/// reading's groups through a deduplication of
+/// its own fails at that seat as the shared
+/// forms fail at theirs.
 #[test]
 fn every_collection_command_counts_a_repeated_entry_at_each_standing() {
     let dir = temp_dir("repeated-entry");
@@ -2363,6 +2366,270 @@ fn every_collection_command_counts_a_repeated_entry_at_each_standing() {
                 .count(),
             1,
             "the {head} section's closing stands once among the lines of its own slice\n{out}"
+        );
+    }
+    let (code, out, _err) = run(&["pattern", &pilot_path]);
+    assert_eq!(code, 0, "pattern over the pilot fixture\n{out}");
+    let pattern_sections: [(&str, usize, usize); 3] = [
+        ("Pattern, near placeholder name", 14, 2),
+        ("Pattern, broad handler", 7, 0),
+        ("Pattern, shared member default", 9, 0),
+    ];
+    let parts: Vec<&str> = out.split("\n\n").collect();
+    let sections = &parts[1..parts.len() - 1];
+    assert_eq!(
+        sections.len(),
+        pattern_sections.len(),
+        "the pattern output stands in its section blocks\n{out}"
+    );
+    for (index, (head, total, contested)) in pattern_sections.iter().enumerate() {
+        let section = sections[index];
+        let pair = [
+            format!("Flags read, {total}"),
+            format!("Contested, {contested}"),
+        ];
+        let section_lines: Vec<&str> = section.lines().collect();
+        assert_eq!(
+            section_lines[section_lines.len() - 2..].join("\n"),
+            pair.join("\n"),
+            "the {head} section's closing pair stands as the last two lines of its own slice in its printed order\n{out}"
+        );
+        assert_eq!(
+            section
+                .lines()
+                .filter(|line| *line == pair[0].as_str())
+                .count(),
+            1,
+            "the {head} section's flags read line stands once among the lines of its own slice\n{out}"
+        );
+        assert_eq!(
+            section
+                .lines()
+                .filter(|line| *line == pair[1].as_str())
+                .count(),
+            1,
+            "the {head} section's contested line stands once among the lines of its own slice\n{out}"
+        );
+    }
+    let (code, out, _err) = run(&["pattern", &constructed_path]);
+    assert_eq!(code, 0, "pattern over the constructed fixture\n{out}");
+    let pattern_sections: [(&str, usize, usize); 3] = [
+        ("Pattern, near placeholder name", 13, 4),
+        ("Pattern, broad handler", 5, 0),
+        ("Pattern, shared member default", 6, 0),
+    ];
+    let parts: Vec<&str> = out.split("\n\n").collect();
+    let sections = &parts[1..parts.len() - 1];
+    assert_eq!(
+        sections.len(),
+        pattern_sections.len(),
+        "the pattern output stands in its section blocks\n{out}"
+    );
+    for (index, (head, total, contested)) in pattern_sections.iter().enumerate() {
+        let section = sections[index];
+        let pair = [
+            format!("Flags read, {total}"),
+            format!("Contested, {contested}"),
+        ];
+        let section_lines: Vec<&str> = section.lines().collect();
+        assert_eq!(
+            section_lines[section_lines.len() - 2..].join("\n"),
+            pair.join("\n"),
+            "the {head} section's closing pair stands as the last two lines of its own slice in its printed order\n{out}"
+        );
+        assert_eq!(
+            section
+                .lines()
+                .filter(|line| *line == pair[0].as_str())
+                .count(),
+            1,
+            "the {head} section's flags read line stands once among the lines of its own slice\n{out}"
+        );
+        assert_eq!(
+            section
+                .lines()
+                .filter(|line| *line == pair[1].as_str())
+                .count(),
+            1,
+            "the {head} section's contested line stands once among the lines of its own slice\n{out}"
+        );
+    }
+    let (code, out, _err) = run(&["files", &pilot_path]);
+    assert_eq!(code, 0, "files over the pilot fixture\n{out}");
+    let files_sections: [(&str, usize, usize); 5] = [
+        ("File, harvest.py", 8, 0),
+        ("File, windows.py", 8, 0),
+        ("File, sorting.py", 8, 0),
+        ("File, ledger.py", 2, 1),
+        ("File, cache.py", 4, 1),
+    ];
+    let parts: Vec<&str> = out.split("\n\n").collect();
+    let sections = &parts[1..parts.len() - 1];
+    assert_eq!(
+        sections.len(),
+        files_sections.len(),
+        "the files output stands in its section blocks\n{out}"
+    );
+    for (index, (head, total, contested)) in files_sections.iter().enumerate() {
+        let section = sections[index];
+        let pair = [
+            format!("Flags read, {total}"),
+            format!("Contested, {contested}"),
+        ];
+        let section_lines: Vec<&str> = section.lines().collect();
+        assert_eq!(
+            section_lines[section_lines.len() - 2..].join("\n"),
+            pair.join("\n"),
+            "the {head} section's closing pair stands as the last two lines of its own slice in its printed order\n{out}"
+        );
+        assert_eq!(
+            section
+                .lines()
+                .filter(|line| *line == pair[0].as_str())
+                .count(),
+            1,
+            "the {head} section's flags read line stands once among the lines of its own slice\n{out}"
+        );
+        assert_eq!(
+            section
+                .lines()
+                .filter(|line| *line == pair[1].as_str())
+                .count(),
+            1,
+            "the {head} section's contested line stands once among the lines of its own slice\n{out}"
+        );
+    }
+    let (code, out, _err) = run(&["files", &constructed_path]);
+    assert_eq!(code, 0, "files over the constructed fixture\n{out}");
+    let files_sections: [(&str, usize, usize); 5] = [
+        ("File, harvest.py", 4, 0),
+        ("File, windows.py", 4, 0),
+        ("File, sorting.py", 4, 0),
+        ("File, ledger.py", 4, 2),
+        ("File, cache.py", 8, 2),
+    ];
+    let parts: Vec<&str> = out.split("\n\n").collect();
+    let sections = &parts[1..parts.len() - 1];
+    assert_eq!(
+        sections.len(),
+        files_sections.len(),
+        "the files output stands in its section blocks\n{out}"
+    );
+    for (index, (head, total, contested)) in files_sections.iter().enumerate() {
+        let section = sections[index];
+        let pair = [
+            format!("Flags read, {total}"),
+            format!("Contested, {contested}"),
+        ];
+        let section_lines: Vec<&str> = section.lines().collect();
+        assert_eq!(
+            section_lines[section_lines.len() - 2..].join("\n"),
+            pair.join("\n"),
+            "the {head} section's closing pair stands as the last two lines of its own slice in its printed order\n{out}"
+        );
+        assert_eq!(
+            section
+                .lines()
+                .filter(|line| *line == pair[0].as_str())
+                .count(),
+            1,
+            "the {head} section's flags read line stands once among the lines of its own slice\n{out}"
+        );
+        assert_eq!(
+            section
+                .lines()
+                .filter(|line| *line == pair[1].as_str())
+                .count(),
+            1,
+            "the {head} section's contested line stands once among the lines of its own slice\n{out}"
+        );
+    }
+    let (code, out, _err) = run(&["contested", &pilot_path]);
+    assert_eq!(code, 0, "contested over the pilot fixture\n{out}");
+    let contested_sections: [(&str, usize, usize); 4] = [
+        ("Set, round 2 set", 0, 0),
+        ("Set, pilot set", 12, 0),
+        ("Set, pilot set", 12, 0),
+        ("Set, constructed round 4 example", 6, 2),
+    ];
+    let parts: Vec<&str> = out.split("\n\n").collect();
+    let sections = &parts[1..parts.len() - 1];
+    assert_eq!(
+        sections.len(),
+        contested_sections.len(),
+        "the contested output stands in its section blocks\n{out}"
+    );
+    for (index, (head, total, contested)) in contested_sections.iter().enumerate() {
+        let section = sections[index];
+        let pair = [
+            format!("Flags read, {total}"),
+            format!("Contested, {contested}"),
+        ];
+        let section_lines: Vec<&str> = section.lines().collect();
+        assert_eq!(
+            section_lines[section_lines.len() - 2..].join("\n"),
+            pair.join("\n"),
+            "the {head} section's closing pair stands as the last two lines of its own slice in its printed order\n{out}"
+        );
+        assert_eq!(
+            section
+                .lines()
+                .filter(|line| *line == pair[0].as_str())
+                .count(),
+            1,
+            "the {head} section's flags read line stands once among the lines of its own slice\n{out}"
+        );
+        assert_eq!(
+            section
+                .lines()
+                .filter(|line| *line == pair[1].as_str())
+                .count(),
+            1,
+            "the {head} section's contested line stands once among the lines of its own slice\n{out}"
+        );
+    }
+    let (code, out, _err) = run(&["contested", &constructed_path]);
+    assert_eq!(code, 0, "contested over the constructed fixture\n{out}");
+    let contested_sections: [(&str, usize, usize); 4] = [
+        ("Set, round 2 set", 0, 0),
+        ("Set, pilot set", 12, 0),
+        ("Set, constructed round 4 example", 6, 2),
+        ("Set, constructed round 4 example", 6, 2),
+    ];
+    let parts: Vec<&str> = out.split("\n\n").collect();
+    let sections = &parts[1..parts.len() - 1];
+    assert_eq!(
+        sections.len(),
+        contested_sections.len(),
+        "the contested output stands in its section blocks\n{out}"
+    );
+    for (index, (head, total, contested)) in contested_sections.iter().enumerate() {
+        let section = sections[index];
+        let pair = [
+            format!("Flags read, {total}"),
+            format!("Contested, {contested}"),
+        ];
+        let section_lines: Vec<&str> = section.lines().collect();
+        assert_eq!(
+            section_lines[section_lines.len() - 2..].join("\n"),
+            pair.join("\n"),
+            "the {head} section's closing pair stands as the last two lines of its own slice in its printed order\n{out}"
+        );
+        assert_eq!(
+            section
+                .lines()
+                .filter(|line| *line == pair[0].as_str())
+                .count(),
+            1,
+            "the {head} section's flags read line stands once among the lines of its own slice\n{out}"
+        );
+        assert_eq!(
+            section
+                .lines()
+                .filter(|line| *line == pair[1].as_str())
+                .count(),
+            1,
+            "the {head} section's contested line stands once among the lines of its own slice\n{out}"
         );
     }
 }
