@@ -2,7 +2,35 @@
 name = "stickler"
 version = "0.1.0"
 edition = "2021"
+rust-version = "1.80"
 description = "Stickler is a command line tool that reviews code against named rules, checks a diff with a built in checker, and prints readings over verdicts that decision model routes recorded while judging a change set against those rules."
+license = "MIT"
+repository = "https://github.com/david-engelmann/stickler"
+homepage = "https://github.com/david-engelmann/stickler"
+documentation = "https://docs.rs/stickler"
+readme = "README.md"
+keywords = ["cli", "code-review", "diff", "linter", "agents"]
+categories = ["command-line-utilities", "development-tools"]
+default-run = "stickler"
+exclude = [
+  "AGENTS.md",
+  "CONTRACT.md",
+  "ROADMAP.md",
+  ".github/**",
+  "docs/**",
+  "examples/**",
+  "rust/src/bin/**",
+  "rust/tests/**",
+]
+
+[package.metadata.binstall]
+pkg-url = "{ repo }/releases/download/v{ version }/stickler-v{ version }-{ target }.tar.gz"
+bin-dir = "stickler-v{ version }-{ target }/{ bin }{ binary-ext }"
+pkg-fmt = "tgz"
+
+[package.metadata.binstall.overrides.x86_64-pc-windows-msvc]
+pkg-url = "{ repo }/releases/download/v{ version }/stickler-v{ version }-{ target }.zip"
+pkg-fmt = "zip"
 
 [lib]
 name = "stickler"
@@ -144,6 +172,3 @@ path = "rust/tests/test_verdicts_reading.rs"
 num-bigint = "0.4"
 num-rational = "0.4"
 num-traits = "0.2"
-
-[dev-dependencies]
-num-bigint = "0.4"
