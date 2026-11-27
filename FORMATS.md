@@ -62,7 +62,7 @@ Every format below stands at version 1 in `CONTRACT.md` (`FIX-CK-24`). No litera
 | `files` | array of objects | required | Zero or more file diff entries (`file` names may repeat across entries) |
 | `files[].file` | string | required | Non-empty single-line file path without unpaired surrogates |
 | `files[].diff` | string | required | Unified diff text for that entry without unpaired surrogates |
-| `files[].verdicts` | array of objects | optional | Recorded model verdicts on borderline lines of `diff` |
+| `files[].verdicts` | array of objects | optional | Recorded model verdicts on borderline lines of `diff` (each `(line, model)` pair must be unique within a single `files[]` entry, while distinct models may record verdicts on the same line) |
 | `verdicts[].line` | integer | required | 1-based raw line number inside `diff` naming a borderline line |
 | `verdicts[].pattern` | string | required | Matching pattern (`near placeholder name`, `broad handler`, or `shared member default`) |
 | `verdicts[].model` | string | required | Non-empty single-line model identifier |
@@ -103,7 +103,7 @@ Every format below stands at version 1 in `CONTRACT.md` (`FIX-CK-24`). No litera
 | Field | Type | Required | Rule |
 | --- | --- | --- | --- |
 | `routes` | array of 2 strings | required | Two distinct non-empty single-line model route identifiers |
-| `change_set` | object | required | Valid inline change set object in the shape above |
+| `change_set` | object | required | Valid inline change set object in the shape above where every recorded verdict `model` equals one of the two `routes` strings |
 
 ```json
 {

@@ -26,4 +26,4 @@ Deterministic Python unified-diff smell checker and recorded multi-model verdict
 - **Pure offline execution.** `stickler` makes zero network calls, spawns no background daemons, and mutates none of the diffs or JSON files handed to it.
 - **Exact rational thresholds.** Verdict confidence floors (`0.5`) and collection counts run without floating-point rounding drift.
 - **Whole-input defect reporting.** Malformed JSON inputs return structured defect lists naming every reachable schema violation before printing a single report line.
-- **Terminal injection fencing.** Untrusted strings loaded from files are validated and fenced against embedded newlines so input data can never forge summary lines.
+- **Single-line output fencing.** Checked string fields reject unpaired UTF-16 surrogates and line breaks (`\n` and `\r`) so untrusted strings cannot forge extra report or summary lines, though operators displaying untrusted text directly in a terminal should still pipe output through a pager or sanitizer.

@@ -8,7 +8,10 @@ Stickler checks Python unified diffs against six built-in code and naming rules,
 
 ```sh
 curl -fsSL https://raw.githubusercontent.com/david-engelmann/stickler/main/install.sh | sh
+export PATH="$HOME/.local/bin:$PATH"
 ```
+
+Pass `--to <DIR>` (for example `sh -s -- --to /usr/local/bin`) to install somewhere other than `$HOME/.local/bin`, and ensure the destination directory stands on `PATH`.
 
 ### Cargo Binstall
 
@@ -26,7 +29,7 @@ cargo install --path . --bin stickler --locked
 
 ## 60-Second Walkthrough
 
-Check a Python unified diff, render a single recorded review, inspect a multi-file change set carrying recorded LLM verdicts, compare routes with `split` and `rejudged`, and summarize a multi-set collection.
+From the root of a `stickler` repository checkout (`git clone https://github.com/david-engelmann/stickler.git && cd stickler`), check a Python unified diff, render a single recorded review, inspect a multi-file change set carrying recorded LLM verdicts, compare routes with `split` and `rejudged`, and summarize a multi-set collection.
 
 ```sh
 stickler check examples/smelly.diff
