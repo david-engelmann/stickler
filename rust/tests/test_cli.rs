@@ -1576,29 +1576,33 @@ fn closing_seat_line(section: &str) -> &str {
 /// repeated entry's second standing, fails here at the
 /// seat it touches, and the grain stands
 /// witnessed at the verdicts seat and at the
-/// seats of the five readings of its form, whose
-/// section closings over both of the pin's
-/// fixtures stand asserted beside their closing
-/// counts under CK-61, and at the states seat,
-/// whose closings at both of its grains over
-/// both of the pin's fixtures stand asserted
-/// beside their closing counts under CK-62, and
-/// at the flags and outcomes seats, whose
-/// section closings over both of the pin's
-/// fixtures stand asserted beside their closing
-/// counts under CK-63, and at the pattern, files
-/// and contested seats, whose section closings
-/// over both of the pin's fixtures stand
+/// seats of the five readings of its form,
+/// whose section closings over both of the
+/// pin's fixtures stand asserted beside their
+/// closing counts under CK-61, and at the
+/// states seat, whose closings at both of its
+/// grains over both of the pin's fixtures stand
 /// asserted beside their closing counts under
-/// CK-64. The outcomes closing stands asserted
-/// whole in the same form, its three judged
-/// lines standing in the block over both
-/// fixtures, where an earlier form of this pin
-/// asserted that seat by its first two lines
-/// alone, so a build that gathers the outcomes
-/// reading's groups through a deduplication of
-/// its own fails at that seat as the shared
-/// forms fail at theirs.
+/// CK-62, and at the flags and outcomes seats,
+/// whose section closings over both of the
+/// pin's fixtures stand asserted beside their
+/// closing counts under CK-63, and at the
+/// pattern, files and contested seats, whose
+/// section closings over both of the pin's
+/// fixtures stand asserted beside their closing
+/// counts under CK-64, and at the borderline
+/// seat, whose section head counts over both of
+/// the pin's fixtures stand asserted beside
+/// their closing counts under CK-65. The
+/// outcomes closing stands asserted whole in
+/// the same form, its three judged lines
+/// standing in the block over both fixtures,
+/// where an earlier form of this pin asserted
+/// that seat by its first two lines alone, so a
+/// build that gathers the outcomes reading's
+/// groups through a deduplication of its own
+/// fails at that seat as the shared forms fail
+/// at theirs.
 #[test]
 fn every_collection_command_counts_a_repeated_entry_at_each_standing() {
     let dir = temp_dir("repeated-entry");
@@ -2630,6 +2634,70 @@ fn every_collection_command_counts_a_repeated_entry_at_each_standing() {
                 .count(),
             1,
             "the {head} section's contested line stands once among the lines of its own slice\n{out}"
+        );
+    }
+    let (code, out, _err) = run(&["borderline", &pilot_path]);
+    assert_eq!(code, 0, "borderline over the pilot fixture\n{out}");
+    let borderline_sections: [(&str, usize); 3] = [
+        ("Set, pilot set", 12),
+        ("Set, pilot set", 12),
+        ("Set, constructed round 4 example", 6),
+    ];
+    let parts: Vec<&str> = out.split("\n\n").collect();
+    let sections = &parts[1..parts.len() - 1];
+    assert_eq!(
+        sections.len(),
+        borderline_sections.len(),
+        "the borderline output stands in its section blocks\n{out}"
+    );
+    for (index, (head, total)) in borderline_sections.iter().enumerate() {
+        let section = sections[index];
+        let count_line = format!("Borderline, {total}");
+        let section_lines: Vec<&str> = section.lines().collect();
+        assert_eq!(
+            section_lines[1],
+            count_line.as_str(),
+            "the {head} section's head count stands as the line at the head seat of its own slice\n{out}"
+        );
+        assert_eq!(
+            section
+                .lines()
+                .filter(|line| *line == count_line.as_str())
+                .count(),
+            1,
+            "the {head} section's head count stands once among the lines of its own slice\n{out}"
+        );
+    }
+    let (code, out, _err) = run(&["borderline", &constructed_path]);
+    assert_eq!(code, 0, "borderline over the constructed fixture\n{out}");
+    let borderline_sections: [(&str, usize); 3] = [
+        ("Set, pilot set", 12),
+        ("Set, constructed round 4 example", 6),
+        ("Set, constructed round 4 example", 6),
+    ];
+    let parts: Vec<&str> = out.split("\n\n").collect();
+    let sections = &parts[1..parts.len() - 1];
+    assert_eq!(
+        sections.len(),
+        borderline_sections.len(),
+        "the borderline output stands in its section blocks\n{out}"
+    );
+    for (index, (head, total)) in borderline_sections.iter().enumerate() {
+        let section = sections[index];
+        let count_line = format!("Borderline, {total}");
+        let section_lines: Vec<&str> = section.lines().collect();
+        assert_eq!(
+            section_lines[1],
+            count_line.as_str(),
+            "the {head} section's head count stands as the line at the head seat of its own slice\n{out}"
+        );
+        assert_eq!(
+            section
+                .lines()
+                .filter(|line| *line == count_line.as_str())
+                .count(),
+            1,
+            "the {head} section's head count stands once among the lines of its own slice\n{out}"
         );
     }
 }
