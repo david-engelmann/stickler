@@ -1,0 +1,55 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/david-engelmann/stickler/main/schemas/review.schema.json",
+  "title": "Stickler Review (v1)",
+  "description": "Version 1 recorded review input read by stickler render.",
+  "type": "object",
+  "required": [
+    "diff_label",
+    "objections"
+  ],
+  "properties": {
+    "diff_label": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "^(?=.*\\S)[^\\r\\n]+$"
+    },
+    "objections": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "category",
+          "flaw",
+          "rewrite",
+          "standard"
+        ],
+        "properties": {
+          "category": {
+            "type": "string",
+            "enum": [
+              "naming",
+              "structure",
+              "smell"
+            ]
+          },
+          "flaw": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": "[\\s\\S]*\\S[\\s\\S]*"
+          },
+          "rewrite": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": "[\\s\\S]*\\S[\\s\\S]*"
+          },
+          "standard": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": "[\\s\\S]*\\S[\\s\\S]*"
+          }
+        }
+      }
+    }
+  }
+}

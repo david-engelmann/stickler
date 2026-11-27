@@ -1,0 +1,33 @@
+#compdef stickler
+
+_stickler() {
+  local -a subcommands
+  subcommands=(
+    'check'
+    'render'
+    'review'
+    'census'
+    'rejudged'
+    'split'
+    'contested'
+    'pattern'
+    'files'
+    'borderline'
+    'outcomes'
+    'verdicts'
+    'shapes'
+    'choices'
+    'categories'
+    'grounds'
+    'judgements'
+    'standings'
+    'states'
+    'flags'
+    'models'
+  )
+  _arguments -C \
+    '1:command:compadd -a subcommands' \
+    '*:input file:_files'
+}
+
+_stickler "$@"

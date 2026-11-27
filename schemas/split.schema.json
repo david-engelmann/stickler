@@ -1,0 +1,27 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/david-engelmann/stickler/main/schemas/split.schema.json",
+  "title": "Stickler Split Wrapper (v1)",
+  "description": "Version 1 two-route split input read by stickler split.",
+  "type": "object",
+  "required": [
+    "routes",
+    "change_set"
+  ],
+  "properties": {
+    "routes": {
+      "type": "array",
+      "minItems": 2,
+      "maxItems": 2,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "minLength": 1,
+        "pattern": "^(?=.*\\S)[^\\r\\n]+$"
+      }
+    },
+    "change_set": {
+      "$ref": "change-set.schema.json"
+    }
+  }
+}
