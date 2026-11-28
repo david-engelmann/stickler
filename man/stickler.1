@@ -1,0 +1,73 @@
+.TH STICKLER 1 "2026-11-27" "stickler 0.1.0" "Spectacle Line Manual"
+.SH NAME
+stickler \- deterministic Python unified-diff checker and recorded multi-model verdict reader
+.SH SYNOPSIS
+\fBstickler\fR \fICOMMAND\fR \fIFILE\fR
+.SH DESCRIPTION
+\fBstickler\fR inspects unified Python diffs against six built-in naming, structure, and smell shapes at zero token cost, flags three ambiguous borderline patterns for recorded two-model arbitration, and prints twenty-one deterministic analytical reports over local diff and JSON files without network access.
+.SH COMMANDS
+.TP
+\fBcheck <file.diff>\fR
+Check a unified Python diff against the six built-in shapes (exits 0 when accepted, 1 when sent back).
+.TP
+\fBrender <review.json>\fR
+Render a version 1 recorded review JSON document.
+.TP
+\fBreview <change_set.json>\fR
+Review a multi-file change set including borderline flags and recorded model verdicts.
+.TP
+\fBsplit <split.json>\fR
+Compare two named model routes side by side across one change set.
+.TP
+\fBrejudged <rejudged.json>\fR
+Compare verdicts across two rejudging waves of the same change set.
+.TP
+\fBcensus <collection.json>\fR
+Summarize set, file, objection, and borderline flag counts across a collection.
+.TP
+\fBcontested | pattern | files | borderline | outcomes <collection.json>\fR
+Print collection-wide readings focused on contested flags, borderline patterns, files, or outcomes.
+.TP
+\fBverdicts | shapes | choices | categories | grounds | judgements | standings | states | flags | models <collection.json>\fR
+Print collection-wide tallies and slices across verdicts, six shapes, model choices, categories, grounds, judgements, standings, states, flags, and models.
+.SH EXIT STATUS
+.TP
+\fB0\fR
+Clean diff on check, accepted review on render, clean change set on review, or valid reading on the other eighteen commands.
+.TP
+\fB1\fR
+Findings stand (sent back on check or render, or static/upheld stickler findings on review), or container depth overflow (> 9997) on render.
+.TP
+\fB2\fR
+Unreadable, non-UTF-8, invalid-JSON, or schema-malformed input file (printing structured defects on stdout), or invalid CLI arguments (printing usage on stderr).
+.TP
+\fB120\fR
+Closed output pipe on stdout or stderr.
+.SH EXAMPLES
+Check a unified diff in CI
+.nf
+.RS 4
+stickler check examples/smelly.diff
+.RE
+.fi
+.PP
+Render a multi-file change-set review
+.nf
+.RS 4
+stickler review examples/change_set.json
+.RE
+.fi
+.PP
+Compare two model routes on borderline lines
+.nf
+.RS 4
+stickler split examples/split.json
+.RE
+.fi
+.SH SEE ALSO
+Project documentation and Draft 2020-12 JSON Schemas at
+.I https://github.com/david-engelmann/stickler
+and the online operator handbook at
+.I https://david-engelmann.github.io/stickler/
+.SH AUTHORS
+David Engelmann. Released under the MIT License.
