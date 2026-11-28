@@ -1,0 +1,90 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/david-engelmann/stickler/main/schemas/change-set.schema.json",
+  "title": "Stickler Change Set (v1)",
+  "description": "Version 1 multi-file diff and borderline verdict record read by stickler review.",
+  "type": "object",
+  "required": [
+    "files"
+  ],
+  "properties": {
+    "files": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/fileEntry"
+      }
+    }
+  },
+  "$defs": {
+    "verdict": {
+      "type": "object",
+      "required": [
+        "line",
+        "pattern",
+        "model",
+        "choice",
+        "confidence"
+      ],
+      "properties": {
+        "line": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "pattern": {
+          "type": "string",
+          "enum": [
+            "near placeholder name",
+            "broad handler",
+            "shared member default"
+          ]
+        },
+        "model": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S",
+          "not": {
+            "pattern": "[\\r\\n]"
+          }
+        },
+        "choice": {
+          "type": "string",
+          "enum": [
+            "stickler",
+            "clean"
+          ]
+        },
+        "confidence": {
+          "type": "number",
+          "minimum": 0.0,
+          "maximum": 1.0
+        }
+      }
+    },
+    "fileEntry": {
+      "type": "object",
+      "required": [
+        "file",
+        "diff"
+      ],
+      "properties": {
+        "file": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S",
+          "not": {
+            "pattern": "[\\r\\n]"
+          }
+        },
+        "diff": {
+          "type": "string"
+        },
+        "verdicts": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/verdict"
+          }
+        }
+      }
+    }
+  }
+}

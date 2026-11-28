@@ -1,0 +1,23 @@
+# Changelog
+
+All notable product and packaging changes to `stickler` stand recorded in this file.
+
+## Unreleased
+
+### Added
+
+- Prebuilt five-target release workflow (`release.yml`) bundling shell completions, JSON Schemas, and manual pages into Linux, macOS, and Windows archives alongside a `SHA256SUMS` verification installer (`install.sh`).
+- Crate packaging and `cargo-binstall` metadata in `Cargo.toml`, excluding internal gate binaries and handbook build sources so published `.crate` archives stay compact, plus `deny.toml` license and advisory checks.
+- Draft 2020-12 JSON Schemas under `schemas/`, static tab-completion scripts under `completions/` (`bash`, `zsh`, `fish`, `PowerShell`), offline `man/stickler.1` manual page, and root composite GitHub Action (`action.yml`).
+- Searchable `mdBook` operator handbook under `book/` paired with GitHub Pages CI (`docs.yml`), clean-room installer verification (`clean-install.yml`), and three-OS matrix validation (`cross-platform.yml`).
+- Documentation and visual media suite under `docs/` and `docs/media/` covering the operator guide, five-tool pipeline cookbook, pipeline architecture, Spectacle Line comparison, measured Apple Silicon release benchmarks, social preview cards, animated CLI showcase, and pinned-compatible storefront README draft.
+
+## 0.1.0
+
+### Added
+
+- Deterministic unified diff checker flagging six built in Python code and naming shapes across naming, structure, and smell categories.
+- Borderline candidate detector isolating near placeholder name, broad handler, and shared member default lines for recorded two model verdict arbitration.
+- Recorded verdict envelope readers supporting structured JSON decision outputs and chat completion envelopes.
+- Twenty offline analytical and rendering commands alongside check, covering single reviews, change sets, split route comparisons, rejudged pairs, and sixteen collection readings.
+- Strict input validation naming every reachable schema defect and fencing untrusted text against line break injection.

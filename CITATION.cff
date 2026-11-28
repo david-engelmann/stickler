@@ -1,0 +1,18 @@
+cff-version: 1.2.0
+message: "If you use Stickler in research or engineering benchmarks, please cite this software."
+type: software
+title: "Stickler"
+abstract: "Stickler is a deterministic Python diff reviewer and recorded LLM verdict reader written in Rust."
+authors:
+  - family-names: "Engelmann"
+    given-names: "David"
+version: "0.1.0"
+license: "MIT"
+repository-code: "https://github.com/david-engelmann/stickler"
+url: "https://github.com/david-engelmann/stickler"
+keywords:
+  - "cli"
+  - "code-review"
+  - "diff"
+  - "linter"
+  - "agents"

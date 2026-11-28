@@ -1,9 +1,11 @@
-//! The stickler library. A strict reviewer of code and naming.
+//! Stickler reviews unified diffs against six built in Python smell rules,
+//! separates borderline candidates for LLM verdict arbitration, and renders
+//! deterministic readings over recorded change sets and collections.
 //!
-//! The library carries the loaders, the checker, the seat readers,
-//! the readings, and the renderers as pure functions. The binary
-//! carries the command line surface over the library. The Python
-//! package under src is the specification this port reproduces.
+//! All loaders, checks, seat readers, readings, and renderers stand as pure
+//! functions in this library. Nothing in the crate writes to inspected files
+//! or opens a network socket. The command line binary in `cli` is a thin
+//! dispatch shell over these modules.
 
 pub mod borderline;
 pub mod categories;

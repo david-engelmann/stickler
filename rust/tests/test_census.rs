@@ -15,8 +15,8 @@ use std::path::{Path, PathBuf};
 
 use stickler::census::{census_of, load_census, Census, CensusSet, Tally};
 use stickler::changeset::review_changeset;
-use stickler::cli::{cli_main, cli_main_units};
-use stickler::json::{parse, JString};
+use stickler::cli::cli_main;
+use stickler::json::parse;
 use stickler::render::{render_census, render_set_review};
 
 fn root() -> PathBuf {
@@ -518,9 +518,14 @@ fn duplicate_labels_and_unread_fields_stand() {
     assert!(out.contains("Sets, 2"));
 }
 
+/// Raw invalid UTF-8 filename test gated to Linux because Windows lacks
+/// OsStringExt and macOS APFS refuses non-UTF-8 byte sequences on disk.
+#[cfg(target_os = "linux")]
 #[test]
 fn the_census_command_reads_a_raw_byte_file_name() {
     use std::os::unix::ffi::OsStringExt;
+    use stickler::cli::cli_main_units;
+    use stickler::json::JString;
     let dir = temp_dir("raw-byte");
     let set = change_set_json(&[entry_json("app.py", JUDGED_DIFF, "")]);
     let text = census_json(&[("byte set", set)]);

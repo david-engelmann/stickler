@@ -1,0 +1,35 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/david-engelmann/stickler/main/schemas/collection.schema.json",
+  "title": "Stickler Collection (v1)",
+  "description": "Version 1 inline multi-set collection read by census and the fifteen collection commands.",
+  "type": "object",
+  "required": [
+    "sets"
+  ],
+  "properties": {
+    "sets": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "label",
+          "change_set"
+        ],
+        "properties": {
+          "label": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": "\\S",
+            "not": {
+              "pattern": "[\\r\\n]"
+            }
+          },
+          "change_set": {
+            "$ref": "change-set.schema.json"
+          }
+        }
+      }
+    }
+  }
+}
