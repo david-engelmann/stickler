@@ -12,7 +12,10 @@
     "diff_label": {
       "type": "string",
       "minLength": 1,
-      "pattern": "^(?=.*\\S)[^\\r\\n]+$"
+      "pattern": "\\S",
+      "not": {
+        "pattern": "[\\r\\n]"
+      }
     },
     "objections": {
       "type": "array",

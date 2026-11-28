@@ -84,6 +84,7 @@ Install a prebuilt release binary on Linux or macOS, install via `cargo binstall
 
 ```sh
 curl -fsSL https://raw.githubusercontent.com/david-engelmann/stickler/main/install.sh | sh
+export PATH="$HOME/.local/bin:$PATH"
 ```
 
 ```sh

@@ -20,7 +20,7 @@ Measured on Apple Silicon (`cargo build --release --locked`, median wall-clock d
 | Benchmark command | `stickler review` | Full end-to-end CLI invocation |
 | Synthetic workload | 1,000 Python diffs (9,000 diff lines, 3,000 objections, 1,000 judged flags) | Validated whole before rendering |
 | Median wall-clock time | `86.65 ms` | Median of 9 cold-process runs |
-| Sustained throughput | `11,541 diffs/sec` | Includes JSON parsing and line-break fencing |
+| Median-derived rate | `11,541 diffs/sec` | Derived from median of 9 cold-process runs |
 
 ## Spectacle Line Release Comparison
 

@@ -17,7 +17,10 @@
       "items": {
         "type": "string",
         "minLength": 1,
-        "pattern": "^(?=.*\\S)[^\\r\\n]+$"
+        "pattern": "\\S",
+        "not": {
+          "pattern": "[\\r\\n]"
+        }
       }
     },
     "change_set": {

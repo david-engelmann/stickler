@@ -41,7 +41,10 @@
         "model": {
           "type": "string",
           "minLength": 1,
-          "pattern": "^(?=.*\\S)[^\\r\\n]+$"
+          "pattern": "\\S",
+          "not": {
+            "pattern": "[\\r\\n]"
+          }
         },
         "choice": {
           "type": "string",
@@ -67,7 +70,10 @@
         "file": {
           "type": "string",
           "minLength": 1,
-          "pattern": "^(?=.*\\S)[^\\r\\n]+$"
+          "pattern": "\\S",
+          "not": {
+            "pattern": "[\\r\\n]"
+          }
         },
         "diff": {
           "type": "string"
