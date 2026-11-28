@@ -2756,7 +2756,13 @@ fn every_collection_command_counts_a_repeated_entry_at_each_standing() {
 /// count, its held count at the same count, and its
 /// changed count at zero, the closing asserted in
 /// full, so a build that drops or merges the second
-/// standing fails here on the counts themselves.
+/// standing fails here on the counts themselves. The
+/// pair groups of the same rendering stand asserted
+/// whole in their own slices beside the closing under
+/// CK-67, so a build that moves a line within a group
+/// or stands a line of a group twice fails at the
+/// group it touches, where the closing counts stand
+/// unchanged.
 #[test]
 fn a_rejudged_pair_of_one_entry_standing_twice_holds_at_every_flag() {
     let dir = temp_dir("rejudged-repeated");
@@ -2768,6 +2774,33 @@ fn a_rejudged_pair_of_one_entry_standing_twice_holds_at_every_flag() {
         "Inputs read, 24\nStanding in both, 12\nHeld, 12\nChanged, 0",
         "the pair's closing stands in full\n{out}"
     );
+    let pair_groups: [&str; 12] = [
+        "harvest.py, line 6, near placeholder name\nFirst, unjudged\nSecond, unjudged\nHeld",
+        "harvest.py, line 7, near placeholder name\nFirst, stickler\nSecond, stickler\nHeld",
+        "harvest.py, line 12, broad handler\nFirst, stickler\nSecond, stickler\nHeld",
+        "harvest.py, line 18, broad handler\nFirst, stickler\nSecond, stickler\nHeld",
+        "windows.py, line 6, shared member default\nFirst, stickler\nSecond, stickler\nHeld",
+        "windows.py, line 10, shared member default\nFirst, stickler\nSecond, stickler\nHeld",
+        "windows.py, line 14, shared member default\nFirst, stickler\nSecond, stickler\nHeld",
+        "windows.py, line 18, shared member default\nFirst, stickler\nSecond, stickler\nHeld",
+        "sorting.py, line 6, near placeholder name\nFirst, stickler\nSecond, stickler\nHeld",
+        "sorting.py, line 11, near placeholder name\nFirst, stickler\nSecond, stickler\nHeld",
+        "sorting.py, line 12, near placeholder name\nFirst, stickler\nSecond, stickler\nHeld",
+        "sorting.py, line 15, broad handler\nFirst, stickler\nSecond, stickler\nHeld",
+    ];
+    let parts: Vec<&str> = out.split("\n\n").collect();
+    let groups = &parts[1..parts.len() - 1];
+    assert_eq!(
+        groups.len(),
+        pair_groups.len(),
+        "the rejudged output stands in its pair groups\n{out}"
+    );
+    for (index, group) in pair_groups.iter().enumerate() {
+        assert_eq!(
+            groups[index], *group,
+            "the rejudged pair group stands whole in its own slice\n{out}"
+        );
+    }
 }
 
 /// The pin of CK-48. One collection carrying the
