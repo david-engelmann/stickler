@@ -1593,7 +1593,11 @@ fn closing_seat_line(section: &str) -> &str {
 /// counts under CK-64, and at the borderline
 /// seat, whose section head counts over both of
 /// the pin's fixtures stand asserted beside
-/// their closing counts under CK-65. The
+/// their closing counts under CK-65, and at the
+/// census seat, whose set blocks over both of
+/// the pin's fixtures stand asserted whole in
+/// their own slices beside the total lines the
+/// pin already asserts under CK-66. The
 /// outcomes closing stands asserted whole in
 /// the same form, its three judged lines
 /// standing in the block over both fixtures,
@@ -2698,6 +2702,48 @@ fn every_collection_command_counts_a_repeated_entry_at_each_standing() {
                 .count(),
             1,
             "the {head} section's head count stands once among the lines of its own slice\n{out}"
+        );
+    }
+    let (code, out, _err) = run(&["census", &pilot_path]);
+    assert_eq!(code, 0, "census over the pilot fixture\n{out}");
+    let census_blocks: [&str; 4] = [
+        "Set, round 2 set\nFiles, 3\nJudgements, 5\nShape, bare except, 1\nShape, print call, 1\nShape, mutable default, 1\nShape, placeholder name, 0\nShape, call default, 1\nShape, class attribute, 1\nBorderline, 0\nPattern, near placeholder name, 0\nPattern, broad handler, 0\nPattern, shared member default, 0\nVerdicts, none recorded",
+        "Set, pilot set\nFiles, 3\nJudgements, 0\nShape, bare except, 0\nShape, print call, 0\nShape, mutable default, 0\nShape, placeholder name, 0\nShape, call default, 0\nShape, class attribute, 0\nBorderline, 12\nPattern, near placeholder name, 5\nPattern, broad handler, 3\nPattern, shared member default, 4\nVerdict lines, stickler 11, clean 0\nUnjudged, 1\nContested, 0",
+        "Set, pilot set\nFiles, 3\nJudgements, 0\nShape, bare except, 0\nShape, print call, 0\nShape, mutable default, 0\nShape, placeholder name, 0\nShape, call default, 0\nShape, class attribute, 0\nBorderline, 12\nPattern, near placeholder name, 5\nPattern, broad handler, 3\nPattern, shared member default, 4\nVerdict lines, stickler 11, clean 0\nUnjudged, 1\nContested, 0",
+        "Set, constructed round 4 example\nFiles, 2\nJudgements, 0\nShape, bare except, 0\nShape, print call, 0\nShape, mutable default, 0\nShape, placeholder name, 0\nShape, call default, 0\nShape, class attribute, 0\nBorderline, 6\nPattern, near placeholder name, 4\nPattern, broad handler, 1\nPattern, shared member default, 1\nVerdict lines, stickler 3, clean 2\nUnjudged, 1\nContested, 2",
+    ];
+    let parts: Vec<&str> = out.split("\n\n").collect();
+    let blocks = &parts[1..parts.len() - 1];
+    assert_eq!(
+        blocks.len(),
+        census_blocks.len(),
+        "the census output stands in its set blocks\n{out}"
+    );
+    for (index, block) in census_blocks.iter().enumerate() {
+        assert_eq!(
+            blocks[index], *block,
+            "the census set block stands whole in its own slice\n{out}"
+        );
+    }
+    let (code, out, _err) = run(&["census", &constructed_path]);
+    assert_eq!(code, 0, "census over the constructed fixture\n{out}");
+    let census_blocks: [&str; 4] = [
+        "Set, round 2 set\nFiles, 3\nJudgements, 5\nShape, bare except, 1\nShape, print call, 1\nShape, mutable default, 1\nShape, placeholder name, 0\nShape, call default, 1\nShape, class attribute, 1\nBorderline, 0\nPattern, near placeholder name, 0\nPattern, broad handler, 0\nPattern, shared member default, 0\nVerdicts, none recorded",
+        "Set, pilot set\nFiles, 3\nJudgements, 0\nShape, bare except, 0\nShape, print call, 0\nShape, mutable default, 0\nShape, placeholder name, 0\nShape, call default, 0\nShape, class attribute, 0\nBorderline, 12\nPattern, near placeholder name, 5\nPattern, broad handler, 3\nPattern, shared member default, 4\nVerdict lines, stickler 11, clean 0\nUnjudged, 1\nContested, 0",
+        "Set, constructed round 4 example\nFiles, 2\nJudgements, 0\nShape, bare except, 0\nShape, print call, 0\nShape, mutable default, 0\nShape, placeholder name, 0\nShape, call default, 0\nShape, class attribute, 0\nBorderline, 6\nPattern, near placeholder name, 4\nPattern, broad handler, 1\nPattern, shared member default, 1\nVerdict lines, stickler 3, clean 2\nUnjudged, 1\nContested, 2",
+        "Set, constructed round 4 example\nFiles, 2\nJudgements, 0\nShape, bare except, 0\nShape, print call, 0\nShape, mutable default, 0\nShape, placeholder name, 0\nShape, call default, 0\nShape, class attribute, 0\nBorderline, 6\nPattern, near placeholder name, 4\nPattern, broad handler, 1\nPattern, shared member default, 1\nVerdict lines, stickler 3, clean 2\nUnjudged, 1\nContested, 2",
+    ];
+    let parts: Vec<&str> = out.split("\n\n").collect();
+    let blocks = &parts[1..parts.len() - 1];
+    assert_eq!(
+        blocks.len(),
+        census_blocks.len(),
+        "the census output stands in its set blocks\n{out}"
+    );
+    for (index, block) in census_blocks.iter().enumerate() {
+        assert_eq!(
+            blocks[index], *block,
+            "the census set block stands whole in its own slice\n{out}"
         );
     }
 }
